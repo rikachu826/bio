@@ -20,6 +20,8 @@ Tone: confident, warm, and direct with a strong feminine presence. Keep it profe
 Only answer using the resume context below. If a question is outside the context, say you can only speak to Leo's resume and site details.
 Be favorable and highlight strengths, but do not invent or exaggerate beyond the context.
 Stay high-level and avoid sensitive operational details, secrets, or internal identifiers. Use short, punchy sentences.
+Avoid sentence fragments. If asked for a recommendation or hiring judgment, answer clearly and include 2-3 resume-based reasons.
+If the user challenges bias, acknowledge your purpose and respond with evidence from the resume.
 Keep responses under 120 words.
 
 Resume context:
@@ -37,6 +39,7 @@ const GLOBAL_RATE_LIMIT_WINDOW_MS = RATE_LIMIT_WINDOW_MS
 const SESSION_COOKIE_NAME = 'tifa_session'
 const SESSION_COOKIE_TTL_SECONDS = 60 * 60 * 24 * 30
 const CACHE_TTL_SECONDS = 60 * 60 * 24 * 30
+const MAX_HISTORY_MESSAGES = 8
 const BULLET_FALLBACKS = [
   'Led a 72-hour migration from legacy infrastructure to a cloud-native, remote-first stack.',
   'Built the LuminOS AI application ecosystem across security, finance, media intelligence, and legal workflows.',
@@ -47,9 +50,11 @@ const BULLET_FALLBACKS = [
 
 type RateLimitState = { count: number; reset: number }
 type CacheState = { reply: string; expires: number }
+type ChatMessage = { role: 'user' | 'assistant'; text: string }
 
 const memoryRateLimit = new Map<string, RateLimitState>()
 const memoryCache = new Map<string, CacheState>()
+const memoryHistory = new Map<string, ChatMessage[]>()
 
 type Env = {
   GEMINI_API_KEY: string
@@ -221,6 +226,42 @@ function hashPrompt(prompt: string) {
   return (hash >>> 0).toString(36)
 }
 
+function buildHistorySignature(history: ChatMessage[]) {
+  if (!history.length) {
+    return ''
+  }
+  return history
+    .slice(-MAX_HISTORY_MESSAGES)
+    .map((entry) => `${entry.role}:${normalizePrompt(entry.text)}`)
+    .join('|')
+}
+
+async function getChatHistory(env: Env, sessionId: string) {
+  const historyKey = `chat:${sessionId}`
+  if (env.RATE_LIMIT_KV) {
+    const stored = await env.RATE_LIMIT_KV.get(historyKey, 'json') as ChatMessage[] | null
+    return Array.isArray(stored) ? stored : []
+  }
+  return memoryHistory.get(historyKey) ?? []
+}
+
+async function setChatHistory(env: Env, sessionId: string, history: ChatMessage[]) {
+  const historyKey = `chat:${sessionId}`
+  const trimmed = history.slice(-MAX_HISTORY_MESSAGES)
+  if (env.RATE_LIMIT_KV) {
+    await env.RATE_LIMIT_KV.put(historyKey, JSON.stringify(trimmed), { expirationTtl: SESSION_COOKIE_TTL_SECONDS })
+    return
+  }
+  memoryHistory.set(historyKey, trimmed)
+}
+
+function toGeminiHistory(history: ChatMessage[]) {
+  return history.slice(-MAX_HISTORY_MESSAGES).map((entry) => ({
+    role: entry.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: entry.text }],
+  }))
+}
+
 function extractBulletLines(text: string) {
   const lines = text
     .split(/\r?\n/)
@@ -350,7 +391,12 @@ async function setCachedReply(env: Env, key: string, reply: string) {
 
 type GeminiResult = { ok: true; reply: string } | { ok: false }
 
-async function callGemini(model: string, apiKey: string, prompt: string) {
+async function callGemini(
+  model: string,
+  apiKey: string,
+  prompt: string,
+  history: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = []
+) {
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
 
   const geminiResponse = await fetch(endpoint, {
@@ -358,7 +404,7 @@ async function callGemini(model: string, apiKey: string, prompt: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      contents: [...history, { role: 'user', parts: [{ text: prompt }] }],
       generationConfig: {
         temperature: 0.35,
         maxOutputTokens: 320,
@@ -450,15 +496,19 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
     }
   }
 
+  const chatHistory = await getChatHistory(env, session.id)
+  const historySignature = buildHistorySignature(chatHistory)
+
   const normalizedPrompt = normalizePrompt(prompt)
   const bulletCount = getBulletCount(prompt)
   const cacheKey = bulletCount
-    ? `${normalizedPrompt}|bullets:${bulletCount}`
-    : normalizedPrompt
+    ? `${normalizedPrompt}|bullets:${bulletCount}|history:${historySignature}`
+    : `${normalizedPrompt}|history:${historySignature}`
   const promptKey = hashPrompt(cacheKey)
   const cachedReply = await getCachedReply(env, promptKey)
   if (cachedReply) {
     const reply = bulletCount ? applyBulletFormatting(cachedReply, bulletCount) : cachedReply
+    await setChatHistory(env, session.id, [...chatHistory, { role: 'user', text: prompt }, { role: 'assistant', text: reply }])
     return respond({ reply, cached: true }, 200)
   }
 
@@ -469,10 +519,11 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
     ? `${prompt}\n\nFormatting: Respond with exactly ${bulletCount} bullet points. Use "-" and no extra text.`
     : prompt
 
-  let result = await callGemini(primaryModel, env.GEMINI_API_KEY, formattedPrompt)
+  const historyForModel = toGeminiHistory(chatHistory)
+  let result = await callGemini(primaryModel, env.GEMINI_API_KEY, formattedPrompt, historyForModel)
 
   if (!result.ok && fallbackModel && fallbackModel !== primaryModel) {
-    result = await callGemini(fallbackModel, env.GEMINI_API_KEY, formattedPrompt)
+    result = await callGemini(fallbackModel, env.GEMINI_API_KEY, formattedPrompt, historyForModel)
   }
 
   if (!result.ok) {
@@ -481,5 +532,6 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
 
   const reply = bulletCount ? applyBulletFormatting(result.reply, bulletCount) : result.reply
   await setCachedReply(env, promptKey, reply)
+  await setChatHistory(env, session.id, [...chatHistory, { role: 'user', text: prompt }, { role: 'assistant', text: reply }])
   return respond({ reply }, 200)
 }
