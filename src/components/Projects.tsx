@@ -738,10 +738,15 @@ export default function Projects() {
                 >
                   ←
                 </button>
-                <img
+                <motion.img
+                  key={projectScreenshots[selectedScreenshotIndex] || selectedScreenshot}
                   src={projectScreenshots[selectedScreenshotIndex] || selectedScreenshot}
                   alt="Project screenshot"
                   className="max-h-[85vh] w-auto max-w-[92vw] rounded-2xl object-contain"
+                  initial={{ opacity: 0, x: 24, scale: 0.98 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -24, scale: 0.98 }}
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 />
                 <button
                   type="button"
@@ -751,6 +756,20 @@ export default function Projects() {
                 >
                   →
                 </button>
+              </div>
+
+              <div className="screenshot-indicators">
+                <span className="screenshot-counter">
+                  {selectedScreenshotIndex + 1} / {projectScreenshots.length}
+                </span>
+                <div className="screenshot-dots">
+                  {projectScreenshots.map((_, index) => (
+                    <span
+                      key={`dot-${index}`}
+                      className={`screenshot-dot ${index === selectedScreenshotIndex ? 'active' : ''}`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </div>,
