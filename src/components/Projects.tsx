@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 interface Project {
@@ -370,6 +370,13 @@ export default function Projects() {
     }, {})
   )
 
+  const projectScreenshots = useMemo(() => {
+    if (!selectedProject?.screenshotsFolder) {
+      return []
+    }
+    return screenshotsByFolder.current[selectedProject.screenshotsFolder] ?? []
+  }, [selectedProject?.screenshotsFolder])
+
   useEffect(() => {
     if (!selectedProject) {
       return
@@ -393,10 +400,14 @@ export default function Projects() {
         setSelectedScreenshot(null)
       }
       if (event.key === 'ArrowRight') {
-        setSelectedScreenshotIndex((prev) => (prev + 1) % projectScreenshots.length)
+        if (projectScreenshots.length > 0) {
+          setSelectedScreenshotIndex((prev) => (prev + 1) % projectScreenshots.length)
+        }
       }
       if (event.key === 'ArrowLeft') {
-        setSelectedScreenshotIndex((prev) => (prev - 1 + projectScreenshots.length) % projectScreenshots.length)
+        if (projectScreenshots.length > 0) {
+          setSelectedScreenshotIndex((prev) => (prev - 1 + projectScreenshots.length) % projectScreenshots.length)
+        }
       }
     }
     window.addEventListener('keydown', handler)
@@ -404,10 +415,16 @@ export default function Projects() {
   }, [selectedScreenshot, projectScreenshots.length])
 
   const showNextScreenshot = () => {
+    if (projectScreenshots.length === 0) {
+      return
+    }
     setSelectedScreenshotIndex((prev) => (prev + 1) % projectScreenshots.length)
   }
 
   const showPrevScreenshot = () => {
+    if (projectScreenshots.length === 0) {
+      return
+    }
     setSelectedScreenshotIndex((prev) => (prev - 1 + projectScreenshots.length) % projectScreenshots.length)
   }
 
@@ -434,10 +451,6 @@ export default function Projects() {
       showPrevScreenshot()
     }
   }
-
-  const projectScreenshots = selectedProject?.screenshotsFolder
-    ? (screenshotsByFolder.current[selectedProject.screenshotsFolder] ?? [])
-    : []
 
   useEffect(() => {
     if (!selectedScreenshot) {
