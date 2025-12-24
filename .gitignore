@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.DS_Store
+.env
+.env.*
+.wrangler/
+.vscode/
+.idea/
+*.log
+
+# Local/private assets
+Images/
+public/avatars/
+public/oneko.gif
+public/fonts/
