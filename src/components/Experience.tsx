@@ -524,7 +524,7 @@ export default function Experience() {
                   viewport={{ amount: 0.6, once: false, margin: '0px 0px -15% 0px' }}
                   transition={{ duration: 0.55, delay: 0.12 + index * 0.18, ease: [0.22, 1, 0.36, 1] }}
                   className={`glass px-7 py-3 rounded-full border border-white/25 shadow-[0_0_25px_rgba(56,189,248,0.18)] ${
-                    item.highlight ? 'bg-gradient-to-r from-sky-blue/45 to-teal/45' : 'bg-space-black/50'
+                    item.highlight ? 'bg-gradient-to-r from-sky-blue/30 to-teal/30' : 'bg-space-black/50'
                   }`}
                 >
                   <span className="text-pure-white text-sm">{item.year}</span>

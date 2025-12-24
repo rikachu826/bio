@@ -104,7 +104,7 @@ export default function CommandCenter() {
     if (!isInView || slideCount <= 1) {
       return
     }
-    const timer = window.setInterval(goNext, 6500)
+    const timer = window.setInterval(goNext, 8500)
     return () => window.clearInterval(timer)
   }, [goNext, isInView, slideCount])
 
