@@ -369,6 +369,24 @@ function applyBulletFormatting(text: string, count: number) {
   return formatted.join('\n')
 }
 
+function finalizeReply(text: string) {
+  const trimmed = text.trim()
+  if (!trimmed) {
+    return trimmed
+  }
+  if (/[.!?]$/.test(trimmed)) {
+    return trimmed
+  }
+  if (/[,:;]$/.test(trimmed)) {
+    return trimmed.replace(/[,:;]+$/, '.')
+  }
+  const lastPunct = Math.max(trimmed.lastIndexOf('.'), trimmed.lastIndexOf('!'), trimmed.lastIndexOf('?'))
+  if (lastPunct !== -1) {
+    return trimmed.slice(0, lastPunct + 1)
+  }
+  return `${trimmed}.`
+}
+
 async function getCachedReply(env: Env, key: string) {
   const cacheKey = `cache:${key}`
   const now = Date.now()
@@ -523,7 +541,7 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
   const promptKey = hashPrompt(cacheKey)
   const cachedReply = await getCachedReply(env, promptKey)
   if (cachedReply) {
-    const reply = bulletCount ? applyBulletFormatting(cachedReply, bulletCount) : cachedReply
+    const reply = bulletCount ? applyBulletFormatting(cachedReply, bulletCount) : finalizeReply(cachedReply)
     await setChatHistory(env, session.id, [...chatHistory, { role: 'user', text: prompt }, { role: 'assistant', text: reply }])
     return respond({ reply, cached: true }, 200)
   }
@@ -546,7 +564,7 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
     return respond({ error: 'AI provider error' }, 502)
   }
 
-  const reply = bulletCount ? applyBulletFormatting(result.reply, bulletCount) : result.reply
+  const reply = bulletCount ? applyBulletFormatting(result.reply, bulletCount) : finalizeReply(result.reply)
   await setCachedReply(env, promptKey, reply)
   await setChatHistory(env, session.id, [...chatHistory, { role: 'user', text: prompt }, { role: 'assistant', text: reply }])
   return respond({ reply }, 200)
