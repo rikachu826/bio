@@ -790,16 +790,25 @@ export default function Projects() {
                 >
                   ←
                 </button>
-                <motion.img
-                  key={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
-                  src={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
-                  alt="Project screenshot"
-                  className="max-h-[85vh] w-auto max-w-[92vw] rounded-2xl object-contain"
-                  initial={{ opacity: 0, x: 24, scale: 0.98 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: -24, scale: 0.98 }}
-                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                />
+                <div
+                  className="screenshot-figure"
+                  data-caption={
+                    projectScreenshots[selectedScreenshotIndex]?.caption?.trim() ||
+                    projectScreenshots[selectedScreenshotIndex]?.name ||
+                    ''
+                  }
+                >
+                  <motion.img
+                    key={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
+                    src={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
+                    alt="Project screenshot"
+                    className="max-h-[85vh] w-auto max-w-[92vw] rounded-2xl object-contain"
+                    initial={{ opacity: 0, x: 24, scale: 0.98 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: -24, scale: 0.98 }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                </div>
                 <button
                   type="button"
                   className="screenshot-arrow"

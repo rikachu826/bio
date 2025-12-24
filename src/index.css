@@ -289,6 +289,35 @@
     box-shadow: 0 30px 80px rgba(2, 6, 23, 0.7);
   }
 
+  .screenshot-figure {
+    position: relative;
+  }
+
+  .screenshot-figure::after {
+    content: attr(data-caption);
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    color: rgba(226, 232, 240, 0.95);
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    box-shadow: 0 12px 24px rgba(2, 6, 23, 0.45);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    text-align: left;
+  }
+
+  .screenshot-figure:hover::after {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .screenshot-nav {
     display: flex;
     align-items: center;
