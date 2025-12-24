@@ -728,7 +728,9 @@ export default function Projects() {
                     {projectScreenshots.map((shot, index) => (
                       <div
                         key={`${shot.src}-${index}`}
-                        className="rounded-2xl border border-white/10 bg-charcoal/40 p-3 cursor-zoom-in"
+                        className="project-screenshot-card rounded-2xl border border-white/10 bg-charcoal/40 p-3 cursor-zoom-in"
+                        data-caption={shot.caption?.trim() ? shot.caption : shot.name}
+                        aria-label={shot.caption?.trim() ? shot.caption : shot.name}
                         onClick={() => {
                           setSelectedScreenshot(shot.src)
                           setSelectedScreenshotIndex(index)
