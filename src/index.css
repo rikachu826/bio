@@ -252,6 +252,39 @@
     background: linear-gradient(180deg, rgba(125, 211, 252, 0.95), rgba(45, 212, 191, 0.9));
   }
 
+  .screenshot-lightbox {
+    padding: 16px;
+    border-radius: 24px;
+    background: linear-gradient(150deg, rgba(15, 23, 42, 0.92), rgba(30, 64, 175, 0.18), rgba(15, 118, 110, 0.2));
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    box-shadow: 0 30px 80px rgba(2, 6, 23, 0.7);
+  }
+
+  .screenshot-nav {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .screenshot-arrow {
+    height: 48px;
+    width: 48px;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: rgba(15, 23, 42, 0.75);
+    color: #e2e8f0;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .screenshot-arrow:hover {
+    transform: translateY(-2px);
+    border-color: rgba(56, 189, 248, 0.7);
+  }
+
   .turnstile-wrapper {
     display: flex;
     align-items: center;

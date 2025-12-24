@@ -12,6 +12,7 @@ interface Project {
   category: string
   highlights: string[]
   details?: ProjectDetailSection[]
+  screenshotsFolder?: string
 }
 
 interface ProjectDetailSection {
@@ -86,7 +87,8 @@ const projects: Project[] = [
           'Dedicated sandbox environments for safe UI and animation experiments.'
         ]
       }
-    ]
+    ],
+    screenshotsFolder: 'luminOS'
   },
   {
     title: 'Diffract',
@@ -135,7 +137,8 @@ const projects: Project[] = [
           'Hosting headers set no-cache for index.html to prevent stale deploys.'
         ]
       }
-    ]
+    ],
+    screenshotsFolder: 'diffract'
   },
   {
     title: 'Refract',
@@ -184,7 +187,8 @@ const projects: Project[] = [
           'Upload guardrails and dependency hardening (pypdf) reduce crafted-PDF risk.'
         ]
       }
-    ]
+    ],
+    screenshotsFolder: 'refract'
   },
   {
     title: 'Prism',
@@ -234,7 +238,8 @@ const projects: Project[] = [
           'Fallback handling for zero results and platform-specific 422 errors.'
         ]
       }
-    ]
+    ],
+    screenshotsFolder: 'prism'
   },
   {
     title: 'Spectrum',
@@ -283,7 +288,8 @@ const projects: Project[] = [
           'Template workflow: edit template.html, regenerate dashboard via generator.py.'
         ]
       }
-    ]
+    ],
+    screenshotsFolder: 'spectrum'
   },
   {
     title: 'NetRunner',
@@ -331,7 +337,8 @@ const projects: Project[] = [
           'openExternal IPC blocks non-http(s) links; no client secret shipped in app.'
         ]
       }
-    ]
+    ],
+    screenshotsFolder: 'netrunner'
   }
 ]
 
@@ -339,6 +346,29 @@ export default function Projects() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: false, margin: "0px 0px 0px 0px", amount: 0.1 })
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null)
+  const [selectedScreenshotIndex, setSelectedScreenshotIndex] = useState(0)
+  const touchStartX = useRef<number | null>(null)
+  const touchEndX = useRef<number | null>(null)
+  const screenshotsByFolder = useRef(
+    Object.entries(
+      import.meta.glob('/Images/projects/**/*.{png,jpg,jpeg,webp}', {
+        eager: true,
+        import: 'default',
+      })
+    ).reduce<Record<string, string[]>>((acc, [path, src]) => {
+      const match = path.match(/\/Images\/projects\/([^/]+)\//)
+      if (!match) {
+        return acc
+      }
+      const folder = match[1]
+      if (!acc[folder]) {
+        acc[folder] = []
+      }
+      acc[folder].push(src as string)
+      return acc
+    }, {})
+  )
 
   useEffect(() => {
     if (!selectedProject) {
@@ -353,6 +383,71 @@ export default function Projects() {
       document.documentElement.style.overflow = originalHtmlOverflow
     }
   }, [selectedProject])
+
+  useEffect(() => {
+    if (!selectedScreenshot) {
+      return
+    }
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedScreenshot(null)
+      }
+      if (event.key === 'ArrowRight') {
+        setSelectedScreenshotIndex((prev) => (prev + 1) % projectScreenshots.length)
+      }
+      if (event.key === 'ArrowLeft') {
+        setSelectedScreenshotIndex((prev) => (prev - 1 + projectScreenshots.length) % projectScreenshots.length)
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [selectedScreenshot, projectScreenshots.length])
+
+  const showNextScreenshot = () => {
+    setSelectedScreenshotIndex((prev) => (prev + 1) % projectScreenshots.length)
+  }
+
+  const showPrevScreenshot = () => {
+    setSelectedScreenshotIndex((prev) => (prev - 1 + projectScreenshots.length) % projectScreenshots.length)
+  }
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchEndX.current = null
+    touchStartX.current = event.targetTouches[0]?.clientX ?? null
+  }
+
+  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchEndX.current = event.targetTouches[0]?.clientX ?? null
+  }
+
+  const handleTouchEnd = () => {
+    if (touchStartX.current === null || touchEndX.current === null) {
+      return
+    }
+    const delta = touchStartX.current - touchEndX.current
+    if (Math.abs(delta) < 50) {
+      return
+    }
+    if (delta > 0) {
+      showNextScreenshot()
+    } else {
+      showPrevScreenshot()
+    }
+  }
+
+  const projectScreenshots = selectedProject?.screenshotsFolder
+    ? (screenshotsByFolder.current[selectedProject.screenshotsFolder] ?? [])
+    : []
+
+  useEffect(() => {
+    if (!selectedScreenshot) {
+      return
+    }
+    const nextSrc = projectScreenshots[selectedScreenshotIndex]
+    if (nextSrc) {
+      setSelectedScreenshot(nextSrc)
+    }
+  }, [selectedScreenshotIndex, projectScreenshots, selectedScreenshot])
 
   return (
     <>
@@ -582,15 +677,83 @@ export default function Projects() {
                 </div>
               </div>
 
-              {/* Placeholder for screenshots */}
-              <div className="border-2 border-dashed border-soft-gray/30 rounded-xl p-12 text-center">
-                <div className="text-6xl mb-4 opacity-50">📸</div>
-                <p className="text-soft-gray">
-                  Screenshots coming soon
-                </p>
-              </div>
+              {projectScreenshots.length > 0 ? (
+                <div className="space-y-4">
+                  <h4 className="text-xl font-semibold mb-4">Screenshots</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {projectScreenshots.map((src, index) => (
+                      <div
+                        key={`${src}-${index}`}
+                        className="rounded-2xl border border-white/10 bg-charcoal/40 p-3 cursor-zoom-in"
+                        onClick={() => {
+                          setSelectedScreenshot(src)
+                          setSelectedScreenshotIndex(index)
+                        }}
+                      >
+                        <img
+                          src={src}
+                          alt={`${selectedProject.title} screenshot ${index + 1}`}
+                          className="w-full rounded-xl object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="border-2 border-dashed border-soft-gray/30 rounded-xl p-12 text-center">
+                  <div className="text-6xl mb-4 opacity-50">📸</div>
+                  <p className="text-soft-gray">
+                    Screenshots coming soon
+                  </p>
+                </div>
+              )}
             </motion.div>
           </motion.div>,
+          document.body
+        )}
+
+      {selectedScreenshot &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[120] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+            onClick={() => setSelectedScreenshot(null)}
+          >
+            <div
+              className="screenshot-lightbox"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div
+                className="screenshot-nav"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
+                <button
+                  type="button"
+                  className="screenshot-arrow"
+                  aria-label="Previous screenshot"
+                  onClick={showPrevScreenshot}
+                >
+                  ←
+                </button>
+                <img
+                  src={projectScreenshots[selectedScreenshotIndex] || selectedScreenshot}
+                  alt="Project screenshot"
+                  className="max-h-[85vh] w-auto max-w-[92vw] rounded-2xl object-contain"
+                />
+                <button
+                  type="button"
+                  className="screenshot-arrow"
+                  aria-label="Next screenshot"
+                  onClick={showNextScreenshot}
+                >
+                  →
+                </button>
+              </div>
+            </div>
+          </div>,
           document.body
         )}
     </>
