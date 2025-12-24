@@ -122,11 +122,11 @@
   }
 
   .ai-scroll {
-    max-height: clamp(240px, 40vh, 420px);
+    max-height: clamp(280px, 50vh, 520px);
   }
 
   .ai-scroll-expanded {
-    max-height: clamp(320px, 55vh, 560px);
+    max-height: clamp(360px, 65vh, 640px);
   }
 
   .ai-panel::before {
@@ -163,6 +163,7 @@
     font-size: 0.85rem;
     line-height: 1.4;
     white-space: pre-wrap;
+    word-break: break-word;
   }
 
   .ai-bubble-user {
@@ -222,6 +223,33 @@
 
   .ai-submit:disabled {
     opacity: 0.6;
+  }
+
+  .project-modal {
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 64, 175, 0.15), rgba(15, 118, 110, 0.18));
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    box-shadow: 0 24px 60px rgba(2, 6, 23, 0.65);
+    scrollbar-color: rgba(56, 189, 248, 0.7) rgba(15, 23, 42, 0.6);
+    scrollbar-width: thin;
+  }
+
+  .project-modal::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .project-modal::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 999px;
+  }
+
+  .project-modal::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(56, 189, 248, 0.85), rgba(45, 212, 191, 0.75));
+    border-radius: 999px;
+    border: 2px solid rgba(15, 23, 42, 0.6);
+  }
+
+  .project-modal::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(125, 211, 252, 0.95), rgba(45, 212, 191, 0.9));
   }
 
   .turnstile-wrapper {

@@ -504,7 +504,7 @@ export default function Projects() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="glass bg-charcoal/90 max-w-4xl w-full max-h-[90vh] overflow-y-auto overscroll-contain rounded-3xl p-8"
+              className="glass project-modal max-w-4xl w-full max-h-[90vh] overflow-y-auto overscroll-contain rounded-3xl p-8"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
