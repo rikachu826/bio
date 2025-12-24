@@ -330,7 +330,10 @@ export async function generateResumePdf() {
   sections.forEach(placeCard)
 
   const pdfBytes = await doc.save()
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+  const arrayBuffer = pdfBytes.buffer instanceof ArrayBuffer
+    ? pdfBytes.buffer.slice(pdfBytes.byteOffset, pdfBytes.byteOffset + pdfBytes.byteLength)
+    : Uint8Array.from(pdfBytes).buffer
+  const blob = new Blob([arrayBuffer], { type: 'application/pdf' })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
