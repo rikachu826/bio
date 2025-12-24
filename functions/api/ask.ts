@@ -38,8 +38,8 @@ const GLOBAL_RATE_LIMIT_MAX = 15
 const GLOBAL_RATE_LIMIT_WINDOW_MS = RATE_LIMIT_WINDOW_MS
 const SESSION_COOKIE_NAME = 'tifa_session'
 const SESSION_COOKIE_TTL_SECONDS = 60 * 60 * 24 * 30
-const CACHE_TTL_SECONDS = 60 * 60 * 24 * 30
-const MAX_HISTORY_MESSAGES = 8
+const CACHE_TTL_SECONDS = 60 * 60 * 24 * 90
+const MAX_HISTORY_MESSAGES = 12
 const BULLET_FALLBACKS = [
   'Led a 72-hour migration from legacy infrastructure to a cloud-native, remote-first stack.',
   'Built the LuminOS AI application ecosystem across security, finance, media intelligence, and legal workflows.',
