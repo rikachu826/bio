@@ -61,6 +61,7 @@ type Env = {
   GEMINI_MODEL?: string
   GEMINI_MODEL_PRIMARY?: string
   GEMINI_MODEL_FALLBACK?: string
+  RATE_LIMIT_ALLOW_IPS?: string
   RATE_LIMIT_KV?: {
     get: (key: string, type: 'json') => Promise<RateLimitState | null>
     put: (key: string, value: string, options?: { expirationTtl?: number }) => Promise<void>
@@ -139,6 +140,18 @@ function getSessionId(request: Request) {
     ? crypto.randomUUID()
     : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
   return { id: generated, isNew: true }
+}
+
+function parseAllowlist(value?: string) {
+  if (!value) {
+    return new Set<string>()
+  }
+  return new Set(
+    value
+      .split(/[\s,]+/)
+      .map((ip) => ip.trim())
+      .filter(Boolean)
+  )
 }
 
 function buildSessionCookie(sessionId: string) {
@@ -471,19 +484,22 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
   }
 
   const clientId = getClientId(request)
-  const globalLimit = await checkRateLimit(env, 'global', GLOBAL_RATE_LIMIT_MAX, GLOBAL_RATE_LIMIT_WINDOW_MS)
-  if (!globalLimit.allowed) {
-    return respond({ error: 'Rate limit exceeded', retryAfter: globalLimit.retryAfter }, 429)
-  }
+  const allowlisted = parseAllowlist(env.RATE_LIMIT_ALLOW_IPS).has(clientId)
+  if (!allowlisted) {
+    const globalLimit = await checkRateLimit(env, 'global', GLOBAL_RATE_LIMIT_MAX, GLOBAL_RATE_LIMIT_WINDOW_MS)
+    if (!globalLimit.allowed) {
+      return respond({ error: 'Rate limit exceeded', retryAfter: globalLimit.retryAfter }, 429)
+    }
 
-  const sessionLimit = await checkRateLimit(env, `session:${session.id}`, SESSION_RATE_LIMIT_MAX, SESSION_RATE_LIMIT_WINDOW_MS)
-  if (!sessionLimit.allowed) {
-    return respond({ error: 'Rate limit exceeded', retryAfter: sessionLimit.retryAfter }, 429)
-  }
+    const sessionLimit = await checkRateLimit(env, `session:${session.id}`, SESSION_RATE_LIMIT_MAX, SESSION_RATE_LIMIT_WINDOW_MS)
+    if (!sessionLimit.allowed) {
+      return respond({ error: 'Rate limit exceeded', retryAfter: sessionLimit.retryAfter }, 429)
+    }
 
-  const rateLimit = await checkRateLimit(env, `ip:${clientId}`, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS)
-  if (!rateLimit.allowed) {
-    return respond({ error: 'Rate limit exceeded', retryAfter: rateLimit.retryAfter }, 429)
+    const rateLimit = await checkRateLimit(env, `ip:${clientId}`, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS)
+    if (!rateLimit.allowed) {
+      return respond({ error: 'Rate limit exceeded', retryAfter: rateLimit.retryAfter }, 429)
+    }
   }
 
   if (env.TURNSTILE_SECRET) {
