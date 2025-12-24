@@ -31,7 +31,7 @@ npm run dev
 ## Build & deploy (Cloudflare Pages)
 ```bash
 npm run build
-npx wrangler pages deploy dist --project-name leochui-tech
+npx wrangler pages deploy dist --project-name "your project name"
 ```
 
 ## Env vars (Cloudflare Pages)
