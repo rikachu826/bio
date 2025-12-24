@@ -4,7 +4,7 @@ import { useRef } from 'react'
 
 export default function About() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, margin: "-10% 0px -10% 0px", amount: 0.2 })
+  const isInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px", amount: 0.15 })
 
   return (
     <div className="section-container" ref={ref}>

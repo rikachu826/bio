@@ -5,7 +5,7 @@ import { generateResumePdf } from '../utils/resumePdf'
 
 export default function Contact() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, margin: "-10% 0px -10% 0px", amount: 0.2 })
+  const isInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px", amount: 0.15 })
   const [isGenerating, setIsGenerating] = useState(false)
 
   const contactMethods: { icon: JSX.Element; label: string; value: string; link: string }[] = [
