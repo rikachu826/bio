@@ -310,7 +310,7 @@ export default function Experience() {
                 SecurityScorecard average <strong className="text-emerald-100">98/100</strong> over 5 years
               </div>
               <p className="text-xs text-soft-gray">
-                Current 91; CSP remediation in progress
+                Current score: 91; CSP remediation in progress
               </p>
             </div>
             <div className="mt-6 border-t border-white/10 pt-6">
