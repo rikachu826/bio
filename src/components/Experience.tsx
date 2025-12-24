@@ -4,7 +4,7 @@ import { useRef } from 'react'
 
 export default function Experience() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, margin: "0px 0px 0px 0px", amount: 0.1 })
+  const isInView = useInView(ref, { once: false, margin: "-10% 0px -10% 0px", amount: 0.2 })
 
   return (
     <div className="section-container py-20" ref={ref}>
@@ -12,7 +12,7 @@ export default function Experience() {
         <motion.h2
           className="text-section-title font-display mb-16 text-center"
           initial={{ opacity: 0, y: 18 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           The <span className="gradient-text">Transformation</span>
@@ -21,7 +21,7 @@ export default function Experience() {
         {/* Main Story */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="mb-16"
         >
@@ -51,7 +51,7 @@ export default function Experience() {
         {/* Legacy Environment Section */}
         <motion.div
           initial={{ opacity: 0, x: -24 }}
-          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0.6, x: -12 }}
+          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -12 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="mb-12"
         >
@@ -121,7 +121,7 @@ export default function Experience() {
           <div className="grid md:grid-cols-2 gap-6">
             <motion.div
               initial={{ opacity: 0, x: -18 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0.6, x: -10 }}
+              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
               transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
@@ -152,7 +152,7 @@ export default function Experience() {
 
             <motion.div
               initial={{ opacity: 0, x: 18 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0.6, x: 10 }}
+              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 10 }}
               transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
@@ -178,7 +178,7 @@ export default function Experience() {
           <div className="grid md:grid-cols-2 gap-6">
             <motion.div
               initial={{ opacity: 0, x: -18 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0.6, x: -10 }}
+              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
               transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
@@ -209,7 +209,7 @@ export default function Experience() {
 
             <motion.div
               initial={{ opacity: 0, x: 18 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0.6, x: 10 }}
+              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 10 }}
               transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
@@ -238,7 +238,7 @@ export default function Experience() {
           {/* Security - Full Width */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 12 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
             transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="glass p-8 rounded-2xl"
           >
@@ -372,7 +372,7 @@ export default function Experience() {
           {/* LuminOS Ecosystem - Full Width */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 12 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
             transition={{ duration: 0.6, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="glass p-6 rounded-2xl"
           >
@@ -444,7 +444,7 @@ export default function Experience() {
         {/* Team & Resources */}
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0.7, scale: 0.98 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
           transition={{ duration: 0.6, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="mb-12 text-center"
         >
@@ -462,7 +462,7 @@ export default function Experience() {
         {/* Outcome Section */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
           transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="glass p-8 md:p-12 rounded-3xl bg-gradient-to-br from-green-500/20 to-sky-blue/20"
         >
@@ -505,7 +505,7 @@ export default function Experience() {
         {/* Timeline */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
           transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
           className="mt-12 text-center"
         >
@@ -519,8 +519,8 @@ export default function Experience() {
             ].map((item, index) => (
               <div key={item.year} className="flex items-center gap-4">
                 <motion.div
-                  initial={{ opacity: 0, y: 16, scale: 0.94 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ amount: 0.6, once: false, margin: '0px 0px -15% 0px' }}
                   transition={{ duration: 0.55, delay: 0.12 + index * 0.18, ease: [0.22, 1, 0.36, 1] }}
                   className={`glass px-7 py-3 rounded-full border border-white/25 shadow-[0_0_25px_rgba(56,189,248,0.18)] ${
@@ -533,8 +533,8 @@ export default function Experience() {
 
                 {index < 3 && (
                   <motion.span
-                    initial={{ opacity: 0, x: -10, scale: 0.9 }}
-                    whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ amount: 0.6, once: false, margin: '0px 0px -15% 0px' }}
                     transition={{ duration: 0.4, delay: 0.2 + index * 0.18, ease: [0.22, 1, 0.36, 1] }}
                     className={`${item.accent} text-2xl`}

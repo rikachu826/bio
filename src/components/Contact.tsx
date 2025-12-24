@@ -5,7 +5,7 @@ import { generateResumePdf } from '../utils/resumePdf'
 
 export default function Contact() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, margin: "0px 0px 0px 0px", amount: 0.1 })
+  const isInView = useInView(ref, { once: false, margin: "-10% 0px -10% 0px", amount: 0.2 })
   const [isGenerating, setIsGenerating] = useState(false)
 
   const contactMethods: { icon: JSX.Element; label: string; value: string; link: string }[] = [
@@ -31,7 +31,7 @@ export default function Contact() {
       <div className="content-wrapper max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="text-center"
         >
@@ -52,7 +52,7 @@ export default function Contact() {
               target="_blank"
               rel="noopener noreferrer"
               initial={{ opacity: 0, y: 12 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 8 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
               transition={{ duration: 0.5, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
               className="glass p-6 rounded-2xl border border-white/30 bg-gradient-to-br from-space-black/70 via-slate-900/60 to-charcoal/70
                          hover:scale-105 hover:bg-white/15 hover:border-sky-blue/40 transition-all duration-300 group"
@@ -76,7 +76,7 @@ export default function Contact() {
 
         <motion.div
           initial={{ opacity: 0, y: 12 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 8 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
           transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="text-center"
         >
@@ -101,7 +101,7 @@ export default function Contact() {
         {/* Footer */}
         <motion.footer
           initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : { opacity: 0.6 }}
+          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="mt-16 pt-8 border-t border-white/10"
         >

@@ -4,14 +4,14 @@ import { useRef } from 'react'
 
 export default function About() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, margin: "0px 0px 0px 0px", amount: 0.1 })
+  const isInView = useInView(ref, { once: false, margin: "-10% 0px -10% 0px", amount: 0.2 })
 
   return (
     <div className="section-container" ref={ref}>
       <div className="content-wrapper">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           <h2 className="text-section-title font-display mb-8">
@@ -21,7 +21,7 @@ export default function About() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -24 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0.6, x: -12 }}
+              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -24 }}
               transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
               <p className="text-lg text-light-gray mb-6 leading-relaxed">
@@ -67,7 +67,7 @@ export default function About() {
 
             <motion.div
               initial={{ opacity: 0, x: 24 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0.6, x: 12 }}
+              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 24 }}
               transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               className="glass p-8 rounded-3xl"
             >

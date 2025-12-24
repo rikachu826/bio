@@ -1,5 +1,5 @@
 import { Suspense, lazy, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Hero from './components/Hero'
 import About from './components/About'
 import CommandCenter from './components/CommandCenter'
@@ -21,14 +21,8 @@ function App() {
     return localStorage.getItem('introSeen') === 'true'
   })
 
-  // Track scroll progress for background transitions
-  const { scrollYProgress } = useScroll()
-
-  // Fade out galaxy background as user scrolls (0 = visible, 1 = invisible)
-  const galaxyOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0])
-
-  // Transition overlay from transparent to light glass (dark → light)
-  const overlayOpacity = useTransform(scrollYProgress, [0.2, 0.5], [0, 0.85])
+  const galaxyOpacity = 1
+  const overlayOpacity = 0.75
 
   return (
     <div className="relative">

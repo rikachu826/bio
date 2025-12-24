@@ -44,7 +44,7 @@ const skillCategories: SkillCategory[] = [
 
 export default function Skills() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, margin: "0px 0px 0px 0px", amount: 0.1 })
+  const isInView = useInView(ref, { once: false, margin: "-10% 0px -10% 0px", amount: 0.2 })
 
   return (
     <div className="section-container py-20" ref={ref}>
@@ -52,7 +52,7 @@ export default function Skills() {
         <motion.h2
           className="text-section-title font-display mb-16 text-center"
           initial={{ opacity: 0, y: 18 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           Skills & <span className="gradient-text">Expertise</span>
@@ -62,8 +62,8 @@ export default function Skills() {
           {skillCategories.map((category, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0.7, scale: 0.98 }}
+              initial={{ opacity: 0, y: 18 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
               transition={{ duration: 0.6, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
               className="glass p-6 rounded-2xl bg-space-black/70 border border-white/20 hover:border-sky-blue/40 hover:shadow-[0_0_24px_rgba(56,189,248,0.25)] transition-all duration-300 group"
             >
@@ -74,8 +74,8 @@ export default function Skills() {
                 {category.skills.map((skill, i) => (
                   <motion.span
                     key={i}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0.6, scale: 0.9 }}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
                     transition={{ duration: 0.4, delay: index * 0.06 + i * 0.04, ease: [0.22, 1, 0.36, 1] }}
                     className="px-3 py-1 bg-charcoal/70 rounded-full text-sm text-light-gray border border-white/10 hover:border-sky-blue/50 hover:text-pure-white transition-all cursor-default"
                   >
