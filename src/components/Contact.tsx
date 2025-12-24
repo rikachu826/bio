@@ -106,34 +106,40 @@ export default function Contact() {
           className="mt-16 pt-8 border-t border-white/10"
         >
           <div className="flex flex-col items-center gap-4">
-            <div className="flex items-center gap-4">
-              <a
-                href="#top"
-                aria-label="Back to top"
-                className="glass h-11 w-11 rounded-full flex items-center justify-center text-lg text-pure-white
-                         border border-sky-blue/30 shadow-[0_0_16px_rgba(79,172,254,0.25)]
-                         animate-pulse-soft hover:scale-105 transition-transform duration-300 ease-apple"
-              >
-                ↑
-              </a>
-              <a
-                href="https://github.com/rikachu826/bio"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub repository"
-                className="glass h-11 w-11 rounded-full flex items-center justify-center text-pure-white
-                         border border-sky-blue/30 shadow-[0_0_16px_rgba(79,172,254,0.25)]
-                         hover:scale-105 transition-transform duration-300 ease-apple"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                  className="h-5 w-5"
-                  fill="currentColor"
+            <div className="flex items-center gap-8">
+              <div className="flex flex-col items-center gap-2">
+                <a
+                  href="#top"
+                  aria-label="Back to top"
+                  className="glass h-11 w-11 rounded-full flex items-center justify-center text-lg text-pure-white
+                           border border-sky-blue/30 shadow-[0_0_16px_rgba(79,172,254,0.25)]
+                           animate-pulse-soft hover:scale-105 transition-transform duration-300 ease-apple"
                 >
-                  <path d="M12 2C6.477 2 2 6.484 2 12.02c0 4.424 2.865 8.19 6.839 9.517.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.467-1.11-1.467-.908-.62.069-.608.069-.608 1.004.07 1.532 1.03 1.532 1.03.892 1.53 2.341 1.088 2.91.832.09-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.03-2.688-.104-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.6 9.6 0 0 1 2.504.337c1.909-1.296 2.748-1.026 2.748-1.026.546 1.378.204 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.338 4.695-4.566 4.944.36.309.68.92.68 1.855 0 1.338-.012 2.419-.012 2.749 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.02C22 6.484 17.523 2 12 2Z" />
-                </svg>
-              </a>
+                  ↑
+                </a>
+                <span className="text-[0.7rem] text-soft-gray">Top</span>
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <a
+                  href="https://github.com/rikachu826/bio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub repository"
+                  className="glass h-11 w-11 rounded-full flex items-center justify-center text-pure-white
+                           border border-sky-blue/30 shadow-[0_0_16px_rgba(79,172,254,0.25)]
+                           hover:scale-105 transition-transform duration-300 ease-apple"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    className="h-5 w-5"
+                    fill="currentColor"
+                  >
+                    <path d="M12 2C6.477 2 2 6.484 2 12.02c0 4.424 2.865 8.19 6.839 9.517.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.467-1.11-1.467-.908-.62.069-.608.069-.608 1.004.07 1.532 1.03 1.532 1.03.892 1.53 2.341 1.088 2.91.832.09-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.03-2.688-.104-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.6 9.6 0 0 1 2.504.337c1.909-1.296 2.748-1.026 2.748-1.026.546 1.378.204 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.338 4.695-4.566 4.944.36.309.68.92.68 1.855 0 1.338-.012 2.419-.012 2.749 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.02C22 6.484 17.523 2 12 2Z" />
+                  </svg>
+                </a>
+                <span className="text-[0.7rem] text-soft-gray">GitHub</span>
+              </div>
             </div>
             <p className="text-soft-gray text-sm">
               © 2025 Leo Chui
