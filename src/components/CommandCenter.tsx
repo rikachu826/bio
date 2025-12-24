@@ -14,12 +14,35 @@ const imageModules = import.meta.glob('/Images/**/*.{jpg,jpeg,png,webp}', {
   import: 'default',
 }) as Record<string, string>
 
-const captionMap: Record<string, { title: string; description: string }> = {
-  'rank1.jpg': {
-    title: 'World #1 DPS (Warcraft Logs)',
-    description: 'Top-tier execution, strategy, and performance under pressure.',
-  },
+type CommandCaption = {
+  title?: string
+  description?: string
 }
+
+const commandCaptionsModule = import.meta.glob('/Images/command-center/captions.json', {
+  eager: true,
+  import: 'default',
+})
+
+const commandCaptionsRaw = (Object.values(commandCaptionsModule)[0] ?? {}) as Record<
+  string,
+  CommandCaption | string
+>
+
+const commandCaptions: Record<string, CommandCaption> = Object.entries(commandCaptionsRaw).reduce(
+  (acc, [key, value]) => {
+    const normalized =
+      typeof value === 'string'
+        ? { description: value }
+        : {
+            title: value?.title,
+            description: value?.description,
+          }
+    acc[key.toLowerCase()] = normalized
+    return acc
+  },
+  {} as Record<string, CommandCaption>
+)
 
 const commandKeywords = ['command', 'desk', 'workstation', 'rig', 'setup', 'command-center']
 
@@ -37,15 +60,16 @@ export default function CommandCenter() {
         if (!isRank && !isCommand) {
           return null
         }
-        const caption = captionMap[lower] || {
-          title: 'Command Center',
-          description: 'Multi-system workspace built for parallel research and monitoring.',
-        }
+        const caption = commandCaptions[lower]
+        const fallbackTitle = 'Command Center'
+        const fallbackDescription = 'Multi-system workspace built for parallel research and monitoring.'
+        const title = caption?.title?.trim() || fallbackTitle
+        const description = caption?.description?.trim() || fallbackDescription
         return {
           src,
-          title: caption.title,
-          description: caption.description,
-          alt: caption.title,
+          title,
+          description,
+          alt: title,
           key: lower,
         }
       })

@@ -20,6 +20,12 @@ interface ProjectDetailSection {
   items: string[]
 }
 
+interface Screenshot {
+  src: string
+  name: string
+  caption?: string
+}
+
 const projects: Project[] = [
   {
     title: 'LuminOS',
@@ -356,16 +362,32 @@ export default function Projects() {
         eager: true,
         import: 'default',
       })
-    ).reduce<Record<string, string[]>>((acc, [path, src]) => {
-      const match = path.match(/\/Images\/projects\/([^/]+)\//)
+    ).reduce<Record<string, Screenshot[]>>((acc, [path, src]) => {
+      const match = path.match(/\/Images\/projects\/([^/]+)\/(.+)$/)
       if (!match) {
         return acc
       }
       const folder = match[1]
+      const name = match[2]
       if (!acc[folder]) {
         acc[folder] = []
       }
-      acc[folder].push(src as string)
+      acc[folder].push({ src: src as string, name })
+      return acc
+    }, {})
+  )
+  const captionsByFolder = useRef(
+    Object.entries(
+      import.meta.glob('/Images/projects/**/captions.json', {
+        eager: true,
+        import: 'default',
+      })
+    ).reduce<Record<string, Record<string, string>>>((acc, [path, data]) => {
+      const match = path.match(/\/Images\/projects\/([^/]+)\/captions\.json$/)
+      if (!match) {
+        return acc
+      }
+      acc[match[1]] = data as Record<string, string>
       return acc
     }, {})
   )
@@ -374,7 +396,16 @@ export default function Projects() {
     if (!selectedProject?.screenshotsFolder) {
       return []
     }
-    return screenshotsByFolder.current[selectedProject.screenshotsFolder] ?? []
+    const folder = selectedProject.screenshotsFolder
+    const screenshots = screenshotsByFolder.current[folder] ?? []
+    const captions = captionsByFolder.current[folder] ?? {}
+    return screenshots
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((shot) => ({
+        ...shot,
+        caption: captions[shot.name] ?? ''
+      }))
   }, [selectedProject?.screenshotsFolder])
 
   useEffect(() => {
@@ -694,21 +725,27 @@ export default function Projects() {
                 <div className="space-y-4">
                   <h4 className="text-xl font-semibold mb-4">Screenshots</h4>
                   <div className="grid md:grid-cols-2 gap-4">
-                    {projectScreenshots.map((src, index) => (
+                    {projectScreenshots.map((shot, index) => (
                       <div
-                        key={`${src}-${index}`}
+                        key={`${shot.src}-${index}`}
                         className="rounded-2xl border border-white/10 bg-charcoal/40 p-3 cursor-zoom-in"
                         onClick={() => {
-                          setSelectedScreenshot(src)
+                          setSelectedScreenshot(shot.src)
                           setSelectedScreenshotIndex(index)
                         }}
                       >
                         <img
-                          src={src}
+                          src={shot.src}
                           alt={`${selectedProject.title} screenshot ${index + 1}`}
+                          title={shot.caption?.trim() ? shot.caption : shot.name}
                           className="w-full rounded-xl object-cover"
                           loading="lazy"
                         />
+                        {shot.caption?.trim() ? (
+                          <p className="mt-2 text-sm text-soft-gray/90">
+                            {shot.caption}
+                          </p>
+                        ) : null}
                       </div>
                     ))}
                   </div>
@@ -752,8 +789,8 @@ export default function Projects() {
                   ←
                 </button>
                 <motion.img
-                  key={projectScreenshots[selectedScreenshotIndex] || selectedScreenshot}
-                  src={projectScreenshots[selectedScreenshotIndex] || selectedScreenshot}
+                  key={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
+                  src={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
                   alt="Project screenshot"
                   className="max-h-[85vh] w-auto max-w-[92vw] rounded-2xl object-contain"
                   initial={{ opacity: 0, x: 24, scale: 0.98 }}
@@ -775,6 +812,11 @@ export default function Projects() {
                 <span className="screenshot-counter">
                   {selectedScreenshotIndex + 1} / {projectScreenshots.length}
                 </span>
+                {projectScreenshots[selectedScreenshotIndex]?.caption?.trim() ? (
+                  <span className="screenshot-caption">
+                    {projectScreenshots[selectedScreenshotIndex]?.caption}
+                  </span>
+                ) : null}
                 <div className="screenshot-dots">
                   {projectScreenshots.map((_, index) => (
                     <span

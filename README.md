@@ -45,7 +45,17 @@ npx wrangler pages deploy dist --project-name "your project name"
 - `VITE_TURNSTILE_SITE_KEY`
 
 ## Notes
-- Large/private assets are intentionally ignored in git. Add your own in `Images/` and `public/avatars/`.
+- Screenshots live in `Images/projects/<project>/` and are auto‑loaded into modals.
+- Optional captions per project: add `Images/projects/<project>/captions.json` and map filenames to tooltip text.
+  Example:
+  ```json
+  {
+    "image.webp": "LuminOS dashboard overview",
+    "Screenshot 2025-12-24 at 10.53.47 AM.png": "Security posture summary"
+  }
+  ```
+- Command Center carousel captions: edit `Images/command-center/captions.json`.
+- After adding screenshots or captions, restart the dev server, then commit + push to deploy.
 - Replace the GitHub link in the footer if you fork.
 
 ---
