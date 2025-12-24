@@ -1,3 +1,5 @@
+import type { PDFFont } from 'pdf-lib'
+
 type CardSection = {
   title: string
   items: string[]
@@ -29,7 +31,7 @@ export async function generateResumePdf() {
   const fontRegular = await doc.embedFont(StandardFonts.Helvetica)
   const fontBold = await doc.embedFont(StandardFonts.HelveticaBold)
 
-  const wrapText = (text: string, size: number, font: any, maxWidth: number) => {
+  const wrapText = (text: string, size: number, font: PDFFont, maxWidth: number) => {
     const words = text.split(' ')
     const lines: string[] = []
     let line = ''

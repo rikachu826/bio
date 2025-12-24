@@ -231,7 +231,7 @@ function extractBulletLines(text: string) {
   let current = ''
 
   for (const line of lines) {
-    const match = line.match(/^(\d+[\.\)]\s+|[-•*]\s+)(.*)$/)
+    const match = line.match(/^(\d+[.)]\s+|[-•*]\s+)(.*)$/)
     if (match) {
       if (current) {
         items.push(current.trim())
@@ -267,7 +267,7 @@ function splitIntoSegments(text: string) {
 
 function expandSegments(segments: string[], target: number) {
   const separators = ['; ', ', ', ' and ']
-  let result = [...segments]
+  const result = [...segments]
 
   while (result.length < target) {
     const index = result.findIndex((segment) =>
