@@ -88,7 +88,7 @@ const projects: Project[] = [
         ]
       }
     ],
-    screenshotsFolder: 'luminOS'
+    screenshotsFolder: 'luminos'
   },
   {
     title: 'Diffract',

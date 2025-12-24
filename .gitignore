@@ -9,4 +9,4 @@ dist/
 *.log
 
 # Local/private assets
-Images/
+# (Images are now tracked for project screenshots and command center)
