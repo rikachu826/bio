@@ -488,8 +488,8 @@ export default function Projects() {
       return
     }
     const nextSrc = projectScreenshots[selectedScreenshotIndex]
-    if (nextSrc) {
-      setSelectedScreenshot(nextSrc)
+    if (nextSrc?.src) {
+      setSelectedScreenshot(nextSrc.src)
     }
   }, [selectedScreenshotIndex, projectScreenshots, selectedScreenshot])
 
