@@ -38,7 +38,7 @@
 
   /* Section container */
   .section-container {
-    @apply min-h-screen w-full flex items-center justify-center px-4 md:px-8 lg:px-16;
+    @apply w-full flex items-center justify-center px-4 md:px-8 lg:px-16 py-16 md:py-0 md:min-h-screen;
   }
 
   .contact-icon {

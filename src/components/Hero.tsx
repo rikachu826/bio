@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 
 export default function Hero() {
   return (
-    <div id="top" className="section-container">
+    <div id="top" className="section-container min-h-screen">
       <div className="content-wrapper text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
