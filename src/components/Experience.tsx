@@ -1,10 +1,22 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function Experience() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px", amount: 0.15 })
+  const [forceVisible, setForceVisible] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    if (window.innerWidth < 768) {
+      setForceVisible(true)
+    }
+  }, [])
+
+  const isVisible = isInView || forceVisible
 
   return (
     <div className="section-container py-20" ref={ref}>
@@ -12,7 +24,7 @@ export default function Experience() {
         <motion.h2
           className="text-section-title font-display mb-16 text-center"
           initial={{ opacity: 0, y: 18 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           The <span className="gradient-text">Transformation</span>
@@ -21,7 +33,7 @@ export default function Experience() {
         {/* Main Story */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="mb-16"
         >
@@ -51,7 +63,7 @@ export default function Experience() {
         {/* Legacy Environment Section */}
         <motion.div
           initial={{ opacity: 0, x: -24 }}
-          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -12 }}
+          animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -12 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="mb-12"
         >
@@ -121,7 +133,7 @@ export default function Experience() {
           <div className="grid md:grid-cols-2 gap-6">
             <motion.div
               initial={{ opacity: 0, x: -18 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+              animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
               transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
@@ -152,7 +164,7 @@ export default function Experience() {
 
             <motion.div
               initial={{ opacity: 0, x: 18 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 10 }}
+              animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: 10 }}
               transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
@@ -178,7 +190,7 @@ export default function Experience() {
           <div className="grid md:grid-cols-2 gap-6">
             <motion.div
               initial={{ opacity: 0, x: -18 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+              animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
               transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
@@ -209,7 +221,7 @@ export default function Experience() {
 
             <motion.div
               initial={{ opacity: 0, x: 18 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 10 }}
+              animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: 10 }}
               transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
@@ -238,7 +250,7 @@ export default function Experience() {
           {/* Security - Full Width */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
             transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="glass p-8 rounded-2xl"
           >
@@ -372,7 +384,7 @@ export default function Experience() {
           {/* LuminOS Ecosystem - Full Width */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
             transition={{ duration: 0.6, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="glass p-6 rounded-2xl"
           >
@@ -444,7 +456,7 @@ export default function Experience() {
         {/* Team & Resources */}
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
+          animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
           transition={{ duration: 0.6, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="mb-12 text-center"
         >
@@ -462,7 +474,7 @@ export default function Experience() {
         {/* Outcome Section */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
           transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="glass p-8 md:p-12 rounded-3xl bg-gradient-to-br from-green-500/20 to-sky-blue/20"
         >
@@ -505,7 +517,7 @@ export default function Experience() {
         {/* Timeline */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
           transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
           className="mt-12 text-center"
         >
