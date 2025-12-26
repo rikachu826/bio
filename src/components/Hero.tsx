@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion'
+import content from '../content/site.json'
 
 export default function Hero() {
+  const hero = content.hero
+
   return (
     <div id="top" className="section-container min-h-screen">
       <div className="content-wrapper text-center">
@@ -15,7 +18,7 @@ export default function Hero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            <span className="gradient-text">Leo Chui</span>
+            <span className="gradient-text">{hero.name}</span>
           </motion.h1>
 
           <motion.h2
@@ -24,7 +27,7 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
           >
-            Associate IT Director • <span className="text-pure-white">GLAAD</span>
+            {hero.role} • <span className="text-pure-white">{hero.org}</span>
           </motion.h2>
 
           <motion.p
@@ -33,26 +36,21 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.9 }}
           >
-            Cloud security leader and full-stack builder. Led a 72-hour migration from Windows Server 2008
-            to a cloud-native stack when COVID-19 hit. Featured by{' '}
-            <a
-              href="https://blog.google/outreach-initiatives/grow-with-google/-it-support-comptia/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sky-blue hover:text-baby-blue underline transition-colors"
-            >
-              Google
-            </a>
-            {' '}and{' '}
-            <a
-              href="https://www.comptia.org/en-us/blog/it-takes-two-comptia-and-google-put-high-growth-tech-jobs-within-reach/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sky-blue hover:text-baby-blue underline transition-colors"
-            >
-              CompTIA
-            </a>
-            {' '}for a career transition story.
+            {hero.summaryParts.map((part, index) =>
+              part.type === 'link' ? (
+                <a
+                  key={`${part.text}-${index}`}
+                  href={part.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sky-blue hover:text-baby-blue underline transition-colors"
+                >
+                  {part.text}
+                </a>
+              ) : (
+                <span key={`text-${index}`}>{part.value}</span>
+              )
+            )}
           </motion.p>
 
           <motion.div
@@ -62,18 +60,18 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 1.2 }}
           >
             <a
-              href="#projects"
+              href={hero.cta.primary.href}
               className="px-8 py-4 bg-gradient-blue rounded-full text-pure-white font-semibold
                        hover:scale-105 transition-transform duration-300 ease-apple"
             >
-              View Projects
+              {hero.cta.primary.label}
             </a>
             <a
-              href="#contact"
+              href={hero.cta.secondary.href}
               className="px-8 py-4 glass rounded-full text-pure-white font-semibold
                        hover:scale-105 transition-transform duration-300 ease-apple"
             >
-              Get in Touch
+              {hero.cta.secondary.label}
             </a>
           </motion.div>
         </motion.div>

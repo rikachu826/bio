@@ -1,5 +1,6 @@
 import { AnimatePresence, motion, useInView } from 'framer-motion'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import content from '../content/site.json'
 
 type Slide = {
   src: string
@@ -50,6 +51,7 @@ const commandKeywords = ['command', 'desk', 'workstation', 'rig', 'setup', 'comm
 export default function CommandCenter() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px", amount: 0.15 })
+  const commandCenter = content.commandCenter
   const slides = useMemo<Slide[]>(() => {
     const entries = Object.entries(imageModules)
       .map(([path, src]) => {
@@ -126,7 +128,8 @@ export default function CommandCenter() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          How I <span className="gradient-text">Work</span>
+          {commandCenter.title.leading}{' '}
+          <span className="gradient-text">{commandCenter.title.accent}</span>
         </motion.h2>
 
         <motion.p
@@ -135,8 +138,7 @@ export default function CommandCenter() {
           animate={isInView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          A personal operations cockpit built for parallel research, incident response, and AI-accelerated delivery.
-          Competitive raiding taught me how to turn preparation into execution under pressure.
+          {commandCenter.intro}
         </motion.p>
 
         <div className="glass bg-charcoal/60 rounded-3xl p-6 md:p-8 border border-white/10">

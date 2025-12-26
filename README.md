@@ -45,6 +45,7 @@ npx wrangler pages deploy dist --project-name "your project name"
 - `VITE_TURNSTILE_SITE_KEY`
 
 ## Notes
+- Site copy lives in `src/content/site.json`. Update text there, then commit + push to deploy.
 - Screenshots live in `Images/projects/<project>/` and are auto‑loaded into modals.
 - Optional captions per project: add `Images/projects/<project>/captions.json` and map filenames to tooltip text.
   Example:

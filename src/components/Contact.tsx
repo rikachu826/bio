@@ -2,15 +2,24 @@ import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { generateResumePdf } from '../utils/resumePdf'
+import content from '../content/site.json'
 
 export default function Contact() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px", amount: 0.15 })
   const [isGenerating, setIsGenerating] = useState(false)
 
-  const contactMethods: { icon: JSX.Element; label: string; value: string; link: string }[] = [
-    {
-      icon: (
+  const contact = content.contact
+  const contactMethods = contact.methods as {
+    type: string
+    label: string
+    value: string
+    link: string
+  }[]
+
+  const renderMethodIcon = (type: string) => {
+    if (type === 'email') {
+      return (
         <span className="envelope-icon" aria-hidden="true">
           <span className="envelope-letter" />
           <svg className="envelope-svg" viewBox="0 0 64 48" role="presentation">
@@ -19,12 +28,19 @@ export default function Contact() {
             <path className="envelope-flap" d="M4 12L32 30L60 12L32 6Z" />
           </svg>
         </span>
-      ),
-      label: 'Email',
-      value: 'leo@leochui.tech',
-      link: 'mailto:leo@leochui.tech'
-    },
-  ]
+      )
+    }
+    return (
+      <span className="envelope-icon" aria-hidden="true">
+        <span className="envelope-letter" />
+        <svg className="envelope-svg" viewBox="0 0 64 48" role="presentation">
+          <rect className="envelope-back" x="4" y="10" width="56" height="30" rx="4" />
+          <path className="envelope-front" d="M4 12L32 30L60 12V40H4Z" />
+          <path className="envelope-flap" d="M4 12L32 30L60 12L32 6Z" />
+        </svg>
+      </span>
+    )
+  }
 
   return (
     <div className="section-container py-20" ref={ref}>
@@ -36,11 +52,10 @@ export default function Contact() {
           className="text-center"
         >
           <h2 className="text-section-title font-display mb-6">
-            Let's <span className="gradient-text">Connect</span>
+            {contact.title.leading} <span className="gradient-text">{contact.title.accent}</span>
           </h2>
           <p className="text-xl text-light-gray mb-12 max-w-2xl mx-auto">
-            No social media, just engineering and continuous learning.
-            If you want to talk cloud security, AI systems, or technical leadership, reach out.
+            {contact.blurb}
           </p>
         </motion.div>
 
@@ -59,7 +74,7 @@ export default function Contact() {
             >
               <div className="flex items-center gap-4">
                 <div className="contact-icon group-hover:scale-110 transition-transform">
-                  {method.icon}
+                  {renderMethodIcon(method.type)}
                 </div>
                 <div className="text-left">
                   <div className="text-sm text-soft-gray mb-1 group-hover:gradient-text transition-all">
@@ -94,7 +109,7 @@ export default function Contact() {
                      hover:scale-105 transition-transform duration-300 ease-apple mb-8 disabled:opacity-70"
             disabled={isGenerating}
           >
-            {isGenerating ? 'Generating PDF...' : 'Download Resume (PDF)'}
+            {isGenerating ? 'Generating PDF...' : contact.resumeButton}
           </button>
         </motion.div>
 
@@ -121,7 +136,7 @@ export default function Contact() {
               </div>
               <div className="flex flex-col items-center gap-2">
                 <a
-                  href="https://github.com/rikachu826/bio"
+                  href={contact.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub repository"
@@ -142,7 +157,7 @@ export default function Contact() {
               </div>
             </div>
             <p className="text-soft-gray text-sm">
-              © 2025 Leo Chui
+              {contact.footerCopyright}
             </p>
           </div>
         </motion.footer>

@@ -1,46 +1,15 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
+import content from '../content/site.json'
 
 interface SkillCategory {
   category: string
   skills: string[]
 }
 
-const skillCategories: SkillCategory[] = [
-  {
-    category: 'AI Development & Integration',
-    skills: [
-      'Vertex AI',
-      'Provider-Agnostic LLM Strategy',
-      'Continuous Model Evaluation',
-      'Rapid Model Upgrades',
-      'Model Fallback Design',
-      'Context Injection',
-      'LLM Security Guardrails'
-    ]
-  },
-  {
-    category: 'Leadership & Strategy',
-    skills: ['IT Strategy', 'Team Leadership', 'Project Management', 'Vendor Management', 'Budget Planning']
-  },
-  {
-    category: 'Cloud & Infrastructure',
-    skills: ['Firebase Hosting/Auth/Functions', 'GCP IAM', 'Firestore', 'Cloud Scheduler', 'AWS WAF/CloudFront', 'Google Workspace']
-  },
-  {
-    category: 'Security & Compliance',
-    skills: ['Zero Trust', 'IAM', 'Secrets Management', 'CSP & Security Headers', 'PKCE OAuth', 'Penetration Testing', 'Incident Response']
-  },
-  {
-    category: 'Development',
-    skills: ['Python', 'TypeScript', 'React', 'Vite', 'Electron', 'Node.js', 'Chart.js']
-  },
-  {
-    category: 'Tools & Platforms',
-    skills: ['Firebase', 'Sentry', 'Algolia', 'Salesforce', 'NetSuite', 'Jamf', 'JumpCloud']
-  }
-]
+const skillsSection = content.skillsSection
+const skillCategories: SkillCategory[] = skillsSection.categories as SkillCategory[]
 
 export default function Skills() {
   const ref = useRef(null)
@@ -55,7 +24,8 @@ export default function Skills() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          Skills & <span className="gradient-text">Expertise</span>
+          {skillsSection.title.leading}{' '}
+          <span className="gradient-text">{skillsSection.title.accent}</span>
         </motion.h2>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
