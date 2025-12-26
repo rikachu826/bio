@@ -7,9 +7,10 @@ type Slide = {
   description: string
   alt: string
   key: string
+  isVideo: boolean
 }
 
-const imageModules = import.meta.glob('/Images/**/*.{jpg,jpeg,png,webp}', {
+const imageModules = import.meta.glob('/Images/**/*.{jpg,jpeg,png,webp,mp4,webm}', {
   eager: true,
   import: 'default',
 }) as Record<string, string>
@@ -60,6 +61,7 @@ export default function CommandCenter() {
         if (!isRank && !isCommand) {
           return null
         }
+        const isVideo = /\.(mp4|webm)$/i.test(lower)
         const caption = commandCaptions[lower]
         const fallbackTitle = 'Command Center'
         const fallbackDescription = 'Multi-system workspace built for parallel research and monitoring.'
@@ -71,6 +73,7 @@ export default function CommandCenter() {
           description,
           alt: title,
           key: lower,
+          isVideo,
         }
       })
       .filter((entry): entry is Slide => Boolean(entry))
@@ -139,16 +142,35 @@ export default function CommandCenter() {
         <div className="glass bg-charcoal/60 rounded-3xl p-6 md:p-8 border border-white/10">
           <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-space-black/60">
             <AnimatePresence mode="wait">
-              <motion.img
-                key={activeSlide.key}
-                src={activeSlide.src}
-                alt={activeSlide.alt}
-                className="w-full h-[320px] md:h-[460px] object-contain bg-space-black"
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              />
+              {activeSlide.isVideo ? (
+                <motion.video
+                  key={activeSlide.key}
+                  className="w-full h-[320px] md:h-[460px] object-contain bg-space-black"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  controls
+                  preload="metadata"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <source src={activeSlide.src} />
+                </motion.video>
+              ) : (
+                <motion.img
+                  key={activeSlide.key}
+                  src={activeSlide.src}
+                  alt={activeSlide.alt}
+                  className="w-full h-[320px] md:h-[460px] object-contain bg-space-black"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                />
+              )}
             </AnimatePresence>
           </div>
 

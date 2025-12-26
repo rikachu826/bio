@@ -24,6 +24,7 @@ interface Screenshot {
   src: string
   name: string
   caption?: string
+  isVideo?: boolean
 }
 
 const projects: Project[] = [
@@ -358,7 +359,7 @@ export default function Projects() {
   const touchEndX = useRef<number | null>(null)
   const screenshotsByFolder = useRef(
     Object.entries(
-      import.meta.glob('/Images/projects/**/*.{png,jpg,jpeg,webp}', {
+      import.meta.glob('/Images/projects/**/*.{png,jpg,jpeg,webp,mp4,webm}', {
         eager: true,
         import: 'default',
       })
@@ -369,10 +370,11 @@ export default function Projects() {
       }
       const folder = match[1]
       const name = match[2]
+      const isVideo = /\.(mp4|webm)$/i.test(name)
       if (!acc[folder]) {
         acc[folder] = []
       }
-      acc[folder].push({ src: src as string, name })
+      acc[folder].push({ src: src as string, name, isVideo })
       return acc
     }, {})
   )
@@ -736,13 +738,26 @@ export default function Projects() {
                           setSelectedScreenshotIndex(index)
                         }}
                       >
-                        <img
-                          src={shot.src}
-                          alt={`${selectedProject.title} screenshot ${index + 1}`}
-                          title={shot.caption?.trim() ? shot.caption : shot.name}
-                          className="w-full rounded-xl object-cover"
-                          loading="lazy"
-                        />
+                        {shot.isVideo ? (
+                          <video
+                            className="w-full rounded-xl object-cover"
+                            muted
+                            playsInline
+                            loop
+                            autoPlay
+                            preload="metadata"
+                          >
+                            <source src={shot.src} />
+                          </video>
+                        ) : (
+                          <img
+                            src={shot.src}
+                            alt={`${selectedProject.title} screenshot ${index + 1}`}
+                            title={shot.caption?.trim() ? shot.caption : shot.name}
+                            className="w-full rounded-xl object-cover"
+                            loading="lazy"
+                          />
+                        )}
                         {shot.caption?.trim() ? (
                           <p className="mt-2 text-sm text-soft-gray/90">
                             {shot.caption}
@@ -798,16 +813,35 @@ export default function Projects() {
                     ''
                   }
                 >
-                  <motion.img
-                    key={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
-                    src={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
-                    alt="Project screenshot"
-                    className="max-h-[85vh] w-auto max-w-[92vw] rounded-2xl object-contain"
-                    initial={{ opacity: 0, x: 24, scale: 0.98 }}
-                    animate={{ opacity: 1, x: 0, scale: 1 }}
-                    exit={{ opacity: 0, x: -24, scale: 0.98 }}
-                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                  />
+                  {projectScreenshots[selectedScreenshotIndex]?.isVideo ? (
+                    <motion.video
+                      key={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
+                      className="max-h-[85vh] w-auto max-w-[92vw] rounded-2xl object-contain"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      controls
+                      preload="metadata"
+                      initial={{ opacity: 0, x: 24, scale: 0.98 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      exit={{ opacity: 0, x: -24, scale: 0.98 }}
+                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <source src={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot} />
+                    </motion.video>
+                  ) : (
+                    <motion.img
+                      key={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
+                      src={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
+                      alt="Project screenshot"
+                      className="max-h-[85vh] w-auto max-w-[92vw] rounded-2xl object-contain"
+                      initial={{ opacity: 0, x: 24, scale: 0.98 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      exit={{ opacity: 0, x: -24, scale: 0.98 }}
+                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                  )}
                 </div>
                 <button
                   type="button"
