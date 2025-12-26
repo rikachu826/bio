@@ -550,10 +550,10 @@ export default function Projects() {
 
                 <div className="mb-6">
                   <h4 className="text-base font-semibold mb-3 text-pure-white">Key Features:</h4>
-                  <ul className="grid md:grid-cols-2 gap-2">
+                  <ul className={`grid md:grid-cols-2 gap-2 reveal-list ${isInView ? 'is-visible' : ''}`}>
                     {project.highlights.map((highlight, i) => (
-                      <li key={i} className="flex items-start gap-2 text-base text-light-gray">
-                        <span className="text-sky-blue mt-1">▹</span>
+                      <li key={i} className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                        <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                         <span>{highlight}</span>
                       </li>
                     ))}
@@ -683,10 +683,10 @@ export default function Projects() {
                         className="rounded-2xl border border-white/10 bg-charcoal/50 p-5"
                       >
                         <h5 className="text-lg font-semibold mb-3 text-pure-white">{section.title}</h5>
-                        <ul className="space-y-2 text-base text-light-gray leading-relaxed">
+                        <ul className="space-y-2 text-base text-light-gray leading-relaxed reveal-list is-visible">
                           {section.items.map((item, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <span className="text-sky-blue mt-1">▹</span>
+                            <li key={i} className="flex items-start gap-2 reveal-item">
+                              <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                               <span>{item}</span>
                             </li>
                           ))}
@@ -699,10 +699,10 @@ export default function Projects() {
 
               <div className="mb-6">
                 <h4 className="text-xl font-semibold mb-4">Key Features</h4>
-                <ul className="space-y-2">
+                <ul className="space-y-2 reveal-list is-visible">
                   {selectedProject.highlights.map((highlight, i) => (
-                    <li key={i} className="flex items-start gap-2 text-light-gray">
-                      <span className="text-sky-blue mt-1">✓</span>
+                    <li key={i} className="flex items-start gap-2 text-light-gray reveal-item">
+                      <span className="text-sky-blue mt-1 reveal-icon">✓</span>
                       <span>{highlight}</span>
                     </li>
                   ))}

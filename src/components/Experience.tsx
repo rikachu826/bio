@@ -74,53 +74,53 @@ export default function Experience() {
               and make it remote-ready in 72 hours. The organization had moved from Los Angeles to New York, but core systems
               never followed. When the pandemic hit, that gap became a single point of failure.
             </p>
-            <ul className="space-y-3 text-light-gray">
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+            <ul className={`space-y-3 text-light-gray reveal-list ${isVisible ? 'is-visible' : ''}`}>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span>End-of-life <strong className="text-pure-white">Windows Server 2008</strong> domain controller</span>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span>MSP-managed legacy stack with minimal modernization and limited internal visibility</span>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span>Users logging in with <strong className="text-pure-white">4-character passwords</strong></span>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span>Hybrid on-prem <strong className="text-pure-white">Microsoft Exchange</strong> with severe storage limits</span>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span><strong className="text-pure-white">No MDM</strong>; users on personal Apple IDs downloading random apps</span>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span>Had to carry a <strong className="text-pure-white">Dell laptop</strong> just to reset passwords on ancient AD</span>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span>Obsolete <strong className="text-pure-white">ShoreTel phone system</strong> (migrated to Verizon One Talk cloud VoIP after the remote shift)</span>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span>LA-based file server left behind after HQ moved to NYC; site-to-site VPN made it feel local, but it wasn’t truly remote-ready</span>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span><strong className="text-pure-white">SonicWall firewalls</strong> were end-of-life, unpatched, and frequently crashed under remote load</span>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span>NetExtender VPN with shared credentials and no modern MFA for remote access</span>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span>LA office sat empty; the file server had no verified backup or disaster recovery plan</span>
               </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-500 mt-1">▸</span>
+              <li className="flex items-start gap-3 reveal-item">
+                <span className="text-red-500 mt-1 reveal-icon">▸</span>
                 <span>Fragile, location-dependent infrastructure unsuitable for distributed work</span>
               </li>
             </ul>
@@ -138,25 +138,25 @@ export default function Experience() {
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
               <h4 className="text-xl font-semibold mb-4 gradient-text">☁️ Cloud & Identity</h4>
-              <ul className="space-y-3 text-base text-light-gray">
-                <li className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">✓</span>
+              <ul className={`space-y-3 text-base text-light-gray reveal-list ${isVisible ? 'is-visible' : ''}`}>
+                <li className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">✓</span>
                   <span>Retired on-prem AD; <strong className="text-pure-white">JumpCloud</strong> became primary identity with Workspace sync</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">✓</span>
+                <li className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">✓</span>
                   <span>Retired hybrid Exchange and moved to <strong className="text-pure-white">Workspace Enterprise</strong> with “unlimited” storage</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">✓</span>
+                <li className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">✓</span>
                   <span>Locked in nonprofit pricing (~$5/user) with Gemini access on a grandfathered tier</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">✓</span>
+                <li className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">✓</span>
                   <span>Cloud-native IAM with modern auth and MFA</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">✓</span>
+                <li className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">✓</span>
                   <span>Reduced VPN dependency for day-to-day access</span>
                 </li>
               </ul>
@@ -169,17 +169,17 @@ export default function Experience() {
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
               <h4 className="text-xl font-semibold mb-4 gradient-text">🏠 Remote-First in 72 Hours</h4>
-              <ul className="space-y-3 text-base text-light-gray">
-                <li className="flex items-start gap-2">
-                  <span className="text-baby-blue mt-1">✓</span>
+              <ul className={`space-y-3 text-base text-light-gray reveal-list ${isVisible ? 'is-visible' : ''}`}>
+                <li className="flex items-start gap-2 reveal-item">
+                  <span className="text-baby-blue mt-1 reveal-icon">✓</span>
                   <span>Entire staff remote-enabled in <strong className="text-pure-white">72 hours</strong></span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-baby-blue mt-1">✓</span>
+                <li className="flex items-start gap-2 reveal-item">
+                  <span className="text-baby-blue mt-1 reveal-icon">✓</span>
                   <span>Location-independent workflows with U.S.-wide hiring</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-baby-blue mt-1">✓</span>
+                <li className="flex items-start gap-2 reveal-item">
+                  <span className="text-baby-blue mt-1 reveal-icon">✓</span>
                   <span>Cloud-based email, files, and collaboration</span>
                 </li>
               </ul>
@@ -195,25 +195,25 @@ export default function Experience() {
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
               <h4 className="text-xl font-semibold mb-4 gradient-text">💻 Device Lifecycle Automation</h4>
-              <ul className="space-y-3 text-base text-light-gray">
-                <li className="flex items-start gap-2">
-                  <span className="text-baby-blue mt-1">✓</span>
+              <ul className={`space-y-3 text-base text-light-gray reveal-list ${isVisible ? 'is-visible' : ''}`}>
+                <li className="flex items-start gap-2 reveal-item">
+                  <span className="text-baby-blue mt-1 reveal-icon">✓</span>
                   <span><strong className="text-pure-white">One-click onboarding</strong> via Apple Business Manager</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-baby-blue mt-1">✓</span>
+                <li className="flex items-start gap-2 reveal-item">
+                  <span className="text-baby-blue mt-1 reveal-icon">✓</span>
                   <span><strong className="text-pure-white">Zero-touch deployment</strong> (direct ship from Apple/Amazon)</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-baby-blue mt-1">✓</span>
+                <li className="flex items-start gap-2 reveal-item">
+                  <span className="text-baby-blue mt-1 reveal-icon">✓</span>
                 <span>Managed Apple IDs with federated sign-in via <strong className="text-pure-white">Apple Business Manager + Google Workspace</strong></span>
                 </li>
-              <li className="flex items-start gap-2">
-                <span className="text-baby-blue mt-1">✓</span>
+              <li className="flex items-start gap-2 reveal-item">
+                <span className="text-baby-blue mt-1 reveal-icon">✓</span>
                 <span><strong className="text-pure-white">Automated offboarding</strong> with scheduled system lock</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-baby-blue mt-1">✓</span>
+              <li className="flex items-start gap-2 reveal-item">
+                <span className="text-baby-blue mt-1 reveal-icon">✓</span>
                 <span>Apple Silicon standard with FileVault + MDM, using nonprofit hardware pricing</span>
               </li>
             </ul>
@@ -226,20 +226,20 @@ export default function Experience() {
               className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
             >
               <h4 className="text-xl font-semibold mb-4 gradient-text">🔄 Dual Environment</h4>
-              <ul className="space-y-3 text-base text-light-gray">
-                <li className="flex items-start gap-2">
+              <ul className={`space-y-3 text-base text-light-gray reveal-list ${isVisible ? 'is-visible' : ''}`}>
+                <li className="flex items-start gap-2 reveal-item">
                   <span className="text-ocean-blue mt-1">✓</span>
                   <span><strong className="text-pure-white">Google Workspace</strong> primary</span>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 reveal-item">
                   <span className="text-ocean-blue mt-1">✓</span>
                   <span><strong className="text-pure-white">Microsoft 365</strong> for finance</span>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 reveal-item">
                   <span className="text-ocean-blue mt-1">✓</span>
                   <span>Secure rsync sync between Microsoft 365 and Google Workspace via a private AWS EC2 transfer host</span>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2 reveal-item">
                   <span className="text-ocean-blue mt-1">✓</span>
                   <span><strong className="text-pure-white">Salesforce + NetSuite</strong></span>
                 </li>
@@ -255,65 +255,65 @@ export default function Experience() {
             className="glass p-8 rounded-2xl"
           >
             <h4 className="text-2xl font-semibold mb-6 gradient-text text-center">🔒 Enterprise Security (Nonprofit Budget)</h4>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4">
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+            <div className={`grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4 reveal-list ${isVisible ? 'is-visible' : ''}`}>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span><strong className="text-pure-white">JumpCloud + Jamf MDM</strong> for devices and personal phones</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span><strong className="text-pure-white">CrowdStrike</strong> endpoint + FileVault encryption</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span><strong className="text-pure-white">YubiKey-only MFA</strong> (7-day token reset)</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span><strong className="text-pure-white">Proofpoint</strong> email security</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span><strong className="text-pure-white">Dashlane Enterprise</strong> with SSO</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span>Layered backups: endpoint NAS, SaaS backups twice daily, encrypted offsite replication</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span>Conditional access with managed Chrome</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span>App allowlisting with ABM/Jamf deployment; no unapproved installs</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span>Redundant VPN endpoints with MFA</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span><strong className="text-pure-white">Nudge Security</strong> for OAuth governance and AI tool DLP visibility</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span><strong className="text-pure-white">AWS + CloudFront + WAF</strong></span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span>GLAAD-managed laptops required</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span><strong className="text-pure-white">Zero-day patching</strong> for critical issues</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span>Monthly pen tests</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
-                <span className="text-teal mt-1">✓</span>
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
+                <span className="text-teal mt-1 reveal-icon">✓</span>
                 <span><strong className="text-pure-white">Diffract</strong> custom-built cyber dashboard</span>
               </div>
             </div>
@@ -327,54 +327,54 @@ export default function Experience() {
             </div>
             <div className="mt-6 border-t border-white/10 pt-6">
               <h5 className="text-lg font-semibold mb-4 text-center text-pure-white">GLAAD.org Platform</h5>
-              <div className="grid md:grid-cols-2 gap-x-8 gap-y-3 text-base text-light-gray">
-                <div className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">▹</span>
+              <div className={`grid md:grid-cols-2 gap-x-8 gap-y-3 text-base text-light-gray reveal-list ${isVisible ? 'is-visible' : ''}`}>
+                <div className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                   <span>AWS Route 53 DNS + CloudFront CDN/WAF front door</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">▹</span>
+                <div className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                   <span>Segmented EC2 tiers behind load balancing</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">▹</span>
+                <div className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                   <span>Publishing locked behind VPN + MFA; admin access restricted</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">▹</span>
+                <div className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                   <span>Tableau dashboards tracking anti-LGBTQ hate and hate crime trends</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">▹</span>
+                <div className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                   <span>Gravity Forms protected with OpenAI-based submission scanning</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">▹</span>
+                <div className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                   <span>Bynder DAM hosts site assets behind SSO (@glaad.org only)</span>
                 </div>
               </div>
             </div>
             <div className="mt-6 border-t border-white/10 pt-6">
               <h5 className="text-lg font-semibold mb-4 text-center text-pure-white">Hybrid Office Infrastructure</h5>
-              <div className="grid md:grid-cols-2 gap-x-8 gap-y-3 text-base text-light-gray">
-                <div className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">▹</span>
+              <div className={`grid md:grid-cols-2 gap-x-8 gap-y-3 text-base text-light-gray reveal-list ${isVisible ? 'is-visible' : ''}`}>
+                <div className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                   <span>Next-gen Ubiquiti network stack with segmented office and production networks</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">▹</span>
+                <div className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                   <span>Dual-WAN connectivity with automatic failover and warm-standby resiliency</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">▹</span>
+                <div className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                   <span>10GbE backbone for creative/media workflows and large asset transfers</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">▹</span>
+                <div className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                   <span>SSO-backed RADIUS Wi-Fi tied to JumpCloud (Wi-Fi 7-ready)</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-sky-blue mt-1">▹</span>
+                <div className="flex items-start gap-2 reveal-item">
+                  <span className="text-sky-blue mt-1 reveal-icon">▹</span>
                   <span>Verkada physical security integrated with JumpCloud access governance</span>
                 </div>
               </div>
@@ -394,27 +394,27 @@ export default function Experience() {
               The naming system mirrors how light reveals truth; each product bends or separates signal to surface insight.
             </p>
             <div className="grid md:grid-cols-2 gap-x-8 gap-y-3 mb-4">
-              <div className="flex items-start gap-2 text-base text-light-gray">
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
                 <span className="text-aqua mt-1">✓</span>
                 <span><strong className="text-pure-white">Diffract</strong>: Executive security dashboard</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
                 <span className="text-aqua mt-1">✓</span>
                 <span><strong className="text-pure-white">Refract</strong>: Salesforce + NetSuite analytics</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
                 <span className="text-aqua mt-1">✓</span>
                 <span><strong className="text-pure-white">Prism</strong>: Media monitoring & tracking</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
                 <span className="text-aqua mt-1">✓</span>
                 <span><strong className="text-pure-white">Spectrum</strong>: Media scoping & analysis</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
                 <span className="text-aqua mt-1">✓</span>
                 <span><strong className="text-pure-white">NetRunner</strong>: Desktop legal analysis tool</span>
               </div>
-              <div className="flex items-start gap-2 text-base text-light-gray">
+              <div className="flex items-start gap-2 text-base text-light-gray reveal-item">
                 <span className="text-aqua mt-1">✓</span>
                 <span>AI personas: <strong className="text-pure-white">Aegis, Astraea, LUMOS, IRIS, Turing</strong></span>
               </div>
@@ -424,27 +424,27 @@ export default function Experience() {
                 <strong className="text-pure-white">Security-First Infrastructure:</strong>
               </p>
               <div className="grid md:grid-cols-2 gap-x-6 gap-y-2 text-sm text-light-gray">
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-2 reveal-item">
                   <span className="text-teal mt-0.5">▹</span>
                   <span>Web apps hosted on <strong className="text-pure-white">Firebase Hosting + GCP Functions</strong></span>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-2 reveal-item">
                   <span className="text-teal mt-0.5">▹</span>
                   <span>Secrets stored in <strong className="text-pure-white">Firebase Secret Manager</strong></span>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-2 reveal-item">
                   <span className="text-teal mt-0.5">▹</span>
                   <span>Server-side OAuth token exchange (no client secrets in desktop app)</span>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-2 reveal-item">
                   <span className="text-teal mt-0.5">▹</span>
                   <span>Firebase Auth enforcement with domain/allowlist controls</span>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-2 reveal-item">
                   <span className="text-teal mt-0.5">▹</span>
                   <span>JumpCloud SSO with org-wide MFA across internal apps</span>
                 </div>
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-2 reveal-item">
                   <span className="text-teal mt-0.5">▹</span>
                   <span>Enterprise tooling administration (Asana, dashboards, and access governance)</span>
                 </div>
