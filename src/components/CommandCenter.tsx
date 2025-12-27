@@ -52,6 +52,8 @@ export default function CommandCenter() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px", amount: 0.15 })
   const commandCenter = content.commandCenter
+  const [isTabVisible, setIsTabVisible] = useState(true)
+  const [visibilityTick, setVisibilityTick] = useState(0)
   const slides = useMemo<Slide[]>(() => {
     const entries = Object.entries(imageModules)
       .map(([path, src]) => {
@@ -106,12 +108,25 @@ export default function CommandCenter() {
   }, [slideCount])
 
   useEffect(() => {
-    if (!isInView || slideCount <= 1) {
+    if (!isInView || slideCount <= 1 || !isTabVisible) {
       return
     }
     const timer = window.setInterval(goNext, 8500)
     return () => window.clearInterval(timer)
-  }, [goNext, isInView, slideCount])
+  }, [goNext, isInView, slideCount, isTabVisible])
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      const visible = document.visibilityState === 'visible'
+      setIsTabVisible(visible)
+      if (visible) {
+        setVisibilityTick((prev) => prev + 1)
+      }
+    }
+    handleVisibilityChange()
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [])
 
   if (slides.length === 0) {
     return null
@@ -146,7 +161,7 @@ export default function CommandCenter() {
             <AnimatePresence mode="wait">
               {activeSlide.isVideo ? (
                 <motion.video
-                  key={activeSlide.key}
+                  key={`${activeSlide.key}-${visibilityTick}`}
                   className="w-full h-[320px] md:h-[460px] object-contain bg-space-black"
                   autoPlay
                   muted
@@ -163,10 +178,12 @@ export default function CommandCenter() {
                 </motion.video>
               ) : (
                 <motion.img
-                  key={activeSlide.key}
+                  key={`${activeSlide.key}-${visibilityTick}`}
                   src={activeSlide.src}
                   alt={activeSlide.alt}
                   className="w-full h-[320px] md:h-[460px] object-contain bg-space-black"
+                  loading="eager"
+                  decoding="async"
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
