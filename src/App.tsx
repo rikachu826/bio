@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import Hero from './components/Hero'
 import About from './components/About'
@@ -20,9 +20,63 @@ function App() {
     }
     return localStorage.getItem('introSeen') === 'true'
   })
+  const [isIdle, setIsIdle] = useState(false)
+  const [isHeroVisible, setIsHeroVisible] = useState(true)
+  const heroRef = useRef<HTMLElement | null>(null)
+  const idleRef = useRef(false)
 
   const galaxyOpacity = 1
   const overlayOpacity = 0.75
+  const shouldPauseGalaxy = isIdle || !isHeroVisible
+
+  useEffect(() => {
+    if (!introComplete) {
+      return
+    }
+    const idleTimeoutMs = 10 * 60 * 1000
+    let idleTimer: number | undefined
+
+    const markIdle = () => {
+      idleRef.current = true
+      setIsIdle(true)
+    }
+
+    const resetIdleTimer = () => {
+      if (idleRef.current) {
+        idleRef.current = false
+        setIsIdle(false)
+      }
+      if (idleTimer) {
+        window.clearTimeout(idleTimer)
+      }
+      idleTimer = window.setTimeout(markIdle, idleTimeoutMs)
+    }
+
+    const events: Array<keyof WindowEventMap> = ['mousemove', 'keydown', 'scroll', 'touchstart', 'pointerdown']
+    events.forEach((event) => window.addEventListener(event, resetIdleTimer, { passive: true }))
+    resetIdleTimer()
+
+    return () => {
+      events.forEach((event) => window.removeEventListener(event, resetIdleTimer))
+      if (idleTimer) {
+        window.clearTimeout(idleTimer)
+      }
+    }
+  }, [introComplete])
+
+  useEffect(() => {
+    if (!heroRef.current || !introComplete) {
+      return
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsHeroVisible(entry.isIntersecting)
+      },
+      { threshold: 0.2 }
+    )
+    observer.observe(heroRef.current)
+    return () => observer.disconnect()
+  }, [introComplete])
 
   return (
     <div className="relative">
@@ -44,7 +98,7 @@ function App() {
               className="fixed inset-0 -z-20"
               style={{ opacity: galaxyOpacity }}
             >
-              <GalaxyBackground />
+              <GalaxyBackground paused={shouldPauseGalaxy} />
             </motion.div>
           </Suspense>
         )}
@@ -57,7 +111,7 @@ function App() {
         )}
 
         {/* Hero Section with Galaxy Background */}
-        <section id="hero" className="relative">
+        <section id="hero" className="relative" ref={heroRef}>
           <Hero />
         </section>
 

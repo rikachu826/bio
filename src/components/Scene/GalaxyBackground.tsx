@@ -1,5 +1,9 @@
 import { useRef, useEffect } from 'react'
 
+type GalaxyBackgroundProps = {
+  paused?: boolean
+}
+
 class Particle {
   x: number
   y: number
@@ -76,9 +80,16 @@ class Particle {
   }
 }
 
-export default function GalaxyBackground() {
+export default function GalaxyBackground({ paused = false }: GalaxyBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const mouse = useRef<{ x: number | null, y: number | null }>({ x: null, y: null })
+  const pausedRef = useRef(paused)
+  const pauseControlRef = useRef<(shouldPause: boolean) => void>(() => {})
+
+  useEffect(() => {
+    pausedRef.current = paused
+    pauseControlRef.current?.(paused || document.hidden)
+  }, [paused])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -99,9 +110,12 @@ export default function GalaxyBackground() {
       particles.push(new Particle(width, height))
     }
 
-    let animationFrameId: number
+    let animationFrameId: number | null = null
 
     const animate = () => {
+      if (!ctx) {
+        return
+      }
       ctx.clearRect(0, 0, width, height)
 
       // Constellation connections (baby blue)
@@ -129,15 +143,35 @@ export default function GalaxyBackground() {
       animationFrameId = requestAnimationFrame(animate)
     }
 
-    animate()
+    const start = () => {
+      if (animationFrameId != null) {
+        return
+      }
+      animationFrameId = requestAnimationFrame(animate)
+    }
+
+    const stop = () => {
+      if (animationFrameId == null) {
+        return
+      }
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
+
+    const setPaused = (value: boolean) => {
+      if (value) {
+        stop()
+      } else {
+        start()
+      }
+    }
+
+    pauseControlRef.current = setPaused
+    setPaused(pausedRef.current || document.hidden)
 
     // Visibility API - pause when tab hidden (saves CPU)
     const handleVisibilityChange = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(animationFrameId)
-      } else {
-        animationFrameId = requestAnimationFrame(animate)
-      }
+      setPaused(document.hidden || pausedRef.current)
     }
 
     document.addEventListener('visibilitychange', handleVisibilityChange)
@@ -155,6 +189,9 @@ export default function GalaxyBackground() {
     }
 
     const handleMouseMove = (e: MouseEvent) => {
+      if (pausedRef.current || document.hidden) {
+        return
+      }
       mouse.current.x = e.x
       mouse.current.y = e.y
     }
@@ -166,7 +203,9 @@ export default function GalaxyBackground() {
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
-      cancelAnimationFrame(animationFrameId)
+      if (animationFrameId != null) {
+        cancelAnimationFrame(animationFrameId)
+      }
     }
   }, [])
 
