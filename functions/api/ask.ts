@@ -435,9 +435,38 @@ function expandSegments(segments: string[], target: number) {
   return result
 }
 
+function mergeFragmentedBullets(items: string[]) {
+  const merged: string[] = []
+  let index = 0
+
+  while (index < items.length) {
+    let current = items[index]?.trim() ?? ''
+    const next = items[index + 1]?.trim() ?? ''
+    const wordCount = current.split(/\s+/).filter(Boolean).length
+    const endsWithColon = current.endsWith(':')
+    const endsWithHe = /:\s*he$/i.test(current) || /\bhe$/i.test(current) && wordCount <= 4
+    const endsWithConnector = /\b(and|with|to|for)$/i.test(current)
+
+    if (next && (wordCount <= 4 || endsWithColon || endsWithHe || endsWithConnector)) {
+      current = `${current.replace(/:?\s*$/, '')} ${next}`.trim()
+      merged.push(current)
+      index += 2
+      continue
+    }
+
+    if (current) {
+      merged.push(current)
+    }
+    index += 1
+  }
+
+  return merged
+}
+
 function applyBulletFormatting(text: string, count: number) {
   const bulletLines = extractBulletLines(text)
   let items = bulletLines.length > 0 ? bulletLines : splitIntoSegments(text)
+  items = mergeFragmentedBullets(items)
   items = expandSegments(items, count)
 
   const normalized = new Set(items.map((item) => item.toLowerCase()))
@@ -698,7 +727,7 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
   const fallbackModel = env.GEMINI_MODEL_FALLBACK || DEFAULT_MODEL_FALLBACK
 
   const formattedPrompt = bulletCount
-    ? `${prompt}\n\nFormatting: Respond with exactly ${bulletCount} bullet points. Use "-" and no extra text. Keep the total response under ${MAX_REPLY_CHARS} characters.`
+    ? `${prompt}\n\nFormatting: Respond with exactly ${bulletCount} bullet points. Use "-" and no extra text. Each bullet must be a complete sentence. Keep the total response under ${MAX_REPLY_CHARS} characters.`
     : `${prompt}\n\nKeep the response under ${MAX_REPLY_CHARS} characters.`
 
   const historyForModel = toGeminiHistory(chatHistory)
