@@ -292,12 +292,16 @@ async function verifyTurnstile(secret: string, token: string, ip?: string) {
     body.set('remoteip', ip)
   }
 
-  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-    method: 'POST',
-    body,
-  })
-  const data = await response.json().catch(() => null) as { success?: boolean }
-  return Boolean(data?.success)
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body,
+    })
+    const data = await response.json().catch(() => null) as { success?: boolean }
+    return Boolean(data?.success)
+  } catch {
+    return false
+  }
 }
 
 function normalizePrompt(prompt: string) {
@@ -532,19 +536,24 @@ async function callGemini(
 ) {
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
 
-  const geminiResponse = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents: [...history, { role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0.35,
-        maxOutputTokens: 220,
-        topP: 0.9,
-      },
-    }),
-  })
+  let geminiResponse: Response
+  try {
+    geminiResponse = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [...history, { role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.35,
+          maxOutputTokens: 220,
+          topP: 0.9,
+        },
+      }),
+    })
+  } catch {
+    return { ok: false } satisfies GeminiResult
+  }
 
   if (!geminiResponse.ok) {
     return { ok: false } satisfies GeminiResult
@@ -709,6 +718,7 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
   return respond({ reply }, 200)
   } catch (error) {
     console.error('ask handler error', error)
-    return respondWithOrigin({ error: 'Internal error' }, 500)
+    const detail = error instanceof Error ? error.message : String(error)
+    return respondWithOrigin({ error: 'Internal error', detail }, 500)
   }
 }
