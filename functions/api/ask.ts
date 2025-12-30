@@ -182,7 +182,7 @@ async function checkRateLimit(env: Env, key: string, max: number, windowMs: numb
   const windowSeconds = Math.ceil(windowMs / 1000)
 
   if (env.RATE_LIMIT_KV) {
-    const current = await env.RATE_LIMIT_KV.get(storageKey, 'json')
+    const current = await kvGetJson<RateLimitState>(env, storageKey)
     const state = !current || current.reset < now
       ? { count: 0, reset: now + windowMs }
       : current
@@ -210,13 +210,24 @@ async function checkRateLimit(env: Env, key: string, max: number, windowMs: numb
   return { allowed: true }
 }
 
+async function kvGetJson<T>(env: Env, key: string) {
+  if (!env.RATE_LIMIT_KV) {
+    return null
+  }
+  try {
+    return await env.RATE_LIMIT_KV.get(key, 'json') as T | null
+  } catch {
+    return null
+  }
+}
+
 async function checkCooldown(env: Env, key: string, windowMs: number) {
   const now = Date.now()
   const storageKey = `cooldown:${key}`
   const windowSeconds = Math.ceil(windowMs / 1000)
 
   if (env.RATE_LIMIT_KV) {
-    const current = await env.RATE_LIMIT_KV.get(storageKey, 'json') as CooldownState | null
+    const current = await kvGetJson<CooldownState>(env, storageKey)
     if (current && now - current.last < windowMs) {
       return { allowed: false, retryAfter: Math.ceil((windowMs - (now - current.last)) / 1000) }
     }
@@ -235,7 +246,7 @@ async function checkCooldown(env: Env, key: string, windowMs: number) {
 async function getAbuseState(env: Env, key: string) {
   const storageKey = `abuse:${key}`
   if (env.RATE_LIMIT_KV) {
-    return await env.RATE_LIMIT_KV.get(storageKey, 'json') as AbuseState | null
+    return await kvGetJson<AbuseState>(env, storageKey)
   }
   return memoryAbuse.get(storageKey) ?? null
 }
@@ -326,7 +337,7 @@ function buildHistorySignature(history: ChatMessage[]) {
 async function getChatHistory(env: Env, sessionId: string) {
   const historyKey = `chat:${sessionId}`
   if (env.RATE_LIMIT_KV) {
-    const stored = await env.RATE_LIMIT_KV.get(historyKey, 'json') as ChatMessage[] | null
+    const stored = await kvGetJson<ChatMessage[]>(env, historyKey)
     return Array.isArray(stored) ? stored : []
   }
   return memoryHistory.get(historyKey) ?? []
@@ -483,7 +494,7 @@ async function getCachedReply(env: Env, key: string) {
   const now = Date.now()
 
   if (env.RATE_LIMIT_KV) {
-    const entry = await env.RATE_LIMIT_KV.get(cacheKey, 'json') as CacheState | null
+    const entry = await kvGetJson<CacheState>(env, cacheKey)
     if (entry && entry.expires > now) {
       return entry.reply
     }
@@ -553,6 +564,10 @@ async function callGemini(
 
 export const onRequest = async ({ request, env }: { request: Request; env: Env }) => {
   const origin = request.headers.get('Origin') || undefined
+  const respondWithOrigin = (body: Record<string, unknown>, status = 200) =>
+    jsonResponse(body, status, origin)
+
+  try {
 
   if (!origin || !allowedOrigins.has(origin)) {
     return jsonResponse({ error: 'Forbidden' }, 403, origin)
@@ -581,8 +596,8 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
     return respond({ error: 'Invalid content type' }, 415)
   }
 
-  const payload = await request.json().catch(() => null) as { prompt?: string; turnstileToken?: string }
-  const prompt = payload?.prompt?.trim()
+  const payload = await request.json().catch(() => null) as { prompt?: unknown; turnstileToken?: string } | null
+  const prompt = typeof payload?.prompt === 'string' ? payload.prompt.trim() : ''
 
   if (!prompt) {
     return respond({ error: 'Prompt required' }, 400)
@@ -692,4 +707,8 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
   await setCachedReply(env, promptKey, reply)
   await setChatHistory(env, session.id, [...chatHistory, { role: 'user', text: prompt }, { role: 'assistant', text: reply }])
   return respond({ reply }, 200)
+  } catch (error) {
+    console.error('ask handler error', error)
+    return respondWithOrigin({ error: 'Internal error' }, 500)
+  }
 }
