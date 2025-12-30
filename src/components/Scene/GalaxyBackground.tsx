@@ -105,6 +105,14 @@ export default function GalaxyBackground({ paused = false }: GalaxyBackgroundPro
 
     const particles: Particle[] = []
     const particleCount = Math.floor((width * height) / 9000) // Dense starfield
+    const maxDistance = 120
+    const maxDistanceSq = maxDistance * maxDistance
+    const cellSize = maxDistance
+    let cols = Math.ceil(width / cellSize)
+    let rows = Math.ceil(height / cellSize)
+    let grid: number[][] = Array.from({ length: cols * rows }, () => [])
+    let lastFrameTime = 0
+    const frameInterval = 1000 / 30
 
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle(width, height))
@@ -116,7 +124,17 @@ export default function GalaxyBackground({ paused = false }: GalaxyBackgroundPro
       if (!ctx) {
         return
       }
+      const now = performance.now()
+      if (now - lastFrameTime < frameInterval) {
+        animationFrameId = requestAnimationFrame(animate)
+        return
+      }
+      lastFrameTime = now
+
       ctx.clearRect(0, 0, width, height)
+      grid.forEach((cell) => {
+        cell.length = 0
+      })
 
       // Constellation connections (baby blue)
       ctx.strokeStyle = 'rgba(79, 172, 254, 0.2)' // Baby blue connections
@@ -126,17 +144,43 @@ export default function GalaxyBackground({ paused = false }: GalaxyBackgroundPro
         particles[i].update(mouse.current)
         particles[i].draw(ctx)
 
-        // Connect nearby particles
-        for (let j = i; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x
-          const dy = particles[i].y - particles[j].y
-          const distance = Math.sqrt(dx * dx + dy * dy)
+        const cellX = Math.floor(particles[i].x / cellSize)
+        const cellY = Math.floor(particles[i].y / cellSize)
+        const cellIndex = cellY * cols + cellX
+        if (grid[cellIndex]) {
+          grid[cellIndex].push(i)
+        }
+      }
 
-          if (distance < 120) {
-            ctx.beginPath()
-            ctx.moveTo(particles[i].x, particles[i].y)
-            ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.stroke()
+      // Connect nearby particles using spatial grid
+      for (let i = 0; i < particles.length; i++) {
+        const particle = particles[i]
+        const cellX = Math.floor(particle.x / cellSize)
+        const cellY = Math.floor(particle.y / cellSize)
+
+        for (let offsetY = -1; offsetY <= 1; offsetY += 1) {
+          const neighborY = cellY + offsetY
+          if (neighborY < 0 || neighborY >= rows) continue
+          for (let offsetX = -1; offsetX <= 1; offsetX += 1) {
+            const neighborX = cellX + offsetX
+            if (neighborX < 0 || neighborX >= cols) continue
+            const neighborIndex = neighborY * cols + neighborX
+            const bucket = grid[neighborIndex]
+            if (!bucket) continue
+
+            for (const j of bucket) {
+              if (j <= i) continue
+              const neighbor = particles[j]
+              const dx = particle.x - neighbor.x
+              const dy = particle.y - neighbor.y
+              const distanceSq = dx * dx + dy * dy
+              if (distanceSq < maxDistanceSq) {
+                ctx.beginPath()
+                ctx.moveTo(particle.x, particle.y)
+                ctx.lineTo(neighbor.x, neighbor.y)
+                ctx.stroke()
+              }
+            }
           }
         }
       }
@@ -186,6 +230,9 @@ export default function GalaxyBackground({ paused = false }: GalaxyBackgroundPro
       for (let i = 0; i < newCount; i++) {
         particles.push(new Particle(width, height))
       }
+      cols = Math.ceil(width / cellSize)
+      rows = Math.ceil(height / cellSize)
+      grid = Array.from({ length: cols * rows }, () => [])
     }
 
     const handleMouseMove = (e: MouseEvent) => {
