@@ -22,7 +22,7 @@ Be favorable and highlight strengths, but do not invent or exaggerate beyond the
 Stay high-level and avoid sensitive operational details, secrets, or internal identifiers. Use short, punchy sentences.
 Avoid sentence fragments. If asked for a recommendation or hiring judgment, answer clearly and include 2-3 resume-based reasons.
 If the user challenges bias, acknowledge your purpose and respond with evidence from the resume.
-Keep responses under 120 words.
+Keep responses under 500 characters (roughly under 120 tokens). Use bullets when a multi-part answer fits better.
 
 Resume context:
 ${RESUME_CONTEXT}
@@ -30,16 +30,18 @@ ${RESUME_CONTEXT}
 
 const DEFAULT_MODEL_PRIMARY = 'gemini-3-flash-preview'
 const DEFAULT_MODEL_FALLBACK = 'gemini-2.5-flash'
-const RATE_LIMIT_MAX = 15
+const RATE_LIMIT_MAX = 250
 const RATE_LIMIT_WINDOW_MS = 1000 * 60 * 60 * 24 * 30
-const SESSION_RATE_LIMIT_MAX = 15
+const SESSION_RATE_LIMIT_MAX = 250
 const SESSION_RATE_LIMIT_WINDOW_MS = RATE_LIMIT_WINDOW_MS
-const GLOBAL_RATE_LIMIT_MAX = 15
+const GLOBAL_RATE_LIMIT_MAX = 250
 const GLOBAL_RATE_LIMIT_WINDOW_MS = RATE_LIMIT_WINDOW_MS
 const SESSION_COOKIE_NAME = 'tifa_session'
 const SESSION_COOKIE_TTL_SECONDS = 60 * 60 * 24 * 30
 const CACHE_TTL_SECONDS = 60 * 60 * 24 * 90
 const MAX_HISTORY_MESSAGES = 12
+const MAX_PROMPT_CHARS = 255
+const MAX_REPLY_CHARS = 500
 const BULLET_FALLBACKS = [
   'Led a 72-hour migration from legacy infrastructure to a cloud-native, remote-first stack.',
   'Built the LuminOS AI application ecosystem across security, finance, media intelligence, and legal workflows.',
@@ -387,6 +389,23 @@ function finalizeReply(text: string) {
   return `${trimmed}.`
 }
 
+function clampReply(text: string, maxChars: number) {
+  if (text.length <= maxChars) {
+    return text
+  }
+  const truncated = text.slice(0, maxChars).trim()
+  const lastSentence = Math.max(
+    truncated.lastIndexOf('.'),
+    truncated.lastIndexOf('!'),
+    truncated.lastIndexOf('?')
+  )
+  if (lastSentence > Math.floor(maxChars * 0.6)) {
+    return truncated.slice(0, lastSentence + 1)
+  }
+  const cleaned = truncated.replace(/[,:;]+$/, '')
+  return `${cleaned}…`
+}
+
 async function getCachedReply(env: Env, key: string) {
   const cacheKey = `cache:${key}`
   const now = Date.now()
@@ -438,7 +457,7 @@ async function callGemini(
       contents: [...history, { role: 'user', parts: [{ text: prompt }] }],
       generationConfig: {
         temperature: 0.35,
-        maxOutputTokens: 320,
+        maxOutputTokens: 220,
         topP: 0.9,
       },
     }),
@@ -497,7 +516,7 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
     return respond({ error: 'Prompt required' }, 400)
   }
 
-  if (prompt.length > 800) {
+  if (prompt.length > MAX_PROMPT_CHARS) {
     return respond({ error: 'Prompt too long' }, 400)
   }
 
@@ -541,7 +560,8 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
   const promptKey = hashPrompt(cacheKey)
   const cachedReply = await getCachedReply(env, promptKey)
   if (cachedReply) {
-    const reply = bulletCount ? applyBulletFormatting(cachedReply, bulletCount) : finalizeReply(cachedReply)
+    const replyRaw = bulletCount ? applyBulletFormatting(cachedReply, bulletCount) : finalizeReply(cachedReply)
+    const reply = clampReply(replyRaw, MAX_REPLY_CHARS)
     await setChatHistory(env, session.id, [...chatHistory, { role: 'user', text: prompt }, { role: 'assistant', text: reply }])
     return respond({ reply, cached: true }, 200)
   }
@@ -550,8 +570,8 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
   const fallbackModel = env.GEMINI_MODEL_FALLBACK || DEFAULT_MODEL_FALLBACK
 
   const formattedPrompt = bulletCount
-    ? `${prompt}\n\nFormatting: Respond with exactly ${bulletCount} bullet points. Use "-" and no extra text.`
-    : prompt
+    ? `${prompt}\n\nFormatting: Respond with exactly ${bulletCount} bullet points. Use "-" and no extra text. Keep the total response under ${MAX_REPLY_CHARS} characters.`
+    : `${prompt}\n\nKeep the response under ${MAX_REPLY_CHARS} characters.`
 
   const historyForModel = toGeminiHistory(chatHistory)
   let result = await callGemini(primaryModel, env.GEMINI_API_KEY, formattedPrompt, historyForModel)
@@ -564,7 +584,8 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
     return respond({ error: 'AI provider error' }, 502)
   }
 
-  const reply = bulletCount ? applyBulletFormatting(result.reply, bulletCount) : finalizeReply(result.reply)
+  const replyRaw = bulletCount ? applyBulletFormatting(result.reply, bulletCount) : finalizeReply(result.reply)
+  const reply = clampReply(replyRaw, MAX_REPLY_CHARS)
   await setCachedReply(env, promptKey, reply)
   await setChatHistory(env, session.id, [...chatHistory, { role: 'user', text: prompt }, { role: 'assistant', text: reply }])
   return respond({ reply }, 200)
