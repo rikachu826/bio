@@ -42,6 +42,11 @@ const CACHE_TTL_SECONDS = 60 * 60 * 24 * 90
 const MAX_HISTORY_MESSAGES = 12
 const MAX_PROMPT_CHARS = 255
 const MAX_REPLY_CHARS = 500
+const COOLDOWN_SECONDS = 30
+const COOLDOWN_WINDOW_MS = COOLDOWN_SECONDS * 1000
+const ABUSE_STRIKE_WINDOW_MS = 10 * 60 * 1000
+const ABUSE_STRIKE_LIMIT = 6
+const ABUSE_BAN_MS = 30 * 60 * 1000
 const BULLET_FALLBACKS = [
   'Led a 72-hour migration from legacy infrastructure to a cloud-native, remote-first stack.',
   'Built the LuminOS AI application ecosystem across security, finance, media intelligence, and legal workflows.',
@@ -53,10 +58,14 @@ const BULLET_FALLBACKS = [
 type RateLimitState = { count: number; reset: number }
 type CacheState = { reply: string; expires: number }
 type ChatMessage = { role: 'user' | 'assistant'; text: string }
+type CooldownState = { last: number }
+type AbuseState = { strikes: number; reset: number; bannedUntil: number }
 
 const memoryRateLimit = new Map<string, RateLimitState>()
 const memoryCache = new Map<string, CacheState>()
 const memoryHistory = new Map<string, ChatMessage[]>()
+const memoryCooldown = new Map<string, CooldownState>()
+const memoryAbuse = new Map<string, AbuseState>()
 
 type Env = {
   GEMINI_API_KEY: string
@@ -199,6 +208,69 @@ async function checkRateLimit(env: Env, key: string, max: number, windowMs: numb
   state.count += 1
   memoryRateLimit.set(storageKey, state)
   return { allowed: true }
+}
+
+async function checkCooldown(env: Env, key: string, windowMs: number) {
+  const now = Date.now()
+  const storageKey = `cooldown:${key}`
+  const windowSeconds = Math.ceil(windowMs / 1000)
+
+  if (env.RATE_LIMIT_KV) {
+    const current = await env.RATE_LIMIT_KV.get(storageKey, 'json') as CooldownState | null
+    if (current && now - current.last < windowMs) {
+      return { allowed: false, retryAfter: Math.ceil((windowMs - (now - current.last)) / 1000) }
+    }
+    await env.RATE_LIMIT_KV.put(storageKey, JSON.stringify({ last: now }), { expirationTtl: windowSeconds })
+    return { allowed: true }
+  }
+
+  const current = memoryCooldown.get(storageKey)
+  if (current && now - current.last < windowMs) {
+    return { allowed: false, retryAfter: Math.ceil((windowMs - (now - current.last)) / 1000) }
+  }
+  memoryCooldown.set(storageKey, { last: now })
+  return { allowed: true }
+}
+
+async function getAbuseState(env: Env, key: string) {
+  const storageKey = `abuse:${key}`
+  if (env.RATE_LIMIT_KV) {
+    return await env.RATE_LIMIT_KV.get(storageKey, 'json') as AbuseState | null
+  }
+  return memoryAbuse.get(storageKey) ?? null
+}
+
+async function registerAbuse(env: Env, key: string) {
+  const now = Date.now()
+  const storageKey = `abuse:${key}`
+  const windowSeconds = Math.ceil(ABUSE_STRIKE_WINDOW_MS / 1000)
+  const banSeconds = Math.ceil(ABUSE_BAN_MS / 1000)
+
+  const current = await getAbuseState(env, key)
+  const state = !current || current.reset < now
+    ? { strikes: 0, reset: now + ABUSE_STRIKE_WINDOW_MS, bannedUntil: 0 }
+    : current
+
+  if (state.bannedUntil > now) {
+    return state
+  }
+
+  state.strikes += 1
+  if (state.strikes >= ABUSE_STRIKE_LIMIT) {
+    state.bannedUntil = now + ABUSE_BAN_MS
+    state.strikes = 0
+    state.reset = now + ABUSE_STRIKE_WINDOW_MS
+  }
+
+  const ttl = Math.max(state.reset, state.bannedUntil || 0) - now
+  const ttlSeconds = Math.ceil(ttl / 1000) || windowSeconds + banSeconds
+
+  if (env.RATE_LIMIT_KV) {
+    await env.RATE_LIMIT_KV.put(storageKey, JSON.stringify(state), { expirationTtl: ttlSeconds })
+  } else {
+    memoryAbuse.set(storageKey, state)
+  }
+  return state
 }
 
 async function verifyTurnstile(secret: string, token: string, ip?: string) {
@@ -523,6 +595,37 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
   const clientId = getClientId(request)
   const allowlisted = parseAllowlist(env.RATE_LIMIT_ALLOW_IPS).has(clientId)
   if (!allowlisted) {
+    const abuseState = await getAbuseState(env, `ip:${clientId}`)
+    if (abuseState?.bannedUntil && abuseState.bannedUntil > Date.now()) {
+      return respond(
+        { error: 'Temporarily blocked', retryAfter: Math.ceil((abuseState.bannedUntil - Date.now()) / 1000) },
+        429
+      )
+    }
+
+    const sessionCooldown = await checkCooldown(env, `session:${session.id}`, COOLDOWN_WINDOW_MS)
+    if (!sessionCooldown.allowed) {
+      const updated = await registerAbuse(env, `ip:${clientId}`)
+      if (updated.bannedUntil > Date.now()) {
+        return respond(
+          { error: 'Temporarily blocked', retryAfter: Math.ceil((updated.bannedUntil - Date.now()) / 1000) },
+          429
+        )
+      }
+      return respond({ error: 'Cooldown active', retryAfter: sessionCooldown.retryAfter }, 429)
+    }
+    const ipCooldown = await checkCooldown(env, `ip:${clientId}`, COOLDOWN_WINDOW_MS)
+    if (!ipCooldown.allowed) {
+      const updated = await registerAbuse(env, `ip:${clientId}`)
+      if (updated.bannedUntil > Date.now()) {
+        return respond(
+          { error: 'Temporarily blocked', retryAfter: Math.ceil((updated.bannedUntil - Date.now()) / 1000) },
+          429
+        )
+      }
+      return respond({ error: 'Cooldown active', retryAfter: ipCooldown.retryAfter }, 429)
+    }
+
     const globalLimit = await checkRateLimit(env, 'global', GLOBAL_RATE_LIMIT_MAX, GLOBAL_RATE_LIMIT_WINDOW_MS)
     if (!globalLimit.allowed) {
       return respond({ error: 'Rate limit exceeded', retryAfter: globalLimit.retryAfter }, 429)
