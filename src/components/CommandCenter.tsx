@@ -11,6 +11,10 @@ type Slide = {
   isVideo: boolean
 }
 
+type CommandCenterProps = {
+  paused?: boolean
+}
+
 const imageModules = import.meta.glob('/Images/**/*.{jpg,jpeg,png,webp,mp4,webm}', {
   eager: true,
   import: 'default',
@@ -48,12 +52,13 @@ const commandCaptions: Record<string, CommandCaption> = Object.entries(commandCa
 
 const commandKeywords = ['command', 'desk', 'workstation', 'rig', 'setup', 'command-center']
 
-export default function CommandCenter() {
+export default function CommandCenter({ paused = false }: CommandCenterProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px", amount: 0.15 })
   const commandCenter = content.commandCenter
   const [isTabVisible, setIsTabVisible] = useState(true)
   const [visibilityTick, setVisibilityTick] = useState(0)
+  const wasPausedRef = useRef(paused)
   const slides = useMemo<Slide[]>(() => {
     const entries = Object.entries(imageModules)
       .map(([path, src]) => {
@@ -108,12 +113,12 @@ export default function CommandCenter() {
   }, [slideCount])
 
   useEffect(() => {
-    if (!isInView || slideCount <= 1 || !isTabVisible) {
+    if (!isInView || slideCount <= 1 || !isTabVisible || paused) {
       return
     }
     const timer = window.setInterval(goNext, 8500)
     return () => window.clearInterval(timer)
-  }, [goNext, isInView, slideCount, isTabVisible])
+  }, [goNext, isInView, slideCount, isTabVisible, paused])
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -127,6 +132,13 @@ export default function CommandCenter() {
     document.addEventListener('visibilitychange', handleVisibilityChange)
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [])
+
+  useEffect(() => {
+    if (wasPausedRef.current && !paused) {
+      setVisibilityTick((prev) => prev + 1)
+    }
+    wasPausedRef.current = paused
+  }, [paused])
 
   if (slides.length === 0) {
     return null

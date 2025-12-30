@@ -118,7 +118,7 @@ function App() {
         {/* About Section - Dark transition */}
         <section id="about" className="relative z-10 bg-gradient-to-b from-space-black/95 via-charcoal/90 to-charcoal/70">
           <About />
-          <CommandCenter />
+          <CommandCenter paused={isIdle} />
         </section>
 
         {/* Experience Section - Medium transition */}
