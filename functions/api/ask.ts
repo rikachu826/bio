@@ -225,13 +225,14 @@ async function checkCooldown(env: Env, key: string, windowMs: number) {
   const now = Date.now()
   const storageKey = `cooldown:${key}`
   const windowSeconds = Math.ceil(windowMs / 1000)
+  const ttlSeconds = Math.max(windowSeconds, 60)
 
   if (env.RATE_LIMIT_KV) {
     const current = await kvGetJson<CooldownState>(env, storageKey)
     if (current && now - current.last < windowMs) {
       return { allowed: false, retryAfter: Math.ceil((windowMs - (now - current.last)) / 1000) }
     }
-    await env.RATE_LIMIT_KV.put(storageKey, JSON.stringify({ last: now }), { expirationTtl: windowSeconds })
+    await env.RATE_LIMIT_KV.put(storageKey, JSON.stringify({ last: now }), { expirationTtl: ttlSeconds })
     return { allowed: true }
   }
 
