@@ -102,42 +102,48 @@ export default function Projects() {
       videoSources.set(base, entry)
     })
 
-    return screenshots
-      .slice()
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map((shot) => {
-        const lowerName = shot.name.toLowerCase()
-        const base = lowerName.replace(/\.(mp4|webm)$/i, '')
-        const source = videoSources.get(base)
-        const hasWebm = Boolean(source?.webm)
-        const hasMp4 = Boolean(source?.mp4)
-        const isMp4 = lowerName.endsWith('.mp4')
-        const isWebm = lowerName.endsWith('.webm')
+    const sorted = screenshots.slice().sort((a, b) => a.name.localeCompare(b.name))
+    const normalized: Screenshot[] = []
 
-        if (shot.isVideo && hasWebm && isMp4) {
-          return null
-        }
+    for (const shot of sorted) {
+      const lowerName = shot.name.toLowerCase()
+      const base = lowerName.replace(/\.(mp4|webm)$/i, '')
+      const source = videoSources.get(base)
+      const hasWebm = Boolean(source?.webm)
+      const hasMp4 = Boolean(source?.mp4)
+      const isMp4 = lowerName.endsWith('.mp4')
+      const isWebm = lowerName.endsWith('.webm')
 
-        const sources = shot.isVideo
-          ? [
-              hasWebm ? { src: source?.webm as string, type: 'video/webm' } : null,
-              hasMp4 ? { src: source?.mp4 as string, type: 'video/mp4' } : null,
-            ].filter(Boolean) as Array<{ src: string; type: string }>
-          : undefined
+      if (shot.isVideo && hasWebm && isMp4) {
+        continue
+      }
 
-        const fallbackType = isWebm ? 'video/webm' : 'video/mp4'
-        const primarySrc = shot.isVideo
-          ? (isWebm && source?.webm ? source.webm : source?.mp4 || shot.src)
-          : shot.src
+      const sources = shot.isVideo
+        ? [
+            hasWebm ? { src: source?.webm as string, type: 'video/webm' } : null,
+            hasMp4 ? { src: source?.mp4 as string, type: 'video/mp4' } : null,
+          ].filter(Boolean) as Array<{ src: string; type: string }>
+        : undefined
 
-        return {
-          ...shot,
-          src: primarySrc,
-          caption: captions[shot.name] ?? '',
-          sources: sources && sources.length > 0 ? sources : shot.isVideo ? [{ src: shot.src, type: fallbackType }] : undefined,
-        }
+      const fallbackType = isWebm ? 'video/webm' : 'video/mp4'
+      const primarySrc = shot.isVideo
+        ? (isWebm && source?.webm ? source.webm : source?.mp4 || shot.src)
+        : shot.src
+
+      normalized.push({
+        ...shot,
+        src: primarySrc,
+        caption: captions[shot.name] ?? '',
+        sources:
+          sources && sources.length > 0
+            ? sources
+            : shot.isVideo
+              ? [{ src: shot.src, type: fallbackType }]
+              : undefined,
       })
-      .filter((shot): shot is Screenshot => Boolean(shot))
+    }
+
+    return normalized
   }, [selectedProject?.screenshotsFolder])
 
   useEffect(() => {
@@ -467,9 +473,9 @@ export default function Projects() {
                 <div className="space-y-4">
                   <h4 className="text-xl font-semibold mb-4">Screenshots</h4>
                   <div className="grid md:grid-cols-2 gap-4">
-                    {projectScreenshots.map((shot, index) => (
-                      <div
-                        key={`${shot.src}-${index}`}
+                  {projectScreenshots.map((shot, index) => (
+                    <div
+                      key={`${shot.src}-${index}`}
                         className="project-screenshot-card rounded-2xl border border-white/10 bg-charcoal/40 p-3 cursor-zoom-in"
                         data-caption={shot.caption?.trim() ? shot.caption : shot.name}
                         aria-label={shot.caption?.trim() ? shot.caption : shot.name}
