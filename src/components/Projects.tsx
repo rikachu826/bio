@@ -37,6 +37,7 @@ export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null)
   const [selectedScreenshotIndex, setSelectedScreenshotIndex] = useState(0)
+  const [lightboxError, setLightboxError] = useState(false)
   const touchStartX = useRef<number | null>(null)
   const touchEndX = useRef<number | null>(null)
   const screenshotsByFolder = useRef(
@@ -128,6 +129,10 @@ export default function Projects() {
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [selectedScreenshot, projectScreenshots.length])
+
+  useEffect(() => {
+    setLightboxError(false)
+  }, [selectedScreenshotIndex, selectedScreenshot])
 
   const showNextScreenshot = () => {
     if (projectScreenshots.length === 0) {
@@ -418,6 +423,10 @@ export default function Projects() {
                           setSelectedScreenshot(shot.src)
                           setSelectedScreenshotIndex(index)
                         }}
+                        onTouchEnd={() => {
+                          setSelectedScreenshot(shot.src)
+                          setSelectedScreenshotIndex(index)
+                        }}
                       >
                         {shot.isVideo ? (
                           <video
@@ -494,7 +503,19 @@ export default function Projects() {
                     ''
                   }
                 >
-                  {projectScreenshots[selectedScreenshotIndex]?.isVideo ? (
+                  {lightboxError ? (
+                    <div className="max-h-[85vh] w-[80vw] max-w-[92vw] rounded-2xl bg-space-black/70 border border-white/10 flex flex-col items-center justify-center p-8 text-center">
+                      <p className="text-pure-white mb-2">Media failed to load on this device.</p>
+                      <a
+                        href={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sky-blue underline"
+                      >
+                        Open file in a new tab
+                      </a>
+                    </div>
+                  ) : projectScreenshots[selectedScreenshotIndex]?.isVideo ? (
                     <motion.video
                       key={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
                       className="max-h-[85vh] w-auto max-w-[92vw] rounded-2xl object-contain"
@@ -504,6 +525,22 @@ export default function Projects() {
                       playsInline
                       controls
                       preload="metadata"
+                      onClick={(event) => {
+                        const target = event.currentTarget
+                        if (target.paused) {
+                          target.play().catch(() => {})
+                        } else {
+                          target.pause()
+                        }
+                      }}
+                      onTouchEnd={(event) => {
+                        const target = event.currentTarget
+                        if (target.paused) {
+                          target.play().catch(() => {})
+                        } else {
+                          target.pause()
+                        }
+                      }}
                       initial={{ opacity: 0, x: 24, scale: 0.98 }}
                       animate={{ opacity: 1, x: 0, scale: 1 }}
                       exit={{ opacity: 0, x: -24, scale: 0.98 }}
@@ -517,6 +554,10 @@ export default function Projects() {
                       src={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
                       alt="Project screenshot"
                       className="max-h-[85vh] w-auto max-w-[92vw] rounded-2xl object-contain"
+                      loading="eager"
+                      decoding="async"
+                      fetchPriority="high"
+                      onError={() => setLightboxError(true)}
                       initial={{ opacity: 0, x: 24, scale: 0.98 }}
                       animate={{ opacity: 1, x: 0, scale: 1 }}
                       exit={{ opacity: 0, x: -24, scale: 0.98 }}
