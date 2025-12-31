@@ -26,6 +26,7 @@ interface Screenshot {
   name: string
   caption?: string
   isVideo?: boolean
+  sources?: Array<{ src: string; type: string }>
 }
 
 const projectsSection = content.projectsSection
@@ -84,13 +85,43 @@ export default function Projects() {
     const folder = selectedProject.screenshotsFolder
     const screenshots = screenshotsByFolder.current[folder] ?? []
     const captions = captionsByFolder.current[folder] ?? {}
+    const videoSources = new Map<string, { mp4?: string; webm?: string }>()
+
+    screenshots.forEach((shot) => {
+      if (!shot.isVideo) {
+        return
+      }
+      const lowerName = shot.name.toLowerCase()
+      const base = lowerName.replace(/\.(mp4|webm)$/i, '')
+      const entry = videoSources.get(base) ?? {}
+      if (lowerName.endsWith('.mp4')) {
+        entry.mp4 = shot.src
+      } else if (lowerName.endsWith('.webm')) {
+        entry.webm = shot.src
+      }
+      videoSources.set(base, entry)
+    })
+
     return screenshots
       .slice()
       .sort((a, b) => a.name.localeCompare(b.name))
-      .map((shot) => ({
-        ...shot,
-        caption: captions[shot.name] ?? ''
-      }))
+      .map((shot) => {
+        const lowerName = shot.name.toLowerCase()
+        const base = lowerName.replace(/\.(mp4|webm)$/i, '')
+        const source = videoSources.get(base)
+        const sources = shot.isVideo
+          ? [
+              source?.mp4 ? { src: source.mp4, type: 'video/mp4' } : null,
+              source?.webm ? { src: source.webm, type: 'video/webm' } : null,
+            ].filter(Boolean) as Array<{ src: string; type: string }>
+          : undefined
+        const fallbackType = lowerName.endsWith('.webm') ? 'video/webm' : 'video/mp4'
+        return {
+          ...shot,
+          caption: captions[shot.name] ?? '',
+          sources: sources && sources.length > 0 ? sources : shot.isVideo ? [{ src: shot.src, type: fallbackType }] : undefined,
+        }
+      })
   }, [selectedProject?.screenshotsFolder])
 
   useEffect(() => {
@@ -436,8 +467,11 @@ export default function Projects() {
                             loop
                             autoPlay
                             preload="metadata"
+                            controls
                           >
-                            <source src={shot.src} />
+                            {(shot.sources && shot.sources.length > 0 ? shot.sources : [{ src: shot.src, type: 'video/mp4' }]).map((source) => (
+                              <source key={source.src} src={source.src} type={source.type} />
+                            ))}
                           </video>
                         ) : (
                           <img
@@ -525,6 +559,7 @@ export default function Projects() {
                       playsInline
                       controls
                       preload="metadata"
+                      onError={() => setLightboxError(true)}
                       onClick={(event) => {
                         const target = event.currentTarget
                         if (target.paused) {
@@ -546,7 +581,12 @@ export default function Projects() {
                       exit={{ opacity: 0, x: -24, scale: 0.98 }}
                       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                     >
-                      <source src={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot} />
+                      {(projectScreenshots[selectedScreenshotIndex]?.sources && projectScreenshots[selectedScreenshotIndex]?.sources?.length > 0
+                        ? projectScreenshots[selectedScreenshotIndex]?.sources
+                        : [{ src: projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot, type: 'video/mp4' }]
+                      ).map((source) => (
+                        <source key={source.src} src={source.src} type={source.type} />
+                      ))}
                     </motion.video>
                   ) : (
                     <motion.img
