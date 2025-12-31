@@ -109,19 +109,35 @@ export default function Projects() {
         const lowerName = shot.name.toLowerCase()
         const base = lowerName.replace(/\.(mp4|webm)$/i, '')
         const source = videoSources.get(base)
+        const hasWebm = Boolean(source?.webm)
+        const hasMp4 = Boolean(source?.mp4)
+        const isMp4 = lowerName.endsWith('.mp4')
+        const isWebm = lowerName.endsWith('.webm')
+
+        if (shot.isVideo && hasWebm && isMp4) {
+          return null
+        }
+
         const sources = shot.isVideo
           ? [
-              source?.mp4 ? { src: source.mp4, type: 'video/mp4' } : null,
-              source?.webm ? { src: source.webm, type: 'video/webm' } : null,
+              hasWebm ? { src: source?.webm as string, type: 'video/webm' } : null,
+              hasMp4 ? { src: source?.mp4 as string, type: 'video/mp4' } : null,
             ].filter(Boolean) as Array<{ src: string; type: string }>
           : undefined
-        const fallbackType = lowerName.endsWith('.webm') ? 'video/webm' : 'video/mp4'
+
+        const fallbackType = isWebm ? 'video/webm' : 'video/mp4'
+        const primarySrc = shot.isVideo
+          ? (isWebm && source?.webm ? source.webm : source?.mp4 || shot.src)
+          : shot.src
+
         return {
           ...shot,
+          src: primarySrc,
           caption: captions[shot.name] ?? '',
           sources: sources && sources.length > 0 ? sources : shot.isVideo ? [{ src: shot.src, type: fallbackType }] : undefined,
         }
       })
+      .filter((shot): shot is Screenshot => Boolean(shot))
   }, [selectedProject?.screenshotsFolder])
 
   useEffect(() => {

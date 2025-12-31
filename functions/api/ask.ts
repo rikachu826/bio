@@ -380,7 +380,12 @@ function extractBulletLines(text: string) {
       if (current) {
         items.push(current.trim())
       }
-      current = match[2]?.trim() || ''
+      const content = match[2]?.trim() || ''
+      const parts = content.split(/\s-\s/).map((part) => part.trim()).filter(Boolean)
+      current = parts.shift() || ''
+      if (parts.length > 0) {
+        items.push(...parts)
+      }
       continue
     }
 
@@ -435,6 +440,27 @@ function expandSegments(segments: string[], target: number) {
   return result
 }
 
+function isBadBullet(item: string) {
+  const text = item.trim()
+  if (!text) {
+    return true
+  }
+  const wordCount = text.split(/\s+/).filter(Boolean).length
+  if (wordCount < 4 && text.length < 24) {
+    return true
+  }
+  if (/[:\-–—]$/.test(text)) {
+    return true
+  }
+  if (/\b(and|with|to|for|a|an|the|of|he)\b$/i.test(text)) {
+    return true
+  }
+  if (/\b\d{1,3}$/.test(text)) {
+    return true
+  }
+  return false
+}
+
 function mergeFragmentedBullets(items: string[]) {
   const merged: string[] = []
   let index = 0
@@ -444,10 +470,11 @@ function mergeFragmentedBullets(items: string[]) {
     const next = items[index + 1]?.trim() ?? ''
     const wordCount = current.split(/\s+/).filter(Boolean).length
     const endsWithColon = current.endsWith(':')
-    const endsWithHe = /:\s*he$/i.test(current) || /\bhe$/i.test(current) && wordCount <= 4
+    const endsWithHe = /:\s*he$/i.test(current)
     const endsWithConnector = /\b(and|with|to|for)$/i.test(current)
+    const endsWithNumber = /\b\d{1,3}$/.test(current)
 
-    if (next && (wordCount <= 4 || endsWithColon || endsWithHe || endsWithConnector)) {
+    if (next && (endsWithColon || endsWithHe || endsWithConnector || endsWithNumber)) {
       current = `${current.replace(/:?\s*$/, '')} ${next}`.trim()
       merged.push(current)
       index += 2
@@ -469,17 +496,18 @@ function applyBulletFormatting(text: string, count: number) {
   items = mergeFragmentedBullets(items)
   items = expandSegments(items, count)
 
+  const cleaned = items.filter((item) => !isBadBullet(item))
   const normalized = new Set(items.map((item) => item.toLowerCase()))
   for (const fallback of BULLET_FALLBACKS) {
-    if (items.length >= count) {
+    if (cleaned.length >= count) {
       break
     }
     if (!normalized.has(fallback.toLowerCase())) {
-      items.push(fallback)
+      cleaned.push(fallback)
     }
   }
 
-  const formatted = items.slice(0, count).map((item) => {
+  const formatted = cleaned.slice(0, count).map((item) => {
     const sentence = item.split(/[.!?]/)[0]?.trim() || item.trim()
     const clipped = sentence.length > 160 ? `${sentence.slice(0, 157).trim()}...` : sentence
     return `- ${clipped}`

@@ -29,7 +29,7 @@ class Particle {
     this.density = (Math.random() * 30) + 1
   }
 
-  update(mouse: { x: number | null, y: number | null }) {
+  update(mouse: { x: number | null, y: number | null }, delta = 1) {
     // Mouse interaction
     if (mouse.x != null && mouse.y != null) {
       const dx = mouse.x - this.x
@@ -44,26 +44,26 @@ class Particle {
 
       // If mouse is close, particles move away
       if (distance < maxDistance) {
-        const directionX = forceDirectionX * force * this.density
-        const directionY = forceDirectionY * force * this.density
+        const directionX = forceDirectionX * force * this.density * delta
+        const directionY = forceDirectionY * force * this.density * delta
         this.x -= directionX
         this.y -= directionY
       } else {
         // Return to base drift
         if (this.x !== this.baseX) {
           const dx = this.x - this.baseX
-          this.x -= dx / 10
+          this.x -= (dx / 10) * delta
         }
         if (this.y !== this.baseY) {
           const dy = this.y - this.baseY
-          this.y -= dy / 10
+          this.y -= (dy / 10) * delta
         }
       }
     }
 
     // Base movement
-    this.baseX += this.vx
-    this.baseY += this.vy
+    this.baseX += this.vx * delta
+    this.baseY += this.vy * delta
 
     // Wrap around
     if (this.baseX < 0) this.baseX = this.width
@@ -112,7 +112,10 @@ export default function GalaxyBackground({ paused = false }: GalaxyBackgroundPro
     let rows = Math.ceil(height / cellSize)
     let grid: number[][] = Array.from({ length: cols * rows }, () => [])
     let lastFrameTime = 0
-    const frameInterval = 1000 / 30
+    const cores = typeof navigator !== 'undefined' ? navigator.hardwareConcurrency ?? 6 : 6
+    const memory = typeof navigator !== 'undefined' ? (navigator as { deviceMemory?: number }).deviceMemory ?? 4 : 4
+    const targetFps = cores >= 10 || memory >= 8 ? 50 : 40
+    const frameInterval = 1000 / targetFps
 
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle(width, height))
@@ -125,10 +128,12 @@ export default function GalaxyBackground({ paused = false }: GalaxyBackgroundPro
         return
       }
       const now = performance.now()
-      if (now - lastFrameTime < frameInterval) {
+      const deltaMs = now - lastFrameTime
+      if (deltaMs < frameInterval) {
         animationFrameId = requestAnimationFrame(animate)
         return
       }
+      const delta = Math.min(2, Math.max(0.5, deltaMs / 16.67))
       lastFrameTime = now
 
       ctx.clearRect(0, 0, width, height)
@@ -141,7 +146,7 @@ export default function GalaxyBackground({ paused = false }: GalaxyBackgroundPro
       ctx.lineWidth = 0.5
 
       for (let i = 0; i < particles.length; i++) {
-        particles[i].update(mouse.current)
+        particles[i].update(mouse.current, delta)
         particles[i].draw(ctx)
 
         const cellX = Math.floor(particles[i].x / cellSize)

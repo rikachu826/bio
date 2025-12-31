@@ -9,6 +9,7 @@ type Slide = {
   alt: string
   key: string
   isVideo: boolean
+  sources?: Array<{ src: string; type: string }>
 }
 
 type CommandCenterProps = {
@@ -71,7 +72,12 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
           return null
         }
         const isVideo = /\.(mp4|webm)$/i.test(lower)
-        const caption = commandCaptions[lower]
+        const base = lower.replace(/\.(mp4|webm)$/i, '')
+        const caption =
+          commandCaptions[lower] ||
+          (isVideo
+            ? commandCaptions[`${base}.webm`] || commandCaptions[`${base}.mp4`]
+            : undefined)
         const fallbackTitle = 'Command Center'
         const fallbackDescription = 'Multi-system workspace built for parallel research and monitoring.'
         const title = caption?.title?.trim() || fallbackTitle
@@ -83,16 +89,60 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
           alt: title,
           key: lower,
           isVideo,
+          videoKey: isVideo ? base : '',
         }
       })
-      .filter((entry): entry is Slide => Boolean(entry))
-      .sort((a, b) => {
-        if (a.key === 'rank1.jpg') return 1
-        if (b.key === 'rank1.jpg') return -1
-        return a.key.localeCompare(b.key)
-      })
+      .filter((entry): entry is Slide & { videoKey: string } => Boolean(entry))
 
-    return entries
+    const videoSources = new Map<string, { mp4?: string; webm?: string }>()
+    entries.forEach((entry) => {
+      if (!entry.isVideo || !entry.videoKey) {
+        return
+      }
+      const source = videoSources.get(entry.videoKey) ?? {}
+      if (entry.key.endsWith('.mp4')) {
+        source.mp4 = entry.src
+      } else if (entry.key.endsWith('.webm')) {
+        source.webm = entry.src
+      }
+      videoSources.set(entry.videoKey, source)
+    })
+
+    const normalizedEntries = entries
+      .map((entry) => {
+        if (!entry.isVideo || !entry.videoKey) {
+          return entry
+        }
+        const source = videoSources.get(entry.videoKey)
+        const hasWebm = Boolean(source?.webm)
+        const hasMp4 = Boolean(source?.mp4)
+        const isMp4 = entry.key.endsWith('.mp4')
+        const isWebm = entry.key.endsWith('.webm')
+
+        if (hasWebm && isMp4) {
+          return null
+        }
+
+        const sources = [
+          hasWebm ? { src: source?.webm as string, type: 'video/webm' } : null,
+          hasMp4 ? { src: source?.mp4 as string, type: 'video/mp4' } : null,
+        ].filter(Boolean) as Array<{ src: string; type: string }>
+        const fallbackType = isWebm ? 'video/webm' : 'video/mp4'
+        const primarySrc = isWebm && source?.webm ? source.webm : source?.mp4 || entry.src
+
+        return {
+          ...entry,
+          src: primarySrc,
+          sources: sources.length > 0 ? sources : [{ src: entry.src, type: fallbackType }],
+        }
+      })
+      .filter((entry): entry is Slide & { videoKey: string } => Boolean(entry))
+
+    return normalizedEntries.sort((a, b) => {
+      if (a.key === 'rank1.jpg') return 1
+      if (b.key === 'rank1.jpg') return -1
+      return a.key.localeCompare(b.key)
+    })
   }, [])
 
   const [activeIndex, setActiveIndex] = useState(0)
@@ -186,7 +236,12 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
                   exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <source src={activeSlide.src} />
+                  {(activeSlide.sources && activeSlide.sources.length > 0
+                    ? activeSlide.sources
+                    : [{ src: activeSlide.src, type: 'video/mp4' }]
+                  ).map((source) => (
+                    <source key={source.src} src={source.src} type={source.type} />
+                  ))}
                 </motion.video>
               ) : (
                 <motion.img
