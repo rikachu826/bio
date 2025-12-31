@@ -468,7 +468,6 @@ function mergeFragmentedBullets(items: string[]) {
   while (index < items.length) {
     let current = items[index]?.trim() ?? ''
     const next = items[index + 1]?.trim() ?? ''
-    const wordCount = current.split(/\s+/).filter(Boolean).length
     const endsWithColon = current.endsWith(':')
     const endsWithHe = /:\s*he$/i.test(current)
     const endsWithConnector = /\b(and|with|to|for)$/i.test(current)

@@ -229,6 +229,13 @@ export default function Projects() {
     }
   }, [selectedScreenshotIndex, projectScreenshots, selectedScreenshot])
 
+  const activeShot = projectScreenshots[selectedScreenshotIndex]
+  const activeFallbackSrc = activeShot?.src || selectedScreenshot || ''
+  const activeSources =
+    activeShot?.sources && activeShot.sources.length > 0
+      ? activeShot.sources
+      : [{ src: activeFallbackSrc, type: 'video/mp4' }]
+
   return (
     <>
       <div className="section-container py-20" ref={ref}>
@@ -597,17 +604,14 @@ export default function Projects() {
                       exit={{ opacity: 0, x: -24, scale: 0.98 }}
                       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                     >
-                      {(projectScreenshots[selectedScreenshotIndex]?.sources && projectScreenshots[selectedScreenshotIndex]?.sources?.length > 0
-                        ? projectScreenshots[selectedScreenshotIndex]?.sources
-                        : [{ src: projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot, type: 'video/mp4' }]
-                      ).map((source) => (
+                      {activeSources.map((source) => (
                         <source key={source.src} src={source.src} type={source.type} />
                       ))}
                     </motion.video>
                   ) : (
                     <motion.img
-                      key={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
-                      src={projectScreenshots[selectedScreenshotIndex]?.src || selectedScreenshot}
+                      key={activeFallbackSrc}
+                      src={activeFallbackSrc}
                       alt="Project screenshot"
                       className="max-h-[85vh] w-auto max-w-[92vw] rounded-2xl object-contain"
                       loading="eager"
