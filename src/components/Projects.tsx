@@ -235,12 +235,46 @@ export default function Projects() {
     }
   }, [selectedScreenshotIndex, projectScreenshots, selectedScreenshot])
 
+  const videoSupport = useMemo(() => {
+    if (typeof document === 'undefined') {
+      return null
+    }
+    const video = document.createElement('video')
+    const canPlay = (type: string) => {
+      const result = video.canPlayType(type)
+      return result === 'probably' || result === 'maybe'
+    }
+    return {
+      webm: canPlay('video/webm; codecs="vp8, vorbis"') || canPlay('video/webm'),
+      mp4: canPlay('video/mp4; codecs="avc1.42E01E, mp4a.40.2"') || canPlay('video/mp4'),
+    }
+  }, [])
+
+  const resolveVideoSources = (
+    sources: Array<{ src: string; type: string }>
+  ): Array<{ src: string; type: string }> => {
+    if (!sources.length || !videoSupport) {
+      return sources
+    }
+    const filtered = sources.filter((source) => {
+      if (source.type === 'video/webm') {
+        return videoSupport.webm
+      }
+      if (source.type === 'video/mp4') {
+        return videoSupport.mp4
+      }
+      return true
+    })
+    return filtered.length > 0 ? filtered : sources
+  }
+
   const activeShot = projectScreenshots[selectedScreenshotIndex]
   const activeFallbackSrc = activeShot?.src || selectedScreenshot || ''
   const activeSources =
     activeShot?.sources && activeShot.sources.length > 0
       ? activeShot.sources
       : [{ src: activeFallbackSrc, type: 'video/mp4' }]
+  const resolvedActiveSources = resolveVideoSources(activeSources)
 
   return (
     <>
@@ -498,7 +532,11 @@ export default function Projects() {
                             preload="metadata"
                             controls
                           >
-                            {(shot.sources && shot.sources.length > 0 ? shot.sources : [{ src: shot.src, type: 'video/mp4' }]).map((source) => (
+                            {resolveVideoSources(
+                              shot.sources && shot.sources.length > 0
+                                ? shot.sources
+                                : [{ src: shot.src, type: 'video/mp4' }]
+                            ).map((source) => (
                               <source key={source.src} src={source.src} type={source.type} />
                             ))}
                           </video>
@@ -610,7 +648,7 @@ export default function Projects() {
                       exit={{ opacity: 0, x: -24, scale: 0.98 }}
                       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                     >
-                      {activeSources.map((source) => (
+                      {resolvedActiveSources.map((source) => (
                         <source key={source.src} src={source.src} type={source.type} />
                       ))}
                     </motion.video>
