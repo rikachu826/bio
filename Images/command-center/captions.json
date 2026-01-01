@@ -23,16 +23,16 @@
     "title": "",
     "description": ""
   },
+  "rank1.jpg": {
+    "title": "Rank 1 DPS (Warcraft Logs)",
+    "description": "Top-tier execution, strategy, and performance under pressure."
+  },
   "quote.jpeg": {
     "title": "Be Passionate.",
     "description": "A quote I live by."
   },
-  "quote2.jpeg": {
-    "title": "Be Passionate.",
-    "description": "A quote I live by."
-  },
-  "rank1.jpg": {
-    "title": "World #1 DPS (Warcraft Logs)",
-    "description": "Top-tier execution, strategy, and performance under pressure."
+  "quote2.png": {
+    "title": "Build.",
+    "description": "Build the world you want to live in."
   }
 }
