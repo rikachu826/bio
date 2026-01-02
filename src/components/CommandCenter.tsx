@@ -59,6 +59,7 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
   const commandCenter = content.commandCenter
   const [isTabVisible, setIsTabVisible] = useState(true)
   const [visibilityTick, setVisibilityTick] = useState(0)
+  const [slideRetries, setSlideRetries] = useState<Record<string, number>>({})
   const wasPausedRef = useRef(paused)
   const slides = useMemo<Slide[]>(() => {
     const entries = Object.entries(imageModules)
@@ -195,6 +196,24 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
   }
 
   const activeSlide = slides[activeIndex]
+  const activeRetry = slideRetries[activeSlide.key] ?? 0
+  const addRetryParam = (src: string) => {
+    if (!activeRetry) {
+      return src
+    }
+    const separator = src.includes('?') ? '&' : '?'
+    return `${src}${separator}retry=${activeRetry}`
+  }
+
+  const handleSlideError = () => {
+    setSlideRetries((prev) => {
+      const current = prev[activeSlide.key] ?? 0
+      if (current >= 2) {
+        return prev
+      }
+      return { ...prev, [activeSlide.key]: current + 1 }
+    })
+  }
 
   return (
     <div className="section-container py-20" ref={ref}>
@@ -231,6 +250,7 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
                   playsInline
                   controls
                   preload="metadata"
+                  onError={handleSlideError}
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
@@ -240,17 +260,18 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
                     ? activeSlide.sources
                     : [{ src: activeSlide.src, type: 'video/mp4' }]
                   ).map((source) => (
-                    <source key={source.src} src={source.src} type={source.type} />
+                    <source key={source.src} src={addRetryParam(source.src)} type={source.type} />
                   ))}
                 </motion.video>
               ) : (
                 <motion.img
                   key={`${activeSlide.key}-${visibilityTick}`}
-                  src={activeSlide.src}
+                  src={addRetryParam(activeSlide.src)}
                   alt={activeSlide.alt}
                   className="w-full h-[320px] md:h-[460px] object-contain bg-space-black"
                   loading="eager"
                   decoding="async"
+                  onError={handleSlideError}
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
