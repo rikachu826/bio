@@ -209,7 +209,7 @@
     },
     "luminos": {
       "title": "🤖 LuminOS: The Apps I Built",
-      "intro": "This is the part I'm most proud of. Five production apps, all built by collaborating with AI. I designed each system, obsessed over the security, and worked with Claude/Gemini to actually build them. Each app has its own AI persona that knows the domain — Aegis for security, Astraea for finance, etc. The naming scheme? GLAAD is a light pillar for LGBTQ rights, so everything follows the 'light reveals truth' metaphor.",
+      "intro": "This is the part I'm most proud of. Five production apps, all built by collaborating with AI. I designed each system, obsessed over the security, and worked with Codex, Claude, and Gemini to actually build them. Each app has its own AI persona that knows the domain — Aegis for security, Astraea for finance, etc. The naming scheme? GLAAD is a light pillar for LGBTQ rights, so everything follows the 'light reveals truth' metaphor.",
       "items": [
         "<strong class=\"text-pure-white\">Diffract</strong>: Executive security dashboard — real-time threat intel",
         "<strong class=\"text-pure-white\">Refract</strong>: Salesforce + NetSuite analytics — financial intelligence",
@@ -662,7 +662,7 @@
       "leading": "Say",
       "accent": "Hi"
     },
-    "blurb": "I'm always happy to chat about AI-augmented building, security, IT leadership, or honestly just nerd out about how wild this technology moment is — especially with Codex, Claude, and Gemini in the mix. No social media presence — just email and GitHub.",
+    "blurb": "I'm always happy to chat about AI-augmented building, security, IT leadership, or honestly just nerd out about how wild this technology moment is. No social media presence — just email and GitHub.",
     "methods": [
       {
         "type": "email",
