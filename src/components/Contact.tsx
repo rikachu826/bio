@@ -130,7 +130,7 @@ export default function Contact() {
   }
 
   return (
-    <div id="contact" className="section-container py-20" ref={ref}>
+    <div id="contact" className="section-container py-20 ocean-section" ref={ref}>
       <div className="content-wrapper max-w-4xl">
         <motion.div
           variants={containerVariant}

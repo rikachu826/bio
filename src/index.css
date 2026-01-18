@@ -145,6 +145,95 @@
     transform-style: preserve-3d;
   }
 
+  /* ============================================
+     OCEAN WAVE EFFECT - GPU Accelerated
+     ============================================ */
+  .ocean-section {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(6, 78, 130, 0.15) 30%,
+      rgba(14, 116, 144, 0.25) 60%,
+      rgba(8, 145, 178, 0.3) 100%
+    );
+  }
+
+  .ocean-section::before,
+  .ocean-section::after {
+    content: '';
+    position: absolute;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    /* GPU acceleration */
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* First wave layer - slow, large movement */
+  .ocean-section::before {
+    bottom: -80%;
+    background: radial-gradient(
+      ellipse 70% 50% at 50% 100%,
+      rgba(56, 189, 248, 0.08) 0%,
+      rgba(14, 165, 233, 0.05) 40%,
+      transparent 70%
+    );
+    animation: ocean-wave-1 20s ease-in-out infinite;
+    opacity: 0.8;
+  }
+
+  /* Second wave layer - medium speed, offset timing */
+  .ocean-section::after {
+    bottom: -85%;
+    background: radial-gradient(
+      ellipse 60% 45% at 50% 100%,
+      rgba(34, 211, 238, 0.06) 0%,
+      rgba(6, 182, 212, 0.04) 50%,
+      transparent 70%
+    );
+    animation: ocean-wave-2 15s ease-in-out infinite;
+    animation-delay: -5s;
+    opacity: 0.6;
+  }
+
+  /* Smooth wave motion using only transforms (GPU accelerated) */
+  @keyframes ocean-wave-1 {
+    0%, 100% {
+      transform: translateX(-5%) translateY(0%) scale(1) translateZ(0);
+    }
+    25% {
+      transform: translateX(3%) translateY(-2%) scale(1.02) translateZ(0);
+    }
+    50% {
+      transform: translateX(5%) translateY(-1%) scale(1.01) translateZ(0);
+    }
+    75% {
+      transform: translateX(-2%) translateY(-3%) scale(1.03) translateZ(0);
+    }
+  }
+
+  @keyframes ocean-wave-2 {
+    0%, 100% {
+      transform: translateX(5%) translateY(-1%) scale(1.01) translateZ(0);
+    }
+    33% {
+      transform: translateX(-4%) translateY(-2%) scale(1) translateZ(0);
+    }
+    66% {
+      transform: translateX(2%) translateY(0%) scale(1.02) translateZ(0);
+    }
+  }
+
+  /* Optional: Add a third subtle shimmer layer with a dedicated element */
+  .ocean-section > .content-wrapper {
+    position: relative;
+    z-index: 1;
+  }
+
   .contact-icon {
     @apply h-12 w-12 flex items-center justify-center;
   }
