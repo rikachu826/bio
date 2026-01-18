@@ -405,7 +405,7 @@
     will-change: transform;
   }
 
-  /* Rays + seahorses */
+  /* Rays */
   .ray {
     position: absolute;
     top: 55%;
@@ -413,16 +413,6 @@
     height: 55px;
     opacity: 0.85;
     animation: ray-glide 52s linear infinite;
-    will-change: transform;
-  }
-
-  .seahorse {
-    position: absolute;
-    top: 28%;
-    width: 45px;
-    height: 90px;
-    opacity: 0.9;
-    animation: seahorse-drift 36s ease-in-out infinite;
     will-change: transform;
   }
 
@@ -453,6 +443,21 @@
   .coral--3 { left: 58%; height: 150px; animation-delay: -3s; }
   .coral--4 { left: 70%; height: 130px; animation-delay: -1.5s; }
   .coral--5 { left: 84%; height: 110px; animation-delay: -2.5s; }
+
+  .reef-accent {
+    position: absolute;
+    bottom: 8px;
+    opacity: 0.9;
+    transform-origin: center;
+  }
+
+  .starfish { width: 48px; height: 48px; }
+  .starfish--1 { left: 35%; bottom: 10px; transform: rotate(-12deg); }
+  .starfish--2 { left: 64%; bottom: 14px; transform: rotate(8deg); }
+
+  .shell { width: 60px; height: 40px; }
+  .shell--1 { left: 12%; bottom: 6px; }
+  .shell--2 { left: 78%; bottom: 8px; }
 
   /* Ocean animations - GPU accelerated */
   @keyframes caustic-drift-1 {
@@ -633,21 +638,6 @@
     }
   }
 
-  @keyframes seahorse-drift {
-    0%, 100% {
-      left: 12%;
-      transform: translateY(0) rotate(-3deg);
-    }
-    35% {
-      left: 16%;
-      transform: translateY(-25px) rotate(2deg);
-    }
-    70% {
-      left: 10%;
-      transform: translateY(15px) rotate(-1deg);
-    }
-  }
-
   @keyframes coral-sway {
     0%, 100% {
       transform: rotate(-2deg);
@@ -669,7 +659,6 @@
     .turtle,
     .jellyfish,
     .ray,
-    .seahorse,
     .coral {
       animation: none;
     }
@@ -684,7 +673,6 @@
     .turtle { left: 30%; }
     .jellyfish { left: 70%; }
     .ray { left: 60%; }
-    .seahorse { left: 12%; }
   }
 
   .contact-icon {

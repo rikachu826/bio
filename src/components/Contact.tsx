@@ -184,6 +184,24 @@ export default function Contact() {
             <path d="M30,110 Q35,85 28,65 Q22,45 35,35 Q50,25 60,40 Q70,55 65,75 Q60,95 65,110" fill="rgba(248,113,113,0.65)"/>
             <path d="M80,110 Q78,88 88,70 Q98,52 110,45 Q118,42 115,60 Q112,78 100,95 Q92,105 88,110" fill="rgba(250,204,21,0.6)"/>
           </svg>
+          <svg className="reef-accent starfish starfish--1" viewBox="0 0 80 80" aria-hidden="true">
+            <path d="M40,6 L48,28 L72,28 L52,42 L60,66 L40,52 L20,66 L28,42 L8,28 L32,28 Z" fill="rgba(251,146,60,0.85)"/>
+            <circle cx="40" cy="40" r="6" fill="rgba(253,186,116,0.9)"/>
+          </svg>
+          <svg className="reef-accent starfish starfish--2" viewBox="0 0 80 80" aria-hidden="true">
+            <path d="M40,8 L50,30 L74,32 L54,44 L62,68 L40,54 L18,68 L26,44 L6,32 L30,30 Z" fill="rgba(248,113,113,0.8)"/>
+            <circle cx="40" cy="40" r="6" fill="rgba(252,165,165,0.9)"/>
+          </svg>
+          <svg className="reef-accent shell shell--1" viewBox="0 0 90 60" aria-hidden="true">
+            <path d="M10,50 Q45,10 80,50 Z" fill="rgba(226,232,240,0.7)"/>
+            <path d="M20,48 Q45,20 70,48" fill="none" stroke="rgba(148,163,184,0.6)" strokeWidth="3"/>
+            <path d="M30,48 Q45,26 60,48" fill="none" stroke="rgba(148,163,184,0.55)" strokeWidth="2"/>
+          </svg>
+          <svg className="reef-accent shell shell--2" viewBox="0 0 90 60" aria-hidden="true">
+            <path d="M12,48 Q45,12 78,48 Z" fill="rgba(244,244,245,0.65)"/>
+            <path d="M22,46 Q45,22 68,46" fill="none" stroke="rgba(148,163,184,0.55)" strokeWidth="3"/>
+            <path d="M34,46 Q45,28 56,46" fill="none" stroke="rgba(148,163,184,0.5)" strokeWidth="2"/>
+          </svg>
         </div>
 
         {/* Swimming fish */}
@@ -233,14 +251,6 @@ export default function Contact() {
           <circle cx="50" cy="32" r="2.5" fill="rgba(30,30,30,0.8)"/>
           <circle cx="70" cy="32" r="2.5" fill="rgba(30,30,30,0.8)"/>
           <path d="M60,45 Q62,55 70,65" fill="none" stroke="rgba(125,211,252,0.55)" strokeWidth="3" strokeLinecap="round"/>
-        </svg>
-
-        {/* Seahorse */}
-        <svg className="seahorse" viewBox="0 0 60 120" aria-hidden="true">
-          <path d="M35,15 Q20,20 22,35 Q24,50 16,62 Q8,75 16,88 Q24,100 20,112 Q16,120 28,118 Q40,116 42,102 Q44,90 36,82 Q28,74 36,66 Q44,58 42,46 Q40,32 48,24 Q56,16 45,12 Q38,10 35,15 Z" fill="rgba(251,207,232,0.75)"/>
-          <circle cx="40" cy="22" r="3" fill="rgba(30,30,30,0.9)"/>
-          <circle cx="42" cy="21" r="1.2" fill="rgba(255,255,255,0.9)"/>
-          <path d="M28,90 Q34,94 30,102" fill="none" stroke="rgba(244,114,182,0.7)" strokeWidth="2" strokeLinecap="round"/>
         </svg>
 
         {/* Jellyfish */}
