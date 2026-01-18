@@ -158,6 +158,34 @@ export default function Contact() {
           </svg>
         </div>
 
+        {/* Coral reef at bottom */}
+        <div className="ocean-reef">
+          <svg className="coral coral--1" viewBox="0 0 120 140" aria-hidden="true">
+            <path d="M20,140 Q30,90 20,40 Q18,20 30,10 Q40,0 50,18 Q55,30 50,45 Q45,65 50,90 Q52,115 45,140" fill="rgba(251,146,60,0.7)"/>
+            <circle cx="80" cy="40" r="12" fill="rgba(248,113,113,0.6)"/>
+            <circle cx="90" cy="70" r="8" fill="rgba(253,186,116,0.7)"/>
+            <circle cx="70" cy="85" r="10" fill="rgba(249,115,22,0.6)"/>
+          </svg>
+          <svg className="coral coral--2" viewBox="0 0 120 120" aria-hidden="true">
+            <path d="M25,120 Q30,90 25,60 Q22,40 35,25 Q45,10 60,20 Q70,30 65,50 Q60,70 68,90 Q72,110 65,120" fill="rgba(34,211,238,0.6)"/>
+            <path d="M80,120 Q78,95 85,70 Q92,50 105,40 Q112,35 110,55 Q108,75 100,95 Q95,110 90,120" fill="rgba(56,189,248,0.55)"/>
+          </svg>
+          <svg className="coral coral--3" viewBox="0 0 120 150" aria-hidden="true">
+            <path d="M30,150 Q35,115 25,90 Q18,70 28,55 Q38,40 45,55 Q50,65 45,85 Q40,105 50,125 Q55,140 50,150" fill="rgba(192,132,252,0.6)"/>
+            <path d="M75,150 Q78,120 70,95 Q62,70 72,55 Q82,40 90,55 Q96,70 90,95 Q85,120 90,150" fill="rgba(216,180,254,0.55)"/>
+            <circle cx="95" cy="40" r="10" fill="rgba(244,114,182,0.6)"/>
+          </svg>
+          <svg className="coral coral--4" viewBox="0 0 120 130" aria-hidden="true">
+            <path d="M20,130 Q25,100 20,75 Q18,55 30,45 Q40,35 50,45 Q60,55 55,80 Q50,105 55,130" fill="rgba(14,165,233,0.55)"/>
+            <circle cx="80" cy="55" r="14" fill="rgba(45,212,191,0.5)"/>
+            <circle cx="95" cy="80" r="10" fill="rgba(34,197,94,0.5)"/>
+          </svg>
+          <svg className="coral coral--5" viewBox="0 0 120 110" aria-hidden="true">
+            <path d="M30,110 Q35,85 28,65 Q22,45 35,35 Q50,25 60,40 Q70,55 65,75 Q60,95 65,110" fill="rgba(248,113,113,0.65)"/>
+            <path d="M80,110 Q78,88 88,70 Q98,52 110,45 Q118,42 115,60 Q112,78 100,95 Q92,105 88,110" fill="rgba(250,204,21,0.6)"/>
+          </svg>
+        </div>
+
         {/* Swimming fish */}
         <svg className="fish fish--1" viewBox="0 0 50 30">
           <ellipse cx="20" cy="15" rx="15" ry="10" fill="rgba(251,146,60,0.8)"/>
@@ -197,6 +225,22 @@ export default function Contact() {
           <ellipse cx="18" cy="36" rx="8" ry="5" fill="rgba(34,197,94,0.6)" transform="rotate(30 18 36)"/>
           <ellipse cx="58" cy="18" rx="6" ry="4" fill="rgba(34,197,94,0.6)" transform="rotate(-20 58 18)"/>
           <ellipse cx="58" cy="38" rx="6" ry="4" fill="rgba(34,197,94,0.6)" transform="rotate(20 58 38)"/>
+        </svg>
+
+        {/* Stingray */}
+        <svg className="ray" viewBox="0 0 120 70" aria-hidden="true">
+          <path d="M10,35 Q35,10 60,25 Q85,10 110,35 Q85,55 60,45 Q35,55 10,35 Z" fill="rgba(125,211,252,0.55)"/>
+          <circle cx="50" cy="32" r="2.5" fill="rgba(30,30,30,0.8)"/>
+          <circle cx="70" cy="32" r="2.5" fill="rgba(30,30,30,0.8)"/>
+          <path d="M60,45 Q62,55 70,65" fill="none" stroke="rgba(125,211,252,0.55)" strokeWidth="3" strokeLinecap="round"/>
+        </svg>
+
+        {/* Seahorse */}
+        <svg className="seahorse" viewBox="0 0 60 120" aria-hidden="true">
+          <path d="M35,15 Q20,20 22,35 Q24,50 16,62 Q8,75 16,88 Q24,100 20,112 Q16,120 28,118 Q40,116 42,102 Q44,90 36,82 Q28,74 36,66 Q44,58 42,46 Q40,32 48,24 Q56,16 45,12 Q38,10 35,15 Z" fill="rgba(251,207,232,0.75)"/>
+          <circle cx="40" cy="22" r="3" fill="rgba(30,30,30,0.9)"/>
+          <circle cx="42" cy="21" r="1.2" fill="rgba(255,255,255,0.9)"/>
+          <path d="M28,90 Q34,94 30,102" fill="none" stroke="rgba(244,114,182,0.7)" strokeWidth="2" strokeLinecap="round"/>
         </svg>
 
         {/* Jellyfish */}

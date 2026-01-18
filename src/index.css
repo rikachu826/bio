@@ -233,7 +233,7 @@
       25vw 0 0 1px rgba(56, 189, 248, 0.5),
       45vw 0 0 2px rgba(45, 212, 191, 0.35),
       75vw 0 0 1.5px rgba(45, 212, 191, 0.4);
-    animation: bubble-rise 15s ease-in-out infinite;
+    animation: bubble-rise 26s linear infinite;
     will-change: transform;
     transform: translateZ(0);
   }
@@ -255,8 +255,8 @@
       12vw 0 0 1px rgba(56, 189, 248, 0.5),
       65vw 0 0 2.5px rgba(56, 189, 248, 0.3),
       90vw 0 0 1.5px rgba(45, 212, 191, 0.4);
-    animation: bubble-rise-slow 20s ease-in-out infinite;
-    animation-delay: -7s;
+    animation: bubble-rise-slow 34s linear infinite;
+    animation-delay: -11s;
     will-change: transform;
     transform: translateZ(0);
   }
@@ -353,38 +353,36 @@
   .kelp--4 { left: 88%; height: 130px; animation-delay: -0.5s; }
   .kelp--5 { left: 92%; height: 170px; animation-delay: -1.5s; }
 
-  /* Swimming fish */
+  /* Swimming fish - flipped to face swimming direction */
   .fish {
     position: absolute;
     width: 50px;
     height: 30px;
-    animation: fish-swim 20s linear infinite;
+    animation: fish-swim 32s linear infinite;
     will-change: transform;
   }
 
   .fish--1 {
     top: 25%;
-    animation-duration: 25s;
+    animation-duration: 38s;
   }
 
   .fish--2 {
     top: 45%;
-    animation-duration: 18s;
-    animation-delay: -8s;
-    transform: scaleX(-1);
+    animation-duration: 30s;
+    animation-delay: -12s;
   }
 
   .fish--3 {
     top: 60%;
-    animation-duration: 22s;
-    animation-delay: -4s;
+    animation-duration: 34s;
+    animation-delay: -6s;
   }
 
   .fish--4 {
     top: 35%;
-    animation-duration: 28s;
-    animation-delay: -12s;
-    transform: scaleX(-1);
+    animation-duration: 42s;
+    animation-delay: -18s;
   }
 
   /* Sea turtle */
@@ -393,7 +391,7 @@
     top: 40%;
     width: 80px;
     height: 50px;
-    animation: turtle-swim 35s linear infinite;
+    animation: turtle-swim 48s linear infinite;
     will-change: transform;
   }
 
@@ -406,6 +404,55 @@
     animation: jellyfish-float 30s ease-in-out infinite, jellyfish-pulse 3s ease-in-out infinite;
     will-change: transform;
   }
+
+  /* Rays + seahorses */
+  .ray {
+    position: absolute;
+    top: 55%;
+    width: 90px;
+    height: 55px;
+    opacity: 0.85;
+    animation: ray-glide 52s linear infinite;
+    will-change: transform;
+  }
+
+  .seahorse {
+    position: absolute;
+    top: 28%;
+    width: 45px;
+    height: 90px;
+    opacity: 0.9;
+    animation: seahorse-drift 36s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  /* Coral reef */
+  .ocean-reef {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 220px;
+    pointer-events: none;
+    z-index: 6;
+  }
+
+  .coral {
+    position: absolute;
+    bottom: 0;
+    width: 120px;
+    height: 140px;
+    opacity: 0.95;
+    transform-origin: bottom center;
+    animation: coral-sway 6s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .coral--1 { left: 8%; height: 140px; animation-delay: -1s; }
+  .coral--2 { left: 22%; height: 120px; animation-delay: -2s; }
+  .coral--3 { left: 58%; height: 150px; animation-delay: -3s; }
+  .coral--4 { left: 70%; height: 130px; animation-delay: -1.5s; }
+  .coral--5 { left: 84%; height: 110px; animation-delay: -2.5s; }
 
   /* Ocean animations - GPU accelerated */
   @keyframes caustic-drift-1 {
@@ -431,34 +478,46 @@
 
   @keyframes bubble-rise {
     0% {
-      transform: translateY(0) scale(1) translateZ(0);
+      transform: translate3d(0, 0, 0) scale(1);
       opacity: 0;
     }
     10% {
       opacity: 0.7;
     }
+    35% {
+      transform: translate3d(2vw, -35vh, 0) scale(0.9);
+    }
+    65% {
+      transform: translate3d(-1vw, -70vh, 0) scale(0.75);
+    }
     90% {
       opacity: 0.5;
     }
     100% {
-      transform: translateY(-100vh) scale(0.6) translateZ(0);
+      transform: translate3d(1vw, -110vh, 0) scale(0.6);
       opacity: 0;
     }
   }
 
   @keyframes bubble-rise-slow {
     0% {
-      transform: translateY(0) scale(1) translateZ(0);
+      transform: translate3d(0, 0, 0) scale(1);
       opacity: 0;
     }
     10% {
       opacity: 0.6;
     }
+    40% {
+      transform: translate3d(-1.5vw, -40vh, 0) scale(0.85);
+    }
+    70% {
+      transform: translate3d(1vw, -80vh, 0) scale(0.7);
+    }
     90% {
       opacity: 0.4;
     }
     100% {
-      transform: translateY(-100vh) scale(0.5) translateZ(0);
+      transform: translate3d(-0.5vw, -115vh, 0) scale(0.55);
       opacity: 0;
     }
   }
@@ -485,25 +544,25 @@
   @keyframes fish-swim {
     0% {
       left: -80px;
-      transform: translateY(0) scaleX(1);
+      transform: translateY(0) scaleX(-1);
     }
     45% {
-      transform: translateY(-20px) scaleX(1);
+      transform: translateY(-20px) scaleX(-1);
     }
     50% {
       left: calc(100% + 80px);
-      transform: translateY(0) scaleX(1);
+      transform: translateY(0) scaleX(-1);
     }
     50.1% {
       left: calc(100% + 80px);
-      transform: translateY(0) scaleX(-1);
+      transform: translateY(0) scaleX(1);
     }
     95% {
-      transform: translateY(15px) scaleX(-1);
+      transform: translateY(15px) scaleX(1);
     }
     100% {
       left: -80px;
-      transform: translateY(0) scaleX(-1);
+      transform: translateY(0) scaleX(1);
     }
   }
 
@@ -557,6 +616,47 @@
     }
   }
 
+  @keyframes ray-glide {
+    0% {
+      left: calc(100% + 120px);
+      transform: translateY(10px) rotate(0deg);
+    }
+    40% {
+      transform: translateY(-25px) rotate(-4deg);
+    }
+    70% {
+      transform: translateY(15px) rotate(3deg);
+    }
+    100% {
+      left: -140px;
+      transform: translateY(0) rotate(0deg);
+    }
+  }
+
+  @keyframes seahorse-drift {
+    0%, 100% {
+      left: 12%;
+      transform: translateY(0) rotate(-3deg);
+    }
+    35% {
+      left: 16%;
+      transform: translateY(-25px) rotate(2deg);
+    }
+    70% {
+      left: 10%;
+      transform: translateY(15px) rotate(-1deg);
+    }
+  }
+
+  @keyframes coral-sway {
+    0%, 100% {
+      transform: rotate(-2deg);
+    }
+    50% {
+      transform: rotate(2.5deg);
+    }
+  }
+
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     .ocean-caustics::before,
@@ -567,7 +667,10 @@
     .kelp,
     .fish,
     .turtle,
-    .jellyfish {
+    .jellyfish,
+    .ray,
+    .seahorse,
+    .coral {
       animation: none;
     }
 
@@ -580,6 +683,8 @@
     .fish { left: 50%; }
     .turtle { left: 30%; }
     .jellyfish { left: 70%; }
+    .ray { left: 60%; }
+    .seahorse { left: 12%; }
   }
 
   .contact-icon {
