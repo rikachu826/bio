@@ -132,10 +132,86 @@ export default function Contact() {
   return (
     <div id="contact" className="ocean-section" ref={ref}>
       {/* Ocean effect layers */}
-      <div className="ocean-divider" />
       <div className="ocean-caustics" />
-      <div className="ocean-ripples" />
       <div className="ocean-bubbles" />
+
+      {/* Sea life - plants and creatures */}
+      <div className="ocean-sealife">
+        {/* Seaweed/kelp plants at bottom */}
+        <div className="ocean-plants">
+          <svg className="kelp kelp--1" viewBox="0 0 40 200" preserveAspectRatio="none">
+            <path d="M20,200 Q10,150 20,120 Q30,90 20,60 Q10,30 20,0" fill="none" stroke="rgba(34,197,94,0.6)" strokeWidth="8" strokeLinecap="round"/>
+            <path d="M20,200 Q15,160 25,130 Q15,100 25,70 Q15,40 20,10" fill="none" stroke="rgba(74,222,128,0.5)" strokeWidth="5" strokeLinecap="round"/>
+          </svg>
+          <svg className="kelp kelp--2" viewBox="0 0 40 180" preserveAspectRatio="none">
+            <path d="M20,180 Q30,140 20,100 Q10,60 20,20" fill="none" stroke="rgba(22,163,74,0.55)" strokeWidth="7" strokeLinecap="round"/>
+            <path d="M20,180 Q25,150 15,110 Q25,70 15,30" fill="none" stroke="rgba(74,222,128,0.45)" strokeWidth="4" strokeLinecap="round"/>
+          </svg>
+          <svg className="kelp kelp--3" viewBox="0 0 40 220" preserveAspectRatio="none">
+            <path d="M20,220 Q5,170 20,130 Q35,90 20,50 Q5,20 20,0" fill="none" stroke="rgba(34,197,94,0.5)" strokeWidth="9" strokeLinecap="round"/>
+          </svg>
+          <svg className="kelp kelp--4" viewBox="0 0 40 160" preserveAspectRatio="none">
+            <path d="M20,160 Q28,120 12,80 Q28,40 20,10" fill="none" stroke="rgba(22,163,74,0.6)" strokeWidth="6" strokeLinecap="round"/>
+          </svg>
+          <svg className="kelp kelp--5" viewBox="0 0 40 190" preserveAspectRatio="none">
+            <path d="M20,190 Q10,150 25,110 Q10,70 25,30" fill="none" stroke="rgba(74,222,128,0.55)" strokeWidth="7" strokeLinecap="round"/>
+          </svg>
+        </div>
+
+        {/* Swimming fish */}
+        <svg className="fish fish--1" viewBox="0 0 50 30">
+          <ellipse cx="20" cy="15" rx="15" ry="10" fill="rgba(251,146,60,0.8)"/>
+          <polygon points="35,15 50,5 50,25" fill="rgba(251,146,60,0.8)"/>
+          <circle cx="12" cy="13" r="2" fill="rgba(30,30,30,0.9)"/>
+          <path d="M5,12 Q8,15 5,18" fill="none" stroke="rgba(253,186,116,0.9)" strokeWidth="2"/>
+        </svg>
+
+        <svg className="fish fish--2" viewBox="0 0 50 30">
+          <ellipse cx="20" cy="15" rx="15" ry="10" fill="rgba(56,189,248,0.75)"/>
+          <polygon points="35,15 50,5 50,25" fill="rgba(56,189,248,0.75)"/>
+          <circle cx="12" cy="13" r="2" fill="rgba(30,30,30,0.9)"/>
+          <ellipse cx="20" cy="15" rx="10" ry="5" fill="rgba(125,211,252,0.5)"/>
+        </svg>
+
+        <svg className="fish fish--3" viewBox="0 0 50 30">
+          <ellipse cx="20" cy="15" rx="15" ry="10" fill="rgba(251,207,232,0.8)"/>
+          <polygon points="35,15 50,5 50,25" fill="rgba(251,207,232,0.8)"/>
+          <circle cx="12" cy="13" r="2" fill="rgba(30,30,30,0.9)"/>
+          <path d="M15,10 Q20,5 25,10" fill="none" stroke="rgba(244,114,182,0.7)" strokeWidth="1.5"/>
+        </svg>
+
+        <svg className="fish fish--4" viewBox="0 0 50 30">
+          <ellipse cx="20" cy="15" rx="15" ry="10" fill="rgba(134,239,172,0.75)"/>
+          <polygon points="35,15 50,5 50,25" fill="rgba(134,239,172,0.75)"/>
+          <circle cx="12" cy="13" r="2" fill="rgba(30,30,30,0.9)"/>
+        </svg>
+
+        {/* Sea turtle */}
+        <svg className="turtle" viewBox="0 0 80 50">
+          <ellipse cx="40" cy="28" rx="25" ry="18" fill="rgba(34,197,94,0.7)"/>
+          <ellipse cx="40" cy="28" rx="20" ry="14" fill="rgba(74,222,128,0.5)"/>
+          <path d="M35,28 L30,28 L28,32 L32,30 Z" fill="rgba(34,197,94,0.6)"/>
+          <circle cx="65" cy="25" r="8" fill="rgba(34,197,94,0.7)"/>
+          <circle cx="68" cy="23" r="2" fill="rgba(30,30,30,0.8)"/>
+          <ellipse cx="18" cy="20" rx="8" ry="5" fill="rgba(34,197,94,0.6)" transform="rotate(-30 18 20)"/>
+          <ellipse cx="18" cy="36" rx="8" ry="5" fill="rgba(34,197,94,0.6)" transform="rotate(30 18 36)"/>
+          <ellipse cx="58" cy="18" rx="6" ry="4" fill="rgba(34,197,94,0.6)" transform="rotate(-20 58 18)"/>
+          <ellipse cx="58" cy="38" rx="6" ry="4" fill="rgba(34,197,94,0.6)" transform="rotate(20 58 38)"/>
+        </svg>
+
+        {/* Jellyfish */}
+        <svg className="jellyfish" viewBox="0 0 60 80">
+          <ellipse cx="30" cy="20" rx="25" ry="18" fill="rgba(192,132,252,0.5)"/>
+          <ellipse cx="30" cy="20" rx="20" ry="14" fill="rgba(216,180,254,0.4)"/>
+          <path d="M10,25 Q15,50 8,80" fill="none" stroke="rgba(192,132,252,0.6)" strokeWidth="2"/>
+          <path d="M20,28 Q22,55 18,80" fill="none" stroke="rgba(216,180,254,0.5)" strokeWidth="2"/>
+          <path d="M30,30 Q30,55 30,80" fill="none" stroke="rgba(192,132,252,0.5)" strokeWidth="2"/>
+          <path d="M40,28 Q38,55 42,80" fill="none" stroke="rgba(216,180,254,0.5)" strokeWidth="2"/>
+          <path d="M50,25 Q45,50 52,80" fill="none" stroke="rgba(192,132,252,0.6)" strokeWidth="2"/>
+        </svg>
+      </div>
+
+      {/* Waves at bottom */}
       <div className="ocean-waves">
         <div className="ocean-wave ocean-wave--back" />
         <div className="ocean-wave ocean-wave--mid" />

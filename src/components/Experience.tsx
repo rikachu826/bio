@@ -168,7 +168,9 @@ const timelineItemVariant = {
 
 export default function Experience() {
   const ref = useRef(null)
+  const timelineRef = useRef(null)
   const isInView = useInView(ref, defaultViewport)
+  const isTimelineInView = useInView(timelineRef, { once: true, amount: 0.3 })
   const [forceVisible, setForceVisible] = useState(false)
 
   useEffect(() => {
@@ -181,6 +183,7 @@ export default function Experience() {
   }, [])
 
   const isVisible = isInView || forceVisible
+  const isTimelineVisible = isTimelineInView || forceVisible
   const experience = content.experience
   const story = experience.story
   const legacy = experience.legacy
@@ -464,9 +467,10 @@ export default function Experience() {
         </motion.div>
 
         <motion.div
+          ref={timelineRef}
           variants={timelineContainerVariant}
           initial="hidden"
-          animate={isVisible ? "visible" : "hidden"}
+          animate={isTimelineVisible ? "visible" : "hidden"}
           className="mt-12 text-center"
         >
           <motion.h4
