@@ -9,7 +9,7 @@
  * - Minority Report operator console aesthetic
  */
 
-import { Variants, Transition } from 'framer-motion'
+import { Variants, Transition, UseInViewOptions } from 'framer-motion'
 
 // ============================================
 // CORE EASING & TIMING
@@ -480,24 +480,24 @@ export const gridItem: Variants = {
 // - amount: 0.1 = 10% of element must be visible (works for tall sections)
 // - margin: -80px = element must be 80px inside viewport before triggering
 // This prevents sections from animating on load while still working for tall content
-export const defaultViewport = {
+export const defaultViewport: UseInViewOptions = {
   once: true,
   margin: '0px 0px -80px 0px',
-  amount: 0.1 as const,
+  amount: 0.1,
 }
 
 // Eager: For smaller elements that should animate slightly sooner
-export const eagerViewport = {
+export const eagerViewport: UseInViewOptions = {
   once: true,
   margin: '0px 0px -30px 0px',
-  amount: 0.05 as const,
+  amount: 0.05,
 }
 
 // Lazy: For sections that should wait until more prominently in view
-export const lazyViewport = {
+export const lazyViewport: UseInViewOptions = {
   once: true,
   margin: '0px 0px -120px 0px',
-  amount: 0.2 as const,
+  amount: 0.2,
 }
 
 // ============================================
