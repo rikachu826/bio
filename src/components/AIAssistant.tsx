@@ -204,18 +204,18 @@ export default function AIAssistant() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9998]">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9998]">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="ai-fab group flex items-center gap-3 rounded-full border border-white/10 bg-space-black/80 px-4 py-3
+        className="ai-fab group flex items-center gap-2 sm:gap-3 rounded-full border border-white/10 bg-space-black/80 px-3 py-2 sm:px-4 sm:py-3
                    shadow-[0_0_30px_rgba(56,189,248,0.35)] backdrop-blur-xl transition-transform duration-200
                    hover:-translate-y-0.5"
         aria-expanded={isOpen}
         aria-controls="tifa-chat-panel"
         ref={buttonRef}
       >
-        <span className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-sky-blue/40">
+        <span className="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center overflow-hidden rounded-full border border-sky-blue/40">
           <img
             src={avatarSrc}
             alt="Tifa avatar"
@@ -223,7 +223,7 @@ export default function AIAssistant() {
           />
           <span className="absolute inset-0 rounded-full ring-2 ring-cyan-400/30 animate-pulse-soft" />
         </span>
-        <span className="text-left">
+        <span className="text-left hidden sm:block">
           <span className="block text-sm font-semibold text-pure-white">Tifa</span>
           <span className="block text-xs text-soft-gray">Assistant</span>
         </span>
@@ -237,13 +237,13 @@ export default function AIAssistant() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className={`ai-panel mt-4 rounded-3xl border border-white/10 bg-space-black/90 shadow-2xl ${
+            className={`ai-panel absolute bottom-full right-0 mb-3 sm:relative sm:bottom-auto sm:right-auto sm:mt-4 sm:mb-0 rounded-3xl border border-white/10 bg-space-black/90 shadow-2xl backdrop-blur-xl ${
               isExpanded ? 'ai-panel-expanded' : ''
             }`}
             ref={panelRef}
           >
             <div className="relative overflow-hidden rounded-3xl">
-              <div className="ai-panel-inner px-5 pt-5 pb-4">
+              <div className="ai-panel-inner px-4 sm:px-5 pt-4 sm:pt-5 pb-3 sm:pb-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-sm font-semibold text-pure-white tracking-[0.08em] uppercase">Tifa</p>
@@ -278,7 +278,7 @@ export default function AIAssistant() {
 
               <div
                 ref={scrollRef}
-                className={`overflow-y-auto px-5 pb-4 space-y-3 ${isExpanded ? 'ai-scroll-expanded' : 'ai-scroll'}`}
+                className={`overflow-y-auto px-4 sm:px-5 pb-3 sm:pb-4 space-y-3 ${isExpanded ? 'ai-scroll-expanded' : 'ai-scroll'}`}
               >
                 {messages.length === 0 && (
                   <div className="ai-bubble ai-bubble-assistant">
@@ -303,18 +303,18 @@ export default function AIAssistant() {
               </div>
 
               {error && (
-                <p className="px-5 pb-3 text-xs text-red-300">{error}</p>
+                <p className="px-4 sm:px-5 pb-2 sm:pb-3 text-xs sm:text-sm text-red-300">{error}</p>
               )}
 
-              <div className="px-5 pb-4">
+              <div className="px-4 sm:px-5 pb-3 sm:pb-4">
                 {showSuggestions && (
-                  <div className="flex flex-wrap gap-2 mb-3">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3">
                     {suggestions.map((text) => (
                       <button
                         key={text}
                         type="button"
                         onClick={() => setPrompt(text)}
-                        className="ai-chip"
+                        className="ai-chip text-xs sm:text-sm"
                       >
                         {text}
                       </button>
@@ -329,11 +329,11 @@ export default function AIAssistant() {
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-3">
+                <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3">
                   <textarea
                     value={prompt}
                     onChange={(event) => setPrompt(event.target.value)}
-                    placeholder="Ask about the systems, the security posture, or the AI toolchain."
+                    placeholder="Ask about the systems, security, or AI tooling..."
                     className="ai-input"
                   />
                   <button

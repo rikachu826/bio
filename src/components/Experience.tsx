@@ -1,11 +1,136 @@
-import { motion } from 'framer-motion'
-import { useInView } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import content from '../content/site.json'
+import { appleEase, sectionTitle, defaultViewport } from '../utils/animations'
+
+// Holographic panel variants with blur and glow
+const storyPanelVariant = {
+  hidden: {
+    opacity: 0,
+    y: 60,
+    scale: 0.9,
+    filter: 'blur(20px)',
+    rotateX: 10,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: 'blur(0px)',
+    rotateX: 0,
+    transition: { duration: 1, ease: appleEase },
+  },
+}
+
+const legacyPanelVariant = {
+  hidden: {
+    opacity: 0,
+    x: -80,
+    scale: 0.92,
+    filter: 'blur(15px)',
+    rotateY: 10,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    filter: 'blur(0px)',
+    rotateY: 0,
+    transition: { duration: 0.9, ease: appleEase, delay: 0.1 },
+  },
+}
+
+const gridCardVariant = (fromLeft: boolean, delay: number) => ({
+  hidden: {
+    opacity: 0,
+    x: fromLeft ? -60 : 60,
+    scale: 0.9,
+    filter: 'blur(12px)',
+    rotateY: fromLeft ? 8 : -8,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    filter: 'blur(0px)',
+    rotateY: 0,
+    transition: { duration: 0.8, ease: appleEase, delay },
+  },
+})
+
+const centerPanelVariant = (delay: number) => ({
+  hidden: {
+    opacity: 0,
+    y: 50,
+    scale: 0.92,
+    filter: 'blur(15px)',
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: 'blur(0px)',
+    transition: { duration: 0.85, ease: appleEase, delay },
+  },
+})
+
+const teamBadgeVariant = {
+  hidden: {
+    opacity: 0,
+    scale: 0.8,
+    filter: 'blur(20px) brightness(1.5)',
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    filter: 'blur(0px) brightness(1)',
+    transition: { duration: 0.7, ease: appleEase, delay: 0.45 },
+  },
+}
+
+const outcomeVariant = {
+  hidden: {
+    opacity: 0,
+    y: 60,
+    scale: 0.9,
+    filter: 'blur(18px)',
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: 'blur(0px)',
+    transition: { duration: 0.9, ease: appleEase, delay: 0.5 },
+  },
+}
+
+const timelineContainerVariant = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.35 },
+  },
+}
+
+const timelineItemVariant = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+    scale: 0.9,
+    filter: 'blur(10px)',
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: 'blur(0px)',
+    transition: { duration: 0.6, ease: appleEase },
+  },
+}
 
 export default function Experience() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px", amount: 0.15 })
+  const isInView = useInView(ref, defaultViewport)
   const [forceVisible, setForceVisible] = useState(false)
 
   useEffect(() => {
@@ -31,23 +156,29 @@ export default function Experience() {
   const renderHtml = (value: string) => ({ __html: value })
 
   return (
-    <div className="section-container py-20" ref={ref}>
+    <div id="experience" className="section-container py-20" ref={ref}>
       <div className="content-wrapper">
         <motion.h2
           className="text-section-title font-display mb-16 text-center"
-          initial={{ opacity: 0, y: 18 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          variants={sectionTitle}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
         >
           {experience.title.leading} <span className="gradient-text">{experience.title.accent}</span>
         </motion.h2>
 
         {/* Main Story */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          variants={storyPanelVariant}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
           className="mb-16"
+          whileHover={{
+            y: -10,
+            scale: 1.01,
+            boxShadow: '0 30px 60px rgba(56, 189, 248, 0.15), 0 0 40px rgba(56, 189, 248, 0.1)',
+            transition: { duration: 0.4 }
+          }}
         >
           <div className="glass p-8 md:p-12 rounded-3xl bg-gradient-to-br from-sky-blue/20 to-teal/20">
             <div className="inline-block px-4 py-2 bg-gradient-blue rounded-full text-sm font-semibold mb-6">
@@ -72,10 +203,11 @@ export default function Experience() {
 
         {/* Legacy Environment Section */}
         <motion.div
-          initial={{ opacity: 0, x: -24 }}
-          animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -12 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          variants={legacyPanelVariant}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
           className="mb-12"
+          whileHover={{ y: -3, transition: { duration: 0.3 } }}
         >
           <div className="glass p-8 rounded-2xl border-l-4 border-red-500/50">
             <h4 className="text-2xl font-semibold mb-4 text-red-400">{legacy.title}</h4>
@@ -95,10 +227,11 @@ export default function Experience() {
         <div className="space-y-6 mb-12">
           <div className="grid md:grid-cols-2 gap-6">
             <motion.div
-              initial={{ opacity: 0, x: -18 }}
-              animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-              transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
+              variants={gridCardVariant(true, 0.15)}
+              initial="hidden"
+              animate={isVisible ? "visible" : "hidden"}
+              className="glass p-6 rounded-2xl"
+              whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.3 } }}
             >
               <h4 className="text-xl font-semibold mb-4 gradient-text">{grid.cloudIdentity.title}</h4>
               <ul className={`space-y-3 text-base text-light-gray reveal-list ${isVisible ? 'is-visible' : ''}`}>
@@ -112,10 +245,11 @@ export default function Experience() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 18 }}
-              animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: 10 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
+              variants={gridCardVariant(false, 0.2)}
+              initial="hidden"
+              animate={isVisible ? "visible" : "hidden"}
+              className="glass p-6 rounded-2xl"
+              whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.3 } }}
             >
               <h4 className="text-xl font-semibold mb-4 gradient-text">{grid.remoteFirst.title}</h4>
               <ul className={`space-y-3 text-base text-light-gray reveal-list ${isVisible ? 'is-visible' : ''}`}>
@@ -131,10 +265,11 @@ export default function Experience() {
 
           <div className="grid md:grid-cols-2 gap-6">
             <motion.div
-              initial={{ opacity: 0, x: -18 }}
-              animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-              transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
+              variants={gridCardVariant(true, 0.25)}
+              initial="hidden"
+              animate={isVisible ? "visible" : "hidden"}
+              className="glass p-6 rounded-2xl"
+              whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.3 } }}
             >
               <h4 className="text-xl font-semibold mb-4 gradient-text">{grid.deviceLifecycle.title}</h4>
               <ul className={`space-y-3 text-base text-light-gray reveal-list ${isVisible ? 'is-visible' : ''}`}>
@@ -148,10 +283,11 @@ export default function Experience() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 18 }}
-              animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: 10 }}
-              transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="glass p-6 rounded-2xl hover:scale-[1.02] transition-transform"
+              variants={gridCardVariant(false, 0.3)}
+              initial="hidden"
+              animate={isVisible ? "visible" : "hidden"}
+              className="glass p-6 rounded-2xl"
+              whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.3 } }}
             >
               <h4 className="text-xl font-semibold mb-4 gradient-text">{grid.dualEnvironment.title}</h4>
               <ul className={`space-y-3 text-base text-light-gray reveal-list ${isVisible ? 'is-visible' : ''}`}>
@@ -166,10 +302,11 @@ export default function Experience() {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            variants={centerPanelVariant(0.35)}
+            initial="hidden"
+            animate={isVisible ? "visible" : "hidden"}
             className="glass p-8 rounded-2xl"
+            whileHover={{ y: -4, transition: { duration: 0.3 } }}
           >
             <h4 className="text-2xl font-semibold mb-6 gradient-text text-center">{security.title}</h4>
             <div className={`grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4 reveal-list ${isVisible ? 'is-visible' : ''}`}>
@@ -213,10 +350,11 @@ export default function Experience() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-            transition={{ duration: 0.6, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            variants={centerPanelVariant(0.4)}
+            initial="hidden"
+            animate={isVisible ? "visible" : "hidden"}
             className="glass p-6 rounded-2xl"
+            whileHover={{ y: -4, transition: { duration: 0.3 } }}
           >
             <h4 className="text-xl font-semibold mb-3 gradient-text text-center">{luminos.title}</h4>
             <p className="text-center text-base text-light-gray mb-4">{luminos.intro}</p>
@@ -245,24 +383,28 @@ export default function Experience() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.6, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          variants={teamBadgeVariant}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
           className="mb-12 text-center"
         >
-          <div className="inline-block glass p-6 rounded-2xl border-2 border-sky-blue/30">
+          <motion.div
+            className="inline-block glass p-6 rounded-2xl border-2 border-sky-blue/30"
+            whileHover={{ scale: 1.03, y: -3, transition: { duration: 0.3 } }}
+          >
             <p className="text-xl md:text-2xl font-semibold mb-2">
               <span className="gradient-text">{team.headline}</span>
             </p>
             <p className="text-sm text-light-gray">{team.body}</p>
-          </div>
+          </motion.div>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-          transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          variants={outcomeVariant}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
           className="glass p-8 md:p-12 rounded-3xl bg-gradient-to-br from-green-500/20 to-sky-blue/20"
+          whileHover={{ y: -4, transition: { duration: 0.3 } }}
         >
           <h4 className="text-2xl font-semibold mb-6 text-green-400">{outcome.title}</h4>
           <div className="grid md:grid-cols-2 gap-6 text-light-gray">
@@ -284,23 +426,26 @@ export default function Experience() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-          transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          variants={timelineContainerVariant}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
           className="mt-12 text-center"
         >
-          <h4 className="text-xl font-semibold mb-8">{timeline.title}</h4>
+          <motion.h4
+            className="text-xl font-semibold mb-8"
+            variants={timelineItemVariant}
+          >
+            {timeline.title}
+          </motion.h4>
           <div className="flex flex-wrap justify-center gap-4 items-center">
             {timeline.items.map((item, index) => (
               <div key={`${item.year}-${item.role}`} className="flex items-center gap-4">
                 <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ amount: 0.6, once: false, margin: '0px 0px -15% 0px' }}
-                  transition={{ duration: 0.55, delay: 0.12 + index * 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  variants={timelineItemVariant}
                   className={`glass px-7 py-3 rounded-full border border-white/25 shadow-[0_0_25px_rgba(56,189,248,0.18)] ${
                     item.highlight ? 'bg-space-black/60' : 'bg-space-black/50'
                   }`}
+                  whileHover={{ scale: 1.05, y: -3, transition: { duration: 0.25 } }}
                 >
                   <span className="text-pure-white text-sm">{item.year}</span>
                   <p className={`font-semibold ${item.highlight ? 'gradient-text' : 'text-pure-white'}`}>
@@ -310,10 +455,7 @@ export default function Experience() {
 
                 {index < timeline.items.length - 1 && (
                   <motion.span
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ amount: 0.6, once: false, margin: '0px 0px -15% 0px' }}
-                    transition={{ duration: 0.4, delay: 0.2 + index * 0.18, ease: [0.22, 1, 0.36, 1] }}
+                    variants={timelineItemVariant}
                     className={`${item.accent} text-2xl`}
                   >
                     →

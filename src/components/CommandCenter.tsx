@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useInView } from 'framer-motion'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import content from '../content/site.json'
+import { appleEase, sectionTitle, defaultViewport } from '../utils/animations'
 
 type Slide = {
   src: string
@@ -53,9 +54,44 @@ const commandCaptions: Record<string, CommandCaption> = Object.entries(commandCa
 
 const commandKeywords = ['command', 'desk', 'workstation', 'rig', 'setup', 'command-center']
 
+// Animation variants
+const containerVariant = {
+  hidden: {
+    opacity: 0,
+    y: 50,
+    scale: 0.98,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.8,
+      ease: appleEase,
+      delay: 0.15,
+    },
+  },
+}
+
+const introVariant = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: appleEase,
+      delay: 0.1,
+    },
+  },
+}
+
 export default function CommandCenter({ paused = false }: CommandCenterProps) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px", amount: 0.15 })
+  const isInView = useInView(ref, defaultViewport)
   const commandCenter = content.commandCenter
   const [isTabVisible, setIsTabVisible] = useState(true)
   const [visibilityTick, setVisibilityTick] = useState(0)
@@ -220,9 +256,9 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
       <div className="content-wrapper">
         <motion.h2
           className="text-section-title font-display mb-6 text-center"
-          initial={{ opacity: 0, y: 18 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          variants={sectionTitle}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
         >
           {commandCenter.title.leading}{' '}
           <span className="gradient-text">{commandCenter.title.accent}</span>
@@ -230,14 +266,21 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
 
         <motion.p
           className="text-center text-light-gray text-lg mb-10 max-w-3xl mx-auto"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          variants={introVariant}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
         >
           {commandCenter.intro}
         </motion.p>
 
-        <div className="glass bg-charcoal/60 rounded-3xl p-6 md:p-8 border border-white/10">
+        <motion.div
+          className="glass bg-charcoal/60 rounded-3xl p-6 md:p-8 border border-white/10
+                   hover:shadow-xl hover:shadow-ocean-blue/5 transition-shadow duration-500"
+          variants={containerVariant}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          whileHover={{ y: -4, transition: { duration: 0.3 } }}
+        >
           <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-space-black/60">
             <AnimatePresence mode="wait">
               {activeSlide.isVideo ? (
@@ -251,10 +294,10 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
                   controls
                   preload="metadata"
                   onError={handleSlideError}
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  initial={{ opacity: 0, scale: 0.96, filter: 'blur(4px)' }}
+                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, scale: 0.96, filter: 'blur(4px)' }}
+                  transition={{ duration: 0.5, ease: appleEase }}
                 >
                   {(activeSlide.sources && activeSlide.sources.length > 0
                     ? activeSlide.sources
@@ -272,61 +315,72 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
                   loading="eager"
                   decoding="async"
                   onError={handleSlideError}
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  initial={{ opacity: 0, scale: 0.96, filter: 'blur(4px)' }}
+                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, scale: 0.96, filter: 'blur(4px)' }}
+                  transition={{ duration: 0.5, ease: appleEase }}
                 />
               )}
             </AnimatePresence>
           </div>
 
-          <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <motion.div
+            className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+            initial={{ opacity: 0, y: 10 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+            transition={{ duration: 0.5, delay: 0.3, ease: appleEase }}
+          >
             <div>
               <h3 className="text-xl font-semibold text-pure-white">{activeSlide.title}</h3>
               <p className="text-sm text-light-gray mt-1">{activeSlide.description}</p>
             </div>
 
             <div className="flex items-center gap-3">
-              <button
+              <motion.button
                 type="button"
                 onClick={goPrev}
                 aria-label="Previous slide"
                 className="glass h-10 w-10 rounded-full flex items-center justify-center text-lg text-pure-white
-                           hover:scale-105 transition-transform duration-200 ease-apple"
+                           hover:bg-white/10 transition-colors duration-200"
                 disabled={slideCount <= 1}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
                 ←
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 type="button"
                 onClick={goNext}
                 aria-label="Next slide"
                 className="glass h-10 w-10 rounded-full flex items-center justify-center text-lg text-pure-white
-                           hover:scale-105 transition-transform duration-200 ease-apple"
+                           hover:bg-white/10 transition-colors duration-200"
                 disabled={slideCount <= 1}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
                 →
-              </button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
 
           <div className="mt-5 flex flex-wrap gap-2">
             {slides.map((slide, index) => (
-              <button
+              <motion.button
                 key={slide.key}
                 type="button"
                 onClick={() => setActiveIndex(index)}
                 aria-label={`Show slide ${index + 1}`}
-                className={`h-2.5 rounded-full transition-all duration-200 ${
+                className={`h-2.5 rounded-full transition-all duration-300 ${
                   index === activeIndex
                     ? 'w-8 bg-sky-blue'
                     : 'w-2.5 bg-white/20 hover:bg-white/40'
                 }`}
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
               />
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   )

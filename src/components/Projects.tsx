@@ -1,8 +1,75 @@
-import { motion } from 'framer-motion'
-import { useInView } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import content from '../content/site.json'
+import { appleEase, sectionTitle, defaultViewport } from '../utils/animations'
+
+// Holographic project card animation variants
+const introVariant = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+    filter: 'blur(10px)',
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.7, ease: appleEase, delay: 0.1 },
+  },
+}
+
+const featuredCardVariant = (index: number) => ({
+  hidden: {
+    opacity: 0,
+    y: 70,
+    scale: 0.9,
+    filter: 'blur(20px)',
+    rotateX: 8,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: 'blur(0px)',
+    rotateX: 0,
+    transition: { duration: 0.9, ease: appleEase, delay: index * 0.12 },
+  },
+})
+
+const gridCardVariant = (index: number) => ({
+  hidden: {
+    opacity: 0,
+    y: 50,
+    x: index % 3 === 0 ? -40 : index % 3 === 2 ? 40 : 0,
+    scale: 0.88,
+    filter: 'blur(15px)',
+    rotateY: index % 3 === 0 ? 8 : index % 3 === 2 ? -8 : 0,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    x: 0,
+    scale: 1,
+    filter: 'blur(0px)',
+    rotateY: 0,
+    transition: { duration: 0.8, ease: appleEase, delay: (index + 2) * 0.1 },
+  },
+})
+
+const footerVariant = {
+  hidden: {
+    opacity: 0,
+    y: 25,
+    filter: 'blur(8px)',
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.6, ease: appleEase, delay: 0.35 },
+  },
+}
 
 interface Project {
   title: string
@@ -13,7 +80,9 @@ interface Project {
   category: string
   highlights: string[]
   details?: ProjectDetailSection[]
-  screenshotsFolder?: string
+  screenshotsFolder?: string | null
+  isMeta?: boolean
+  metaMessage?: string
 }
 
 interface ProjectDetailSection {
@@ -34,7 +103,7 @@ const projects: Project[] = content.projects as Project[]
 
 export default function Projects() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px", amount: 0.15 })
+  const isInView = useInView(ref, defaultViewport)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null)
   const [selectedScreenshotIndex, setSelectedScreenshotIndex] = useState(0)
@@ -282,9 +351,9 @@ export default function Projects() {
         <div className="content-wrapper">
           <motion.h2
             className="text-section-title font-display mb-16 text-center"
-            initial={{ opacity: 0, y: 18 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            variants={sectionTitle}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
           >
             {projectsSection.title.leading}{' '}
             <span className="gradient-text">{projectsSection.title.accent}</span>
@@ -292,9 +361,9 @@ export default function Projects() {
 
           <motion.p
             className="text-center text-light-gray text-lg mb-12 max-w-3xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            variants={introVariant}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
             dangerouslySetInnerHTML={{ __html: projectsSection.intro }}
           />
 
@@ -303,11 +372,18 @@ export default function Projects() {
             {projects.filter(p => p.featured).map((project, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 24 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-                transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                variants={featuredCardVariant(index)}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
                 onClick={() => setSelectedProject(project)}
-                className="glass p-8 rounded-2xl bg-gradient-to-br from-sky-blue/20 to-teal/20 hover:scale-[1.02] transition-all duration-300 cursor-pointer group"
+                className="glass p-8 rounded-2xl bg-gradient-to-br from-sky-blue/20 to-teal/20 cursor-pointer group"
+                whileHover={{
+                  scale: 1.03,
+                  y: -12,
+                  boxShadow: '0 40px 80px rgba(56, 189, 248, 0.2), 0 0 50px rgba(56, 189, 248, 0.1)',
+                  transition: { duration: 0.4 }
+                }}
+                whileTap={{ scale: 0.98 }}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -359,11 +435,19 @@ export default function Projects() {
             {projects.filter(p => !p.featured).map((project, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 24 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-                transition={{ duration: 0.6, delay: (index + 2) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                variants={gridCardVariant(index)}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
                 onClick={() => setSelectedProject(project)}
-                className="glass p-6 rounded-2xl hover:scale-105 transition-all duration-300 cursor-pointer group"
+                className="glass p-6 rounded-2xl cursor-pointer group"
+                whileHover={{
+                  scale: 1.06,
+                  y: -14,
+                  rotateY: 3,
+                  boxShadow: '0 35px 70px rgba(56, 189, 248, 0.18), 0 0 40px rgba(56, 189, 248, 0.08)',
+                  transition: { duration: 0.4 }
+                }}
+                whileTap={{ scale: 0.97 }}
               >
                 <div className="flex items-start justify-between mb-3">
                   <h3 className="text-2xl font-semibold group-hover:gradient-text transition-all">
@@ -397,9 +481,9 @@ export default function Projects() {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-            transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            variants={footerVariant}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
             className="text-center mt-12"
           >
             <p className="text-light-gray">
@@ -503,7 +587,17 @@ export default function Projects() {
                 </div>
               </div>
 
-              {projectScreenshots.length > 0 ? (
+              {selectedProject.isMeta ? (
+                <div className="rounded-2xl border border-sky-blue/30 bg-gradient-to-br from-sky-blue/10 to-teal/10 p-8 text-center">
+                  <div className="text-5xl mb-4">👀</div>
+                  <p className="text-xl text-pure-white mb-2 font-medium">
+                    {selectedProject.metaMessage || "You're already looking at it!"}
+                  </p>
+                  <p className="text-light-gray text-sm">
+                    Close this modal and scroll around to see the holographic animations in action.
+                  </p>
+                </div>
+              ) : projectScreenshots.length > 0 ? (
                 <div className="space-y-4">
                   <h4 className="text-xl font-semibold mb-4">Screenshots</h4>
                   <div className="grid md:grid-cols-2 gap-4">

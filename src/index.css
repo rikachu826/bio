@@ -9,14 +9,17 @@
 
   html {
     @apply scroll-smooth;
-    font-size: clamp(15px, 0.7vw + 12.5px, 17px);
+    /* Comfortable reading size - scales with viewport */
+    /* Min 18px, scales up, max 22px on large screens */
+    font-size: clamp(18px, 1vw + 14px, 22px);
   }
 
   body {
     @apply m-0 p-0 font-sans antialiased;
     @apply bg-space-black text-pure-white;
     @apply overflow-x-hidden;
-    @apply leading-relaxed;
+    /* Increased line height for breathing room */
+    line-height: 1.75;
   }
 
   #root {
@@ -28,17 +31,118 @@
     z-index: 9999;
     pointer-events: none;
   }
+
+  /* Improved paragraph readability */
+  p {
+    @apply leading-relaxed;
+    letter-spacing: 0.01em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply leading-tight;
+    letter-spacing: -0.02em;
+  }
 }
 
 @layer components {
-  /* Glass morphism effect */
+  /* Glass morphism effect - Enhanced with holographic feel */
   .glass {
     @apply bg-white/10 backdrop-blur-glass border border-white/20;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 0 0 1px rgba(56, 189, 248, 0.05);
+  }
+
+  /* Holographic panel - more dramatic */
+  .holo-panel {
+    @apply bg-white/10 backdrop-blur-glass border border-white/20;
+    box-shadow:
+      0 20px 50px rgba(0, 0, 0, 0.4),
+      0 0 30px rgba(56, 189, 248, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 0 0 1px rgba(56, 189, 248, 0.1);
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  .holo-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgba(56, 189, 248, 0.08) 0%,
+      transparent 40%,
+      transparent 60%,
+      rgba(45, 212, 191, 0.06) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Holographic glow effect */
+  .holo-glow {
+    box-shadow:
+      0 0 40px rgba(56, 189, 248, 0.15),
+      0 0 80px rgba(56, 189, 248, 0.08),
+      0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Scan line overlay for that CRT/hologram feel */
+  .scan-lines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* Holographic text glow */
+  .holo-text {
+    text-shadow:
+      0 0 20px rgba(56, 189, 248, 0.4),
+      0 0 40px rgba(56, 189, 248, 0.2);
+  }
+
+  /* Floating animation */
+  @keyframes float-gentle {
+    0%, 100% { transform: translateY(0) rotateX(0); }
+    50% { transform: translateY(-8px) rotateX(1deg); }
+  }
+
+  .float-anim {
+    animation: float-gentle 6s ease-in-out infinite;
+  }
+
+  /* Pulse glow for emphasis */
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.2), 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(56, 189, 248, 0.35), 0 25px 60px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 4s ease-in-out infinite;
   }
 
   /* Section container */
   .section-container {
     @apply w-full flex items-center justify-center px-4 md:px-8 lg:px-16 py-16 md:py-0 md:min-h-screen;
+    /* 3D perspective for holographic effects - scoped to sections only */
+    /* This was previously on #root but broke fixed positioning for Tifa's chat button */
+    perspective: 1500px;
+    transform-style: preserve-3d;
   }
 
   .contact-icon {
@@ -96,6 +200,10 @@
     @apply max-w-7xl w-full mx-auto;
   }
 
+  /* ============================================
+     TIFA AI ASSISTANT - Enhanced for readability
+     ============================================ */
+
   .ai-fab {
     position: relative;
     isolation: isolate;
@@ -111,24 +219,32 @@
     z-index: -1;
   }
 
+  /* Default panel - comfortable reading size */
   .ai-panel {
     position: relative;
     overflow: hidden;
-    width: min(92vw, 480px);
+    width: min(94vw, 420px);
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
+  /* Expanded panel - significantly larger for comfortable use */
   .ai-panel.ai-panel-expanded {
-    width: min(94vw, 680px);
+    width: min(96vw, 720px);
+    font-size: 1.05rem;
   }
 
+  /* Scroll area - default */
   .ai-scroll {
-    max-height: clamp(280px, 50vh, 520px);
+    max-height: clamp(300px, 55vh, 480px);
   }
 
+  /* Scroll area - expanded (much taller) */
   .ai-scroll-expanded {
-    max-height: clamp(360px, 65vh, 640px);
+    max-height: clamp(400px, 70vh, 720px);
   }
 
+  /* Holographic background effects */
   .ai-panel::before {
     content: '';
     position: absolute;
@@ -155,15 +271,17 @@
     z-index: 1;
   }
 
+  /* Chat bubbles - larger, more readable */
   .ai-bubble {
     position: relative;
     z-index: 1;
-    padding: 10px 14px;
-    border-radius: 16px;
-    font-size: 0.85rem;
-    line-height: 1.4;
+    padding: 14px 18px;
+    border-radius: 18px;
+    font-size: 1rem;
+    line-height: 1.65;
     white-space: pre-wrap;
     word-break: break-word;
+    max-width: 92%;
   }
 
   .ai-bubble-user {
@@ -180,10 +298,12 @@
     color: rgba(226, 232, 240, 0.95);
   }
 
+  /* Suggestion chips - larger touch targets */
   .ai-chip {
-    @apply px-3 py-1.5 rounded-full text-xs text-light-gray border border-white/10;
+    @apply px-4 py-2 rounded-full text-sm text-light-gray border border-white/10;
     background: rgba(15, 23, 42, 0.55);
     transition: all 0.2s ease;
+    line-height: 1.4;
   }
 
   .ai-chip:hover {
@@ -191,38 +311,103 @@
     color: #f8fafc;
   }
 
+  /* Text input - larger and more readable */
   .ai-input {
     width: 100%;
-    min-height: 88px;
+    min-height: 100px;
     resize: vertical;
-    border-radius: 16px;
+    border-radius: 18px;
     border: 1px solid rgba(148, 163, 184, 0.2);
     background: rgba(5, 8, 15, 0.75);
-    padding: 12px 14px;
+    padding: 16px 18px;
     color: #e2e8f0;
-    font-size: 0.85rem;
-    line-height: 1.4;
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
   .ai-input:focus {
     outline: none;
     border-color: rgba(56, 189, 248, 0.5);
-    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
   }
 
+  .ai-input::placeholder {
+    color: rgba(148, 163, 184, 0.6);
+    font-size: 0.95rem;
+  }
+
+  /* Submit button - larger touch target */
   .ai-submit {
     width: 100%;
     border-radius: 999px;
-    padding: 10px 16px;
-    font-size: 0.85rem;
+    padding: 14px 20px;
+    font-size: 1rem;
     font-weight: 600;
     color: #020617;
     background: linear-gradient(135deg, #38bdf8, #2dd4bf);
-    transition: opacity 0.2s ease;
+    transition: all 0.2s ease;
+  }
+
+  .ai-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3);
   }
 
   .ai-submit:disabled {
     opacity: 0.6;
+  }
+
+  /* High-resolution displays (Retina, 4K) */
+  @media (min-resolution: 2dppx) {
+    .ai-panel {
+      width: min(94vw, 480px);
+    }
+    .ai-panel.ai-panel-expanded {
+      width: min(96vw, 800px);
+    }
+  }
+
+  /* Mobile-specific improvements */
+  @media (max-width: 640px) {
+    .ai-panel {
+      width: calc(100vw - 24px);
+      max-width: none;
+      font-size: 1rem;
+    }
+
+    .ai-panel.ai-panel-expanded {
+      width: calc(100vw - 16px);
+      font-size: 1rem;
+    }
+
+    .ai-scroll {
+      max-height: clamp(250px, 45vh, 400px);
+    }
+
+    .ai-scroll-expanded {
+      max-height: clamp(350px, 60vh, 550px);
+    }
+
+    .ai-bubble {
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      max-width: 95%;
+    }
+
+    .ai-chip {
+      @apply px-3 py-2 text-sm;
+    }
+
+    .ai-input {
+      min-height: 90px;
+      padding: 14px 16px;
+      font-size: 16px; /* Prevents iOS zoom on focus */
+    }
+
+    .ai-submit {
+      padding: 16px 20px;
+      font-size: 1rem;
+    }
   }
 
   .project-modal {
@@ -826,4 +1011,191 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+}
+
+/* ============================================
+   MOBILE RESPONSIVENESS
+   ============================================ */
+
+/* Small screens (phones) */
+@media (max-width: 640px) {
+  /* Slightly smaller on mobile but still very readable */
+  html {
+    font-size: 17px;
+  }
+
+  body {
+    line-height: 1.7;
+  }
+
+  /* Section container - mobile padding */
+  .section-container {
+    @apply px-4 py-12;
+    min-height: auto;
+  }
+
+  /* Content wrapper - tighter on mobile */
+  .content-wrapper {
+    @apply px-2;
+  }
+
+  /* Glass panels - reduce padding on mobile */
+  .glass {
+    @apply p-4;
+  }
+
+  /* Improve touch targets for all interactive elements */
+  a, button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Hero section mobile adjustments */
+  #top .content-wrapper {
+    padding-top: 2rem;
+  }
+
+  /* Skill badges - wrap better on mobile */
+  .glass .flex-wrap {
+    gap: 0.5rem;
+  }
+
+  /* Project modal - full screen on mobile */
+  .project-modal {
+    max-height: 95vh;
+    border-radius: 1.5rem;
+  }
+
+  /* Screenshot lightbox - mobile friendly */
+  .screenshot-lightbox {
+    padding: 0.5rem;
+  }
+
+  .screenshot-arrow {
+    @apply w-10 h-10 text-xl;
+  }
+
+  .screenshot-nav {
+    gap: 0.5rem;
+  }
+
+  /* Tifa floating button - smaller on mobile */
+  .ai-fab {
+    @apply px-3 py-2;
+  }
+
+  .ai-fab span.relative {
+    @apply h-9 w-9;
+  }
+
+  .ai-fab .text-left {
+    display: none;
+  }
+
+  /* Experience section - stack grids */
+  .reveal-list {
+    @apply grid-cols-1;
+  }
+
+  /* Timeline items - stack vertically on mobile */
+  .flex-wrap.justify-center {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Contact method cards */
+  .flex.justify-center.mb-12 {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .section-container {
+    @apply px-6 py-16;
+  }
+
+  /* Two column grids on tablet */
+  .grid.lg\\:grid-cols-3 {
+    @apply grid-cols-2;
+  }
+}
+
+/* Large screens and high-resolution displays */
+@media (min-width: 1440px) {
+  html {
+    font-size: 20px;
+  }
+
+  .content-wrapper {
+    max-width: 85rem;
+  }
+}
+
+/* Very large screens (4K) */
+@media (min-width: 2560px) {
+  html {
+    font-size: 22px;
+  }
+
+  .content-wrapper {
+    max-width: 100rem;
+  }
+
+  .section-container {
+    @apply px-24;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .glass {
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .gradient-text {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: #4facfe;
+  }
+}
+
+/* Touch device improvements */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  .ai-chip,
+  .px-3.py-1,
+  .px-4.py-2 {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Disable hover-only effects */
+  .group:hover .group-hover\\:scale-110 {
+    transform: none;
+  }
+}
+
+/* Safe area insets for notched phones */
+@supports (padding: max(0px)) {
+  .fixed.bottom-6 {
+    bottom: max(1.5rem, env(safe-area-inset-bottom));
+    right: max(1.5rem, env(safe-area-inset-right));
+  }
+
+  .section-container {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
 }

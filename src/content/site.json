@@ -575,7 +575,9 @@
           ]
         }
       ],
-      "screenshotsFolder": null
+      "screenshotsFolder": null,
+      "isMeta": true,
+      "metaMessage": "You're already looking at it! Scroll around to explore. This modal is part of the demo too."
     }
   ],
   "skillsSection": {
