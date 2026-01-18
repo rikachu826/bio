@@ -4,8 +4,6 @@ import content from '../content/site.json'
 import {
   appleEase,
   sectionTitle,
-  slideFromLeft,
-  slideFromRight,
   staggerContainer,
   defaultViewport,
 } from '../utils/animations'
@@ -141,7 +139,7 @@ export default function About() {
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
             >
-              {about.pills.map((pill, index) => (
+              {about.pills.map((pill) => (
                 <motion.span
                   key={pill}
                   className="px-4 py-2 glass rounded-full text-sm hover:bg-white/10
