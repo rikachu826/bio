@@ -10,8 +10,8 @@
   html {
     @apply scroll-smooth;
     /* Comfortable reading size - scales with viewport */
-    /* Min 18px, scales up, max 22px on large screens */
-    font-size: clamp(18px, 1vw + 14px, 22px);
+    /* Min 16px, scales up, max 19px on large screens */
+    font-size: clamp(16px, 0.8vw + 13px, 19px);
   }
 
   body {
@@ -1021,7 +1021,7 @@
 @media (max-width: 640px) {
   /* Slightly smaller on mobile but still very readable */
   html {
-    font-size: 17px;
+    font-size: 16px;
   }
 
   body {
@@ -1125,7 +1125,7 @@
 /* Large screens and high-resolution displays */
 @media (min-width: 1440px) {
   html {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .content-wrapper {
@@ -1136,7 +1136,7 @@
 /* Very large screens (4K) */
 @media (min-width: 2560px) {
   html {
-    font-size: 22px;
+    font-size: 19px;
   }
 
   .content-wrapper {
