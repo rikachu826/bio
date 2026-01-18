@@ -1,12 +1,12 @@
 {
   "hero": {
     "name": "Leo Chui",
-    "role": "Associate IT Director",
+    "role": "IT Director & AI-Augmented Builder",
     "org": "GLAAD",
     "summaryParts": [
       {
         "type": "text",
-        "value": "Cloud security leader and full-stack builder. Led a 72-hour migration from Windows Server 2008 to a cloud-native stack when COVID-19 hit. Featured by "
+        "value": "I'm not a developer — but I've shipped five production apps anyway. I design systems, think through security, and collaborate with AI to bring ideas to life. It's a new way of building, and I'm all in. Featured by "
       },
       {
         "type": "link",
@@ -24,17 +24,17 @@
       },
       {
         "type": "text",
-        "value": " for a career transition story."
+        "value": " for an unconventional career path."
       }
     ],
     "cta": {
       "primary": {
-        "label": "View Projects",
+        "label": "See the Work",
         "href": "#projects"
       },
       "secondary": {
-        "label": "Get in Touch",
-        "href": "#contact"
+        "label": "How I Work",
+        "href": "#about"
       }
     }
   },
@@ -45,53 +45,52 @@
     },
     "paragraphs": [
       {
-        "text": "After 12+ years as a personal trainer and nutritionist, I pivoted to IT in 2018. Since then I have focused on systems reliability, security, and scaling mission-critical operations."
+        "label": "Here's the thing:",
+        "text": "I'm not a traditional developer. I can't whiteboard a binary tree or rattle off algorithms. But I've figured out something that works for me — I design the system in my head, think through security and architecture, and then collaborate with AI tools to actually build it. It's like having a brilliant team that never sleeps, and my job is to be the one who knows what we're building and why."
       },
       {
-        "text": "Joined GLAAD in September 2019 as a help desk technician and grew into Associate IT Director. When COVID-19 hit, I led a 72-hour migration from Windows Server 2008 to a cloud-native stack, keeping the organization fully remote."
+        "label": "It actually works.",
+        "text": "I've shipped five production apps this way (the LuminOS suite), led a 72-hour infrastructure transformation when COVID hit, and somehow maintain a 98/100 average on SecurityScorecard. No dev team. Just me, some really good AI tools, and a lot of iteration. The site you're on right now? Same approach."
       },
       {
-        "text": "Built LuminOS, an internal AI application ecosystem with five production apps: a security dashboard, finance analytics, two media intelligence tools, and a macOS desktop app. Web apps run on Firebase/GCP; the desktop app uses server-side OAuth exchange via Firebase Functions."
+        "label": "Security comes first, always.",
+        "text": "Before I ask AI to generate anything, I've already thought through auth flows, rate limiting, secrets management, and what could go wrong. AI is powerful, but it needs guardrails. I'm the human in the loop — the one who says 'wait, that's not secure enough' before it ships."
       },
       {
-        "label": "AI-augmented workflow:",
-        "text": "Each app has a dedicated AI persona mapped to its domain (Aegis for security, Astraea for finance, LUMOS for media, IRIS for Spectrum reporting, Turing for legal analysis). I treat AI as infrastructure, with strict auth, real data sources, caching, guardrails, and model fallbacks."
+        "label": "The toolkit:",
+        "text": "Claude Code, Gemini CLI, Cursor IDE, MCP servers for orchestration. Usually multiple terminals running different agents for different parts of the system. It sounds chaotic, but there's a rhythm to it. Design, direct, review, ship, iterate."
       },
       {
-        "label": "AI build stack:",
-        "text": "Multi-terminal workflows with Codex, Claude Code, and Gemini CLI; IDEs like Cursor and Google Anti Gravity; MCP gateway servers via Docker for tool orchestration. I automate aggressively, but keep a security-first, human-in-the-loop posture across every pipeline."
+        "label": "The unlikely path:",
+        "text": "I spent 12 years as a personal trainer and nutritionist before pivoting to IT in 2018. Joined GLAAD as help desk in 2019 and worked my way up to Associate IT Director. Turns out the discipline from bodybuilding — showing up every day, tracking progress, iterating on what works — translates pretty well to infrastructure and building software."
       },
       {
-        "label": "Systems mindset:",
-        "text": "My love of tech started in gaming and became discipline through bodybuilding. I was a competitive World of Warcraft raider and guild leader, building strategies before playbooks existed. That same focus on preparation, execution, and team coordination is how I run infrastructure today."
-      },
-      {
-        "label": "Command center:",
-        "text": "Multi-system workspace tuned for parallel research, monitoring, and production, built to keep pace with AI-assisted workflows and executive response windows."
+        "label": "Gaming roots:",
+        "text": "I used to be a competitive World of Warcraft raider and guild leader, theorycrafting strategies before guides existed. That systems thinking — understanding how everything connects, optimizing under constraints, coordinating a team — is honestly how I still approach problems today. Nerdier origin story than most, but it's mine."
       }
     ],
     "pills": [
-      "Cloud Migration",
-      "Zero Trust Security",
-      "Crisis Leadership",
-      "Digital Transformation"
+      "AI-Augmented Development",
+      "Security-First Architecture",
+      "Enterprise Transformation",
+      "Zero-Trust Design"
     ],
     "journeyTitle": "Journey",
     "journey": [
       { "label": "Started at GLAAD", "value": "September 2019" },
       { "label": "Current Role", "value": "Associate IT Director" },
-      { "label": "Years in IT", "value": "7 Years" },
-      { "label": "Focus", "value": "Security + Cloud + AI" },
-      { "label": "AI Posture", "value": "Augmented Delivery" },
-      { "label": "Deployment", "value": "Automated + Secure" }
+      { "label": "Development Team", "value": "None — AI-Directed" },
+      { "label": "Production Apps Shipped", "value": "5 (LuminOS Suite)" },
+      { "label": "Build Philosophy", "value": "Architect + Direct + Ship" },
+      { "label": "Security Posture", "value": "98/100 Average" }
     ]
   },
   "commandCenter": {
     "title": {
-      "leading": "How I",
-      "accent": "Work"
+      "leading": "The",
+      "accent": "Setup"
     },
-    "intro": "A personal operations cockpit built for parallel research, incident response, and AI-accelerated delivery. Competitive raiding taught me how to turn preparation into execution under pressure."
+    "intro": "Yeah, it's a lot of screens. But when you're juggling AI agents, monitoring systems, and trying to ship something before the day ends, you need the real estate. This is where the work happens."
   },
   "experience": {
     "title": {
@@ -102,25 +101,25 @@
       "badge": "🚀 Associate IT Director • GLAAD • September 2019 - Present",
       "headline": "72-Hour Emergency Cloud Transformation During COVID-19",
       "paragraphs": [
-        "Led an emergency transformation of GLAAD's IT infrastructure at the start of COVID-19, moving the organization from an aging on-prem environment to a cloud-native, remote-first architecture in under <strong class=\"text-pure-white\">three days</strong>.",
-        "<strong class=\"text-pure-white\">GLAAD Media Awards (2019-Present):</strong> Provide IT infrastructure and security support for bi-annual flagship events in Los Angeles and New York City. In 2020, secured and delivered the first fully virtual broadcast, including streaming infrastructure and security controls under emergency conditions."
+        "When COVID hit, I was still pretty new to IT. The MSP had just been let go, and suddenly I was looking at a legacy stack that needed to become fully remote in <strong class=\"text-pure-white\">72 hours</strong>. No consultants coming to save the day. Just me, a lot of coffee, and the realization that if I didn't figure this out, people couldn't do their jobs. So I figured it out.",
+        "<strong class=\"text-pure-white\">GLAAD Media Awards (2019-Present):</strong> I handle IT infrastructure and security for the bi-annual flagship events in LA and NYC. In 2020, we had to pivot the entire thing to virtual broadcast with almost no lead time — streaming infrastructure, security, production support. It was chaos, but good chaos."
       ]
     },
     "legacy": {
-      "title": "❌ Legacy Environment Decommissioned",
-      "intro": "I was early in my IT career when the MSP was let go, and I was asked to take over a legacy stack and make it remote-ready in 72 hours. The organization had moved from Los Angeles to New York, but core systems never followed. When the pandemic hit, that gap became a single point of failure.",
+      "title": "❌ What I Walked Into",
+      "intro": "Look, I'll be honest — when I inherited this environment, I didn't fully understand how bad it was. The org had moved from LA to NYC, but the infrastructure stayed behind. Here's what I was working with:",
       "items": [
         "End-of-life <strong class=\"text-pure-white\">Windows Server 2008</strong> domain controller",
-        "MSP-managed legacy stack with minimal modernization and limited internal visibility",
+        "MSP-managed legacy stack with minimal documentation and zero internal visibility",
         "Users logging in with <strong class=\"text-pure-white\">4-character passwords</strong>",
         "Hybrid on-prem <strong class=\"text-pure-white\">Microsoft Exchange</strong> with severe storage limits",
-        "<strong class=\"text-pure-white\">No MDM</strong>; users on personal Apple IDs downloading random apps",
-        "Had to carry a <strong class=\"text-pure-white\">Dell laptop</strong> just to reset passwords on ancient AD",
-        "Obsolete <strong class=\"text-pure-white\">ShoreTel phone system</strong> (migrated to Verizon One Talk cloud VoIP after the remote shift)",
-        "LA-based file server left behind after HQ moved to NYC; site-to-site VPN made it feel local, but it wasn’t truly remote-ready",
-        "<strong class=\"text-pure-white\">SonicWall firewalls</strong> were end-of-life, unpatched, and frequently crashed under remote load",
-        "NetExtender VPN with shared credentials and no modern MFA for remote access",
-        "LA office sat empty; the file server had no verified backup or disaster recovery plan",
+        "<strong class=\"text-pure-white\">No MDM</strong>; personal Apple IDs, unmanaged app installs",
+        "Carried a <strong class=\"text-pure-white\">Dell laptop</strong> just to reset passwords on ancient AD",
+        "Obsolete <strong class=\"text-pure-white\">ShoreTel phone system</strong> with no remote capability",
+        "LA-based file server left behind after HQ moved; VPN made it feel local, but it wasn't remote-ready",
+        "<strong class=\"text-pure-white\">SonicWall firewalls</strong> were end-of-life, unpatched, crashed under load",
+        "Shared VPN credentials with no modern MFA",
+        "No verified backup. No disaster recovery plan.",
         "Fragile, location-dependent infrastructure unsuitable for distributed work"
       ]
     },
@@ -129,10 +128,10 @@
         "title": "☁️ Cloud & Identity",
         "items": [
           "Retired on-prem AD; <strong class=\"text-pure-white\">JumpCloud</strong> became primary identity with Workspace sync",
-          "Retired hybrid Exchange and moved to <strong class=\"text-pure-white\">Workspace Enterprise</strong> with unlimited storage",
-          "Locked in nonprofit pricing (~$5/user) with Gemini access on a grandfathered tier",
-          "Cloud-native IAM with modern auth and MFA",
-          "Reduced VPN dependency for day-to-day access"
+          "Retired hybrid Exchange → <strong class=\"text-pure-white\">Workspace Enterprise</strong> with unlimited storage",
+          "Locked nonprofit pricing (~$5/user) with Gemini access on grandfathered tier",
+          "Cloud-native IAM with modern auth and MFA everywhere",
+          "Eliminated VPN dependency for daily operations"
         ]
       },
       "remoteFirst": {
@@ -140,26 +139,26 @@
         "items": [
           "Entire staff remote-enabled in <strong class=\"text-pure-white\">72 hours</strong>",
           "Location-independent workflows with U.S.-wide hiring",
-          "Cloud-based email, files, and collaboration"
+          "Cloud-based email, files, and collaboration from day one"
         ]
       },
       "deviceLifecycle": {
-        "title": "💻 Device Lifecycle Automation",
+        "title": "💻 Zero-Touch Device Lifecycle",
         "items": [
           "<strong class=\"text-pure-white\">One-click onboarding</strong> via Apple Business Manager",
           "<strong class=\"text-pure-white\">Zero-touch deployment</strong> (direct ship from Apple/Amazon)",
-          "Managed Apple IDs with federated sign-in via <strong class=\"text-pure-white\">Apple Business Manager + Google Workspace</strong>",
+          "Managed Apple IDs with federated sign-in via <strong class=\"text-pure-white\">ABM + Google Workspace</strong>",
           "<strong class=\"text-pure-white\">Automated offboarding</strong> with scheduled system lock",
-          "Apple Silicon standard with FileVault + MDM, using nonprofit hardware pricing"
+          "Apple Silicon standard with FileVault + MDM, nonprofit hardware pricing"
         ]
       },
       "dualEnvironment": {
         "title": "🔄 Dual Environment",
         "items": [
-          "<strong class=\"text-pure-white\">Google Workspace</strong> primary",
-          "<strong class=\"text-pure-white\">Microsoft 365</strong> for finance",
-          "Secure rsync sync between Microsoft 365 and Google Workspace via a private AWS EC2 transfer host",
-          "<strong class=\"text-pure-white\">Salesforce + NetSuite</strong>"
+          "<strong class=\"text-pure-white\">Google Workspace</strong> primary productivity",
+          "<strong class=\"text-pure-white\">Microsoft 365</strong> for finance operations",
+          "Secure rclone sync between M365 and Workspace via private AWS EC2 transfer host",
+          "<strong class=\"text-pure-white\">Salesforce + NetSuite</strong> integration"
         ]
       }
     },
@@ -172,15 +171,15 @@
         "<strong class=\"text-pure-white\">Proofpoint</strong> email security",
         "<strong class=\"text-pure-white\">Dashlane Enterprise</strong> with SSO",
         "Layered backups: endpoint NAS, SaaS backups twice daily, encrypted offsite replication",
-        "Conditional access with managed Chrome",
-        "App allowlisting with ABM/Jamf deployment; no unapproved installs",
+        "Conditional access with managed Chrome profiles",
+        "App allowlisting via ABM/Jamf; no unapproved installs",
         "Redundant VPN endpoints with MFA",
         "<strong class=\"text-pure-white\">Nudge Security</strong> for OAuth governance and AI tool DLP visibility",
-        "<strong class=\"text-pure-white\">AWS + CloudFront + WAF</strong>",
-        "GLAAD-managed laptops required",
-        "<strong class=\"text-pure-white\">Zero-day patching</strong> for critical issues",
-        "Monthly pen tests",
-        "<strong class=\"text-pure-white\">Diffract</strong> custom-built cyber dashboard"
+        "<strong class=\"text-pure-white\">AWS + CloudFront + WAF</strong> for public infrastructure",
+        "GLAAD-managed devices required for access",
+        "<strong class=\"text-pure-white\">Zero-day patching</strong> for critical vulnerabilities",
+        "Monthly penetration tests",
+        "<strong class=\"text-pure-white\">Diffract</strong> — custom-built security dashboard (AI-directed build)"
       ],
       "scorecard": {
         "labelPrefix": "SecurityScorecard average",
@@ -189,8 +188,9 @@
         "current": "Current score: 91; CSP remediation in progress"
       },
       "platform": {
-        "title": "GLAAD.org Platform",
+        "title": "GLAAD.org Platform (Infrastructure I Manage)",
         "items": [
+          "Website built and maintained by our web team — I handle the infrastructure and security side",
           "AWS Route 53 DNS + CloudFront CDN/WAF front door",
           "Segmented EC2 tiers behind load balancing",
           "Publishing locked behind VPN + MFA; admin access restricted",
@@ -211,14 +211,14 @@
       }
     },
     "luminos": {
-      "title": "🤖 LuminOS: Internal AI Application Ecosystem",
-      "intro": "AI-native toolset with domain-specific assistants (Aegis, Astraea, LUMOS, IRIS, Turing) for security, finance, media intelligence, and legal analysis. The naming system mirrors how light reveals truth; each product bends or separates signal to surface insight.",
+      "title": "🤖 LuminOS: The Apps I Built",
+      "intro": "This is the part I'm most proud of. Five production apps, all built by collaborating with AI. I designed each system, obsessed over the security, and worked with Claude/Gemini to actually build them. Each app has its own AI persona that knows the domain — Aegis for security, Astraea for finance, etc. The naming scheme? GLAAD is a light pillar for LGBTQ rights, so everything follows the 'light reveals truth' metaphor.",
       "items": [
-        "<strong class=\"text-pure-white\">Diffract</strong>: Executive security dashboard",
-        "<strong class=\"text-pure-white\">Refract</strong>: Salesforce + NetSuite analytics",
-        "<strong class=\"text-pure-white\">Prism</strong>: Media monitoring & tracking",
-        "<strong class=\"text-pure-white\">Spectrum</strong>: Media scoping & analysis",
-        "<strong class=\"text-pure-white\">NetRunner</strong>: Desktop legal analysis tool",
+        "<strong class=\"text-pure-white\">Diffract</strong>: Executive security dashboard — real-time threat intel",
+        "<strong class=\"text-pure-white\">Refract</strong>: Salesforce + NetSuite analytics — financial intelligence",
+        "<strong class=\"text-pure-white\">Prism</strong>: Media monitoring — IGDB, TMDB, Dash Social, Reddit, OpenMeasures",
+        "<strong class=\"text-pure-white\">Spectrum</strong>: Exploratory analysis — pattern recognition and insight discovery",
+        "<strong class=\"text-pure-white\">NetRunner</strong>: Desktop legal analysis — Electron app with secure local processing",
         "AI personas: <strong class=\"text-pure-white\">Aegis, Astraea, LUMOS, IRIS, Turing</strong>"
       ],
       "securityLabel": "Security-First Infrastructure:",
@@ -228,27 +228,26 @@
         "Server-side OAuth token exchange (no client secrets in desktop app)",
         "Firebase Auth enforcement with domain/allowlist controls",
         "JumpCloud SSO with org-wide MFA across internal apps",
-        "Enterprise tooling administration (Asana, dashboards, and access governance)"
+        "Rate limiting, abuse detection, and model fallbacks on all AI endpoints"
       ]
     },
     "team": {
-      "headline": "Lean IT Team, Hands-On Leadership",
-      "body": "Led architecture and delivery end-to-end, with day-to-day support handled by a junior technician. I also support creative and media production workflows for high-visibility events."
+      "headline": "Small Team, Big Output",
+      "body": "It's me and a junior technician for day-to-day support — that's the IT department. No developers on staff. Every app in LuminOS was designed and shipped by me using AI tools. I also help out with creative and media production for events, because at a nonprofit, you wear a lot of hats."
     },
     "outcome": {
-      "title": "✨ Outcome",
+      "title": "✨ Outcomes",
       "left": [
         "<strong class=\"text-pure-white\">Cloud-native, SaaS-first</strong> IT environment",
-        "Organization became <strong class=\"text-pure-white\">location-independent within 72 hours</strong>",
-        "Dramatically increased <strong class=\"text-pure-white\">reliability, security, and scalability</strong>",
+        "Organization became <strong class=\"text-pure-white\">location-independent in 72 hours</strong>",
+        "Dramatic improvements in <strong class=\"text-pure-white\">reliability, security, and scalability</strong>",
         "<strong class=\"text-pure-white\">Enterprise-grade security</strong> on nonprofit budget"
       ],
       "right": [
-        "Enabled <strong class=\"text-pure-white\">distributed operations</strong> with modern hiring practices",
+        "<strong class=\"text-pure-white\">Five production apps</strong> delivered without a dev team",
         "Standardized <strong class=\"text-pure-white\">device lifecycle and identity</strong> management",
         "<strong class=\"text-pure-white\">Sub-minute response</strong> for critical issues with prevention-first operations",
-        "Automated and maintained <strong class=\"text-pure-white\">org-wide workflows</strong> across IT and security",
-        "<strong class=\"text-pure-white\">Zero-trust-aligned architecture</strong> with monthly penetration test validation"
+        "<strong class=\"text-pure-white\">Zero-trust-aligned architecture</strong> with monthly pen test validation"
       ]
     },
     "timeline": {
@@ -263,76 +262,64 @@
   },
   "projectsSection": {
     "title": {
-      "leading": "AI-Powered",
-      "accent": "Projects"
+      "leading": "What I've",
+      "accent": "Built"
     },
-    "intro": "Built LuminOS as five production apps across web and desktop. Web apps run on Firebase/GCP; the desktop app uses Electron with server-side OAuth exchange. Click any project for details."
+    "intro": "All of these were built the same way — I figured out what I needed, designed how it should work, thought through security, and collaborated with AI to make it real. Click any project to see how it came together."
   },
   "projects": [
     {
       "title": "LuminOS",
-      "description": "AI-native application ecosystem with domain-specific assistants across security, finance, media intelligence, and legal analysis. Web apps run on Firebase/GCP; the desktop app ships as a signed macOS build with server-side OAuth exchange.",
-      "origin": "Named for GLAAD as a light pillar; LuminOS is the operating system that unifies every tool into one mission surface.",
-      "category": "AI Application Ecosystem",
+      "description": "Five apps that actually get used every day at GLAAD — security, finance, media intelligence, and legal analysis. All built by me and AI working together. I'm genuinely proud of this one.",
+      "origin": "Named for GLAAD as a light pillar. Each product follows the 'light reveals truth' metaphor — Diffract exposes weaknesses, Refract bends signals into clarity, Prism splits information into sources.",
+      "category": "Internal Tool Ecosystem",
       "tech": ["Firebase", "GCP", "React", "TypeScript", "Python", "Vertex AI", "Perplexity", "Electron"],
       "featured": true,
       "highlights": [
-        "Diffract: Executive cybersecurity dashboard with real-time threat intelligence",
-        "Refract: Financial analytics unifying Salesforce + NetSuite with deep research",
-        "Prism: Comprehensive media intelligence (IGDB, TMDB, Dash Social, Reddit, OpenMeasures)",
-        "Spectrum: Modular exploratory analysis for pattern recognition",
-        "NetRunner: Desktop legal analysis app",
-        "AI personas: Aegis (security), Astraea (finance), LUMOS (media), IRIS (spectrum), Turing (legal)"
+        "Five production apps delivered without a development team",
+        "AI-directed development: Claude Code, Gemini CLI, Cursor IDE",
+        "Domain-specific AI personas: Aegis, Astraea, LUMOS, IRIS, Turing",
+        "Security-first: CSP headers, rate limiting, auth flows specified before code generation",
+        "Enterprise integrations: Salesforce, NetSuite, AWS, Proofpoint, and more"
       ],
       "details": [
         {
-          "title": "Suite Purpose",
+          "title": "How It Was Built",
           "items": [
-            "Unifies executive operations into a single AI-native ecosystem spanning security, finance, media intelligence, and legal analysis.",
-            "Dedicated AI personas per domain, with shared prompt/guardrail patterns and context injection.",
-            "Designed to replace fragmented vendor workflows with a single pane of glass."
+            "Zero traditional development. Every component was architected by me and implemented by AI agents.",
+            "Multi-terminal workflows: different agents handle frontend, backend, infrastructure, and security review.",
+            "I specify requirements, security constraints, and architecture. AI generates code. I review, validate, and ship.",
+            "Each app has extensive guardrails: rate limiting, abuse detection, model fallbacks, and strict auth."
           ]
         },
         {
-          "title": "Naming & Mission",
+          "title": "The Five Products",
           "items": [
-            "GLAAD is a light pillar for LGBTQ rights and representation; the suite names follow how light reveals truth.",
-            "LuminOS is the operating system, a unified surface where each tool provides a different perspective.",
-            "Each product name reflects its role in bending, separating, or shielding light to find insight."
+            "Diffract: Security dashboard with real-time threat intel from AWS WAF, Proofpoint, CrowdStrike",
+            "Refract: Financial analytics unifying Salesforce + NetSuite with AI-powered research",
+            "Prism: Media intelligence aggregating IGDB, TMDB, Dash Social, Reddit, OpenMeasures",
+            "Spectrum: Exploratory analysis workspace for pattern recognition and insight discovery",
+            "NetRunner: Desktop legal analysis tool with local processing and server-side OAuth"
           ]
         },
         {
-          "title": "Light Metaphors (by Product)",
+          "title": "Naming Philosophy",
           "items": [
-            "Diffract: stress-tests security posture to expose weak points and threats.",
-            "Refract: bends financial signals to keep programs funded and aligned.",
-            "Prism: splits media signals to surface sources, context, and coverage patterns.",
-            "Spectrum: scans across the media landscape to find signal in the noise.",
-            "NetRunner: cyberpunk-inspired legal sentinel protecting mission-critical risk."
+            "GLAAD is a light pillar for LGBTQ rights; the suite follows how light reveals truth.",
+            "Diffract: stress-tests security posture to expose weak points",
+            "Refract: bends financial signals into clear executive decisions",
+            "Prism: splits media signals to surface sources and patterns",
+            "Spectrum: scans the landscape to separate noise from insight",
+            "NetRunner: cyberpunk sentinel guarding legal risk"
           ]
         },
         {
-          "title": "Shared Architecture",
+          "title": "Architecture Patterns",
           "items": [
-            "React + TypeScript frontends on Firebase Hosting; Python backends on Cloud Functions; Electron desktop app for NetRunner.",
-            "Vertex AI (Gemini) for chat/analysis, Perplexity for deep research where required, with model fallbacks for resilience.",
-            "Firebase Auth + Secrets Manager across the web apps; App Check used where supported."
-          ]
-        },
-        {
-          "title": "Cross-App Workflow",
-          "items": [
-            "Apps ingest vendor signals (AWS, Proofpoint, Salesforce, NetSuite, IGDB, TMDB, Dash Social, and more).",
-            "Data normalized in Firestore with cache layers to keep dashboards fast and stable.",
-            "Context payloads flow into each assistant (Aegis/Astraea/LUMOS/IRIS/Turing) for executive summaries and recommendations."
-          ]
-        },
-        {
-          "title": "Suite Milestones",
-          "items": [
-            "Five production apps delivered in a rapid build sprint.",
-            "Production deploy workflows across Firebase Hosting/Functions and signed desktop packaging.",
-            "Dedicated sandbox environments for safe UI and animation experiments."
+            "React + TypeScript frontends on Firebase Hosting; Python backends on Cloud Functions",
+            "Vertex AI (Gemini 3 Flash primary, 2.5 Flash fallback; Gemini 3 Pro for deep research); Perplexity for citations",
+            "Firebase Auth + Secrets Manager; App Check where supported",
+            "Electron desktop app with secure local processing and server-side token exchange"
           ]
         }
       ],
@@ -340,48 +327,49 @@
     },
     {
       "title": "Diffract",
-      "description": "Executive cybersecurity dashboard providing real-time visibility into organizational security posture, compliance status, and threat intelligence.",
-      "origin": "Diffraction exposes weak points in a wave; Diffract surfaces weak points in security posture before they become incidents.",
-      "category": "Security Analytics",
+      "description": "Executive cybersecurity dashboard providing real-time visibility into organizational security posture, compliance status, and threat intelligence. Built by directing AI agents with security-first requirements.",
+      "origin": "Diffraction exposes weak points in a wave. Diffract surfaces weak points in security posture before they become incidents.",
+      "category": "AI-Directed Security Analytics",
       "tech": ["React", "TypeScript", "Firebase", "Vertex AI", "Python"],
       "featured": true,
       "highlights": [
         "Real-time security metrics and compliance tracking",
+        "Aegis AI persona for threat analysis and recommendations",
+        "Single-pane view of CrowdStrike, JumpCloud, Proofpoint, AWS WAF",
         "Monthly pen test status tracking",
-        "Single-pane view of CrowdStrike, JumpCloud, Proofpoint status",
-        "AI-powered threat analysis and recommendations"
+        "Built without writing code — AI-directed from architecture to deployment"
       ],
       "details": [
         {
-          "title": "Purpose & Outcomes",
+          "title": "Purpose & How I Built It",
           "items": [
-            "Executive cybersecurity cockpit for GLAAD with a clear red/green narrative of risk and readiness.",
-            "Aegis AI persona translates complex security signals into actionable guidance.",
-            "Glass cockpit UI keeps posture at a glance without leaving the dashboard."
+            "Needed an executive security cockpit with red/green narrative of risk and readiness.",
+            "Designed the data model, API structure, and UI layout. Directed AI to implement each layer.",
+            "Specified security requirements upfront: auth flows, CORS policy, secrets handling, cache strategies.",
+            "Aegis AI persona translates complex security signals into actionable guidance."
           ]
         },
         {
-          "title": "Build & Architecture",
+          "title": "Architecture",
           "items": [
             "React + Vite frontend on Firebase Hosting; Python 3.12 Cloud Functions backend.",
-            "Vertex AI Gemini 2.5 Flash primary with 2.0 Flash fallback; lazy init to reduce cold starts.",
-            "Integrations: AWS WAF, Proofpoint, At-Bay (Gmail label scan), Google Drive; CrowdStrike mocked."
+            "Vertex AI Gemini 3 Flash primary with 2.5 Flash fallback; lazy init to reduce cold starts.",
+            "Integrations: AWS WAF, Proofpoint, At-Bay (Gmail label scan), Google Drive."
           ]
         },
         {
-          "title": "Workflow & Data Flow",
+          "title": "Data Flow",
           "items": [
             "User logs in via Firebase Auth; backend verifies ID token and @glaad.org domain on every call.",
             "get_dashboard_data aggregates cache-first metrics (WAF 15 min, Proofpoint 5 min, At-Bay 6h, Drive 60 min).",
-            "Aegis chat validates auth and App Check, injects dashboard context, returns Gemini response with fallback."
+            "Aegis chat validates auth and App Check, injects dashboard context, returns AI response with fallback."
           ]
         },
         {
-          "title": "Security & Ops Guardrails",
+          "title": "Security Guardrails",
           "items": [
             "Strict CORS allowlist, App Check (warn mode), secrets in Firebase Secret Manager.",
-            "Proofpoint API requires urllib + manual Base64 auth to avoid 400 errors.",
-            "Layout locked to h-screen + overflow-hidden; shimmer uses will-change to prevent CPU spikes.",
+            "Layout locked to h-screen + overflow-hidden to prevent content jump.",
             "Hosting headers set no-cache for index.html to prevent stale deploys."
           ]
         }
@@ -390,49 +378,42 @@
     },
     {
       "title": "Refract",
-      "description": "Financial analytics platform unifying Salesforce and NetSuite data with AI-powered deep research for executive decision-making and forecasting.",
-      "origin": "Refraction bends light to reveal signal; Refract bends finance data into clear, executive-ready decisions.",
-      "category": "Financial Intelligence",
+      "description": "Financial analytics platform unifying Salesforce and NetSuite data with AI-powered deep research. Designed for executive decision-making without requiring finance team expertise.",
+      "origin": "Refraction bends light to reveal signal. Refract bends finance data into clear, executive-ready decisions.",
+      "category": "AI-Directed Financial Intelligence",
       "tech": ["React", "TypeScript", "Python", "Salesforce API", "NetSuite API", "Vertex AI", "Perplexity"],
       "highlights": [
-        "Single-pane-of-glass for Salesforce + NetSuite integration",
-        "Real-time financial analytics without multiple system logins",
-        "Deep research options for complex financial analysis",
-        "AI-powered insights, forecasting, and strategic recommendations",
-        "Custom reports designed for non-technical executives"
+        "Single-pane view for Salesforce + NetSuite integration",
+        "Astraea AI persona for financial analysis and forecasting",
+        "Deep research via Perplexity with citations",
+        "Intelligence Hub with GO/CAUTION/NO-GO recommendations",
+        "Built by specifying requirements and directing AI implementation"
       ],
       "details": [
         {
-          "title": "Purpose & Outcomes",
+          "title": "Purpose & How I Built It",
           "items": [
-            "Executive finance and audit dashboard unifying Salesforce and NetSuite for GLAAD.",
-            "Astraea AI analyst answers financial questions and produces executive-ready summaries.",
-            "Intelligence Hub evaluates proposals with GO/CAUTION/NO-GO recommendations."
+            "Needed a unified finance dashboard that non-technical executives could use without multiple logins.",
+            "Specified data model for Salesforce opportunities, NetSuite transactions, and treasury views.",
+            "Directed AI to build React components, Python API endpoints, and Perplexity integration.",
+            "Astraea AI analyst answers financial questions and produces executive-ready summaries."
           ]
         },
         {
-          "title": "Build & Architecture",
+          "title": "Architecture",
           "items": [
             "React + Vite + TypeScript frontend; Python 3.12 Cloud Functions backend.",
             "Salesforce REST via client credentials; NetSuite diagnostics and treasury views.",
-            "Gemini chat via Vertex AI; Perplexity Sonar Pro and Gemini Interactions API for deep research; jsPDF exports; Sentry."
+            "Gemini 3 Flash chat (2.5 Flash fallback); Gemini 3 Pro + Perplexity Sonar Pro for deep research; jsPDF exports."
           ]
         },
         {
-          "title": "Workflow & Operations",
+          "title": "Security & Operations",
           "items": [
-            "Deploy via ./deploy_prod.sh to build frontend and deploy hosting + functions.",
             "Allowlist enforced in two layers: frontend ALLOWED_EMAILS and backend ALLOWED_USERS secret.",
-            "Deep Research runs async with status polling; fallback to Gemini Flash if Interactions API fails.",
-            "Proposal uploads are size-limited and PDF parsing is hardened with timeouts and subprocess fallback."
-          ]
-        },
-        {
-          "title": "Security & Reliability",
-          "items": [
+            "Deep Research runs async with status polling; fallback to Gemini Flash if Perplexity fails.",
             "CSP report-only headers plus /csp-report endpoint for visibility.",
-            "External links in markdown/citations are sanitized to http(s) only.",
-            "Upload guardrails and dependency hardening (pypdf) reduce crafted-PDF risk."
+            "External links sanitized to http(s) only; upload guardrails for crafted-PDF risk."
           ]
         }
       ],
@@ -440,49 +421,41 @@
     },
     {
       "title": "Prism",
-      "description": "Comprehensive media intelligence platform integrating IGDB (video games), TMDB (movies/TV), OpenMeasures OSINT, Dash Social listening, and Reddit, plus AI collaboration via LUMOS for team decisions.",
-      "origin": "A prism splits light into components; Prism separates media signals into sources, context, and actionable insight.",
-      "category": "Media Analytics",
+      "description": "Comprehensive media intelligence platform integrating IGDB, TMDB, OpenMeasures OSINT, Dash Social, and Reddit. Built for GLAAD Media Awards workflows and ongoing media monitoring.",
+      "origin": "A prism splits light into components. Prism separates media signals into sources, context, and actionable insight.",
+      "category": "AI-Directed Media Analytics",
       "tech": ["React", "TypeScript", "Firebase", "Algolia", "Vertex AI", "Perplexity", "IGDB", "TMDB"],
       "highlights": [
-        "Auto-research modals for awards eligibility workflows (GLAAD Media Awards use case)",
-        "LUMOS assistant supports group decision-making in collaboration threads",
-        "Deep research via Perplexity with citations and AI summarization",
-        "OSINT media search with OpenMeasures (partial integration)",
-        "Social listening via Dash Social + News API intelligence",
-        "Team collaboration with watch lists and shared research"
+        "Auto-research modals for GLAAD Media Awards eligibility",
+        "LUMOS AI assistant for group decision-making",
+        "Deep research via Perplexity with citations",
+        "Social listening via Dash Social + Reddit + NewsAPI",
+        "Watchlists and collaborative research workflows"
       ],
       "details": [
         {
-          "title": "Purpose & Outcomes",
+          "title": "Purpose & How I Built It",
           "items": [
-            "AI-powered media research dashboard for GLAAD across gaming, film/TV, and social listening.",
-            "LUMOS assistant delivers context-aware summaries, deep research, and collaborative decision support.",
-            "Watchlists, modal research, and shared findings support team workflows."
+            "GLAAD Media Awards require comprehensive research on games, films, TV shows, and social discourse.",
+            "Designed a unified research interface pulling from multiple APIs — directed AI to implement each integration.",
+            "LUMOS AI assistant supports group decisions with context-aware summaries and citations.",
+            "Specified security: Firebase Auth required, App Check enforced, server-side API tokens."
           ]
         },
         {
-          "title": "Build & Architecture",
+          "title": "Architecture",
           "items": [
-            "React + Vite frontend on Firebase Hosting; Flask/Python backend with Firestore and Algolia search.",
+            "React + Vite frontend on Firebase Hosting; Flask/Python backend with Firestore and Algolia.",
             "Integrations: IGDB, TMDB, OpenMeasures, Dash Social, Reddit, NewsAPI.",
             "Perplexity deep research with citation output; Gemini fallback for summaries."
           ]
         },
         {
-          "title": "Workflow Highlights",
+          "title": "Workflow Features",
           "items": [
-            "Auto-research modals for GLAAD Media Awards categories with pre-populated data.",
+            "Auto-research modals for Media Awards categories with pre-populated data.",
             "Interactive watchlist and trending media pipeline for real-time monitoring.",
             "Citation-ready reports for internal review and external messaging."
-          ]
-        },
-        {
-          "title": "Security & Reliability",
-          "items": [
-            "Firebase Auth required for all actions; App Check enforced.",
-            "Server-side token exchange for social APIs; no secrets exposed in the client.",
-            "CORS locked to glaad.org domains; sanitized URL allowlists for external links."
           ]
         }
       ],
@@ -490,39 +463,32 @@
     },
     {
       "title": "Spectrum",
-      "description": "Exploratory intelligence workspace for rapid pattern analysis across campaigns, media narratives, and mission-critical signals.",
-      "origin": "A spectrum reveals the full range of light; Spectrum scans the media landscape to separate noise from insight.",
-      "category": "Exploratory Analysis",
+      "description": "Exploratory intelligence workspace for rapid pattern analysis across campaigns, media narratives, and mission-critical signals. A sandbox for hypothesis testing and insight discovery.",
+      "origin": "A spectrum reveals the full range of light. Spectrum scans the media landscape to separate noise from insight.",
+      "category": "AI-Directed Exploratory Analysis",
       "tech": ["React", "TypeScript", "Firebase", "Vertex AI", "Python"],
       "highlights": [
-        "Sandbox analysis workspace with modular panels",
-        "Rapid hypothesis testing with AI summaries",
+        "Modular analysis workspace with configurable panels",
+        "IRIS AI persona for rapid insight generation",
         "Cross-media pattern analysis across campaigns",
         "Quick export and shareable insight briefs"
       ],
       "details": [
         {
-          "title": "Purpose & Outcomes",
+          "title": "Purpose & How I Built It",
           "items": [
-            "Rapid analysis environment for testing hypotheses and exploring media narratives.",
+            "Needed a sandbox for testing hypotheses and exploring media narratives without rigid structure.",
+            "Designed modular widget system — directed AI to implement panel components and data flows.",
             "IRIS AI persona supports quick insight generation and summary drafting.",
-            "Designed as an internal lab for experimental research and signal discovery."
+            "Export pipelines produce shareable briefs for leadership reporting."
           ]
         },
         {
-          "title": "Build & Architecture",
+          "title": "Architecture",
           "items": [
             "React + TypeScript frontend with Firebase Hosting and Firestore.",
-            "Vertex AI Gemini models for summarization and pattern detection.",
-            "Export pipelines for shareable briefs and executive-ready insights."
-          ]
-        },
-        {
-          "title": "Workflow Highlights",
-          "items": [
-            "Modular widgets for topic tracking, sentiment snapshots, and timeline reviews.",
-            "Quick-save snapshots for campaign retrospectives and team updates.",
-            "Automated summary cards for leadership reporting."
+            "Vertex AI Gemini 3 Flash for summarization and pattern detection.",
+            "Modular widgets for topic tracking, sentiment snapshots, and timeline reviews."
           ]
         }
       ],
@@ -530,91 +496,174 @@
     },
     {
       "title": "NetRunner",
-      "description": "Cyberpunk-inspired legal analysis companion for compliance checks, document reviews, and research workflows.",
-      "origin": "A shadow operative ensuring legal protection; NetRunner hides in plain sight and guards the mission.",
-      "category": "Legal Intelligence",
+      "description": "Cyberpunk-inspired desktop legal analysis companion for compliance checks, document reviews, and research workflows. Secure local processing with AI-assisted document audits.",
+      "origin": "A shadow operative ensuring legal protection. NetRunner hides in plain sight and guards the mission.",
+      "category": "AI-Directed Legal Intelligence",
       "tech": ["Electron", "React", "TypeScript", "Python", "Vertex AI"],
       "highlights": [
-        "Desktop app with secure local processing",
-        "LLM-assisted document audits",
-        "Risk flagging with audit trails",
-        "Exportable findings for legal review"
+        "Desktop app with secure local document processing",
+        "Turing AI persona for legal analysis and risk flagging",
+        "LLM-assisted document audits with audit trails",
+        "Exportable findings for legal review",
+        "Server-side OAuth — no client secrets in the app"
       ],
       "details": [
         {
-          "title": "Purpose & Outcomes",
+          "title": "Purpose & How I Built It",
           "items": [
-            "Legal analysis cockpit for compliance, contracts, and risk review.",
-            "Turing AI persona provides structured legal summaries and risk flags.",
-            "Optimized for sensitive documents with local-first processing."
+            "Legal analysis requires local processing for sensitive documents — can't send everything to cloud APIs.",
+            "Designed Electron architecture with secure IPC, filesystem sandboxing, and server-side OAuth exchange.",
+            "Directed AI to implement React UI, Python analysis engine, and Gemini integration with guardrails.",
+            "Turing AI persona provides structured legal summaries and risk flags."
           ]
         },
         {
-          "title": "Build & Architecture",
+          "title": "Architecture",
           "items": [
             "Electron desktop app with React UI and Python analysis engine.",
-            "Gemini models for analysis with guardrails and redaction controls.",
-            "Local storage of audit logs and exportable compliance reports."
+            "Gemini 3 Flash for analysis with guardrails and redaction controls.",
+            "Local storage of audit logs; exportable compliance reports."
           ]
         },
         {
-          "title": "Security & Guardrails",
+          "title": "Security",
           "items": [
             "Strict filesystem sandboxing and IPC validation.",
-            "No client secrets shipped; OAuth tokens stored securely.",
+            "No client secrets shipped; OAuth tokens stored securely via server-side exchange.",
             "Exportable audit trails for compliance review."
           ]
         }
       ],
       "screenshotsFolder": "netrunner"
+    },
+    {
+      "title": "This Website",
+      "description": "You're looking at it! Built the same way as everything else — I designed how it should work, thought through the security, and collaborated with AI to build it. Felt right to include it here.",
+      "origin": "If I'm going to talk about AI-augmented building, the portfolio itself should be proof of concept.",
+      "category": "Portfolio Site",
+      "tech": ["React", "TypeScript", "Vite", "Tailwind", "Cloudflare Workers", "Gemini API"],
+      "highlights": [
+        "Production React app with edge deployment on Cloudflare Pages",
+        "Tifa AI assistant with rate limiting, abuse detection, and context locking",
+        "Canvas-based galaxy background with performance optimization",
+        "Security headers: CSP, HSTS preload, X-Frame-Options",
+        "100% AI-directed development — I designed, AI implemented"
+      ],
+      "details": [
+        {
+          "title": "How I Built This Site",
+          "items": [
+            "Designed component architecture, content model, and visual system.",
+            "Specified security: Cloudflare Turnstile, rate limiting (250/month), session cookies, CORS lockdown.",
+            "Directed AI to implement React components, Cloudflare Worker, and animation system.",
+            "Reviewed every line, validated security posture, deployed to production."
+          ]
+        },
+        {
+          "title": "Technical Architecture",
+          "items": [
+            "React 18 + TypeScript + Vite on Cloudflare Pages.",
+            "Cloudflare Worker proxies Gemini API with 3-layer rate limiting and abuse detection.",
+            "Canvas particle system with spatial grid optimization and visibility-aware pausing.",
+            "Content centralized in site.json for easy updates without code changes."
+          ]
+        },
+        {
+          "title": "Security Implementation",
+          "items": [
+            "CSP: strict-src 'self' only; HSTS: 2 years, preload.",
+            "Rate limiting: 250 requests/month per IP + session + global.",
+            "30-second cooldown between AI requests; 6-strike abuse = 30-minute ban.",
+            "HttpOnly, Secure, SameSite=Strict session cookies."
+          ]
+        }
+      ],
+      "screenshotsFolder": null
     }
   ],
   "skillsSection": {
     "title": {
       "leading": "Skills &",
-      "accent": "Expertise"
+      "accent": "Capabilities"
     },
     "categories": [
       {
-        "category": "AI Development & Integration",
+        "category": "AI-Directed Development",
         "skills": [
-          "Vertex AI",
-          "Provider-Agnostic LLM Strategy",
-          "Continuous Model Evaluation",
-          "Rapid Model Upgrades",
+          "Claude Code / Gemini CLI",
+          "Cursor IDE / Google Antigravity",
+          "MCP Gateway Orchestration",
+          "Multi-Agent Workflows",
+          "Prompt Engineering",
+          "Security-First AI Direction",
+          "Human-in-the-Loop Validation"
+        ]
+      },
+      {
+        "category": "AI Integration & Operations",
+        "skills": [
+          "Vertex AI / Gemini 3",
+          "Perplexity API",
           "Model Fallback Design",
+          "Rate Limiting & Abuse Detection",
           "Context Injection",
-          "LLM Security Guardrails"
+          "LLM Security Guardrails",
+          "Provider-Agnostic Strategy"
+        ]
+      },
+      {
+        "category": "Security & Compliance",
+        "skills": [
+          "Zero Trust Architecture",
+          "IAM & Identity Federation",
+          "Secrets Management",
+          "CSP & Security Headers",
+          "PKCE OAuth Flows",
+          "Penetration Testing",
+          "Incident Response"
+        ]
+      },
+      {
+        "category": "Cloud & Infrastructure",
+        "skills": [
+          "Firebase Hosting/Auth/Functions",
+          "GCP IAM & Cloud Functions",
+          "AWS WAF/CloudFront",
+          "Cloudflare Workers/Pages",
+          "Google Workspace Admin",
+          "JumpCloud / Jamf MDM"
         ]
       },
       {
         "category": "Leadership & Strategy",
-        "skills": ["IT Strategy", "Team Leadership", "Project Management", "Vendor Management", "Budget Planning"]
+        "skills": [
+          "IT Strategy & Roadmaps",
+          "Enterprise Transformation",
+          "Vendor Management",
+          "Budget Planning",
+          "Crisis Response",
+          "Team Leadership"
+        ]
       },
       {
-        "category": "Cloud & Infrastructure",
-        "skills": ["Firebase Hosting/Auth/Functions", "GCP IAM", "Firestore", "Cloud Scheduler", "AWS WAF/CloudFront", "Google Workspace"]
-      },
-      {
-        "category": "Security & Compliance",
-        "skills": ["Zero Trust", "IAM", "Secrets Management", "CSP & Security Headers", "PKCE OAuth", "Penetration Testing", "Incident Response"]
-      },
-      {
-        "category": "Development",
-        "skills": ["Python", "TypeScript", "React", "Vite", "Electron", "Node.js", "Chart.js"]
-      },
-      {
-        "category": "Tools & Platforms",
-        "skills": ["Firebase", "Sentry", "Algolia", "Salesforce", "NetSuite", "Jamf", "JumpCloud"]
+        "category": "Platforms & Integrations",
+        "skills": [
+          "Salesforce",
+          "NetSuite",
+          "Proofpoint",
+          "CrowdStrike",
+          "Algolia",
+          "Sentry"
+        ]
       }
     ]
   },
   "contact": {
     "title": {
-      "leading": "Let's",
-      "accent": "Connect"
+      "leading": "Say",
+      "accent": "Hi"
     },
-    "blurb": "No social media, just engineering and continuous learning. If you want to talk cloud security, AI systems, or technical leadership, reach out.",
+    "blurb": "I'm always happy to chat about AI-augmented building, security, IT leadership, or honestly just nerd out about how wild this technology moment is. No social media presence — just email and GitHub.",
     "methods": [
       {
         "type": "email",

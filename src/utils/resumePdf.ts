@@ -264,7 +264,7 @@ export async function generateResumePdf() {
         'Remote-enabled staff in 72 hours with cloud email and collaboration',
         'Migrated ShoreTel to Verizon One Talk after the remote shift',
         'JumpCloud identity with Workspace sync and ABM-managed devices',
-        'Private EC2 rsync bridge for Microsoft 365 and Workspace data',
+        'Private EC2 rclone bridge for Microsoft 365 and Workspace data',
       ],
     },
     {
