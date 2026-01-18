@@ -106,21 +106,18 @@
       ]
     },
     "legacy": {
-      "title": "❌ What I Walked Into",
-      "intro": "Look, I'll be honest — when I inherited this environment, I didn't fully understand how bad it was. The org had moved from LA to NYC, but the infrastructure stayed behind. Here's what I was working with:",
+      "title": "📋 The Starting Point",
+      "intro": "When I joined, the organization had recently relocated from LA to NYC, but the IT infrastructure hadn't fully made that transition. Like many nonprofits, years of rapid growth had outpaced technology investments. Here's what needed modernization:",
       "items": [
-        "End-of-life <strong class=\"text-pure-white\">Windows Server 2008</strong> domain controller",
-        "MSP-managed legacy stack with minimal documentation and zero internal visibility",
-        "Users logging in with <strong class=\"text-pure-white\">4-character passwords</strong>",
-        "Hybrid on-prem <strong class=\"text-pure-white\">Microsoft Exchange</strong> with severe storage limits",
-        "<strong class=\"text-pure-white\">No MDM</strong>; personal Apple IDs, unmanaged app installs",
-        "Carried a <strong class=\"text-pure-white\">Dell laptop</strong> just to reset passwords on ancient AD",
-        "Obsolete <strong class=\"text-pure-white\">ShoreTel phone system</strong> with no remote capability",
-        "LA-based file server left behind after HQ moved; VPN made it feel local, but it wasn't remote-ready",
-        "<strong class=\"text-pure-white\">SonicWall firewalls</strong> were end-of-life, unpatched, crashed under load",
-        "Shared VPN credentials with no modern MFA",
-        "No verified backup. No disaster recovery plan.",
-        "Fragile, location-dependent infrastructure unsuitable for distributed work"
+        "Aging on-prem infrastructure managed by an external MSP",
+        "Limited documentation and internal visibility into systems",
+        "Authentication and identity management needed strengthening",
+        "Email and storage systems hitting capacity constraints",
+        "Device management was informal — no centralized MDM",
+        "Phone systems weren't designed for remote work",
+        "Core infrastructure was location-dependent, not cloud-ready",
+        "Backup and disaster recovery needed formalization",
+        "Security controls required modernization across the board"
       ]
     },
     "grid": {
