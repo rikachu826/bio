@@ -146,75 +146,340 @@
   }
 
   /* ============================================
-     OCEAN WAVE EFFECT - GPU Accelerated
+     IMMERSIVE OCEAN SECTION - Full Background
+     A visual counterpart to the galaxy intro
      ============================================ */
+
+  /* Ocean section wrapper - creates the distinct zone */
   .ocean-section {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(
-      180deg,
-      transparent 0%,
-      rgba(6, 78, 130, 0.25) 30%,
-      rgba(14, 116, 144, 0.4) 70%,
-      rgba(8, 145, 178, 0.5) 100%
-    );
+    min-height: 100vh;
+    /* Deep ocean gradient - darker depths to lighter surface */
+    background:
+      linear-gradient(
+        180deg,
+        rgb(2, 6, 23) 0%,
+        rgb(3, 24, 50) 15%,
+        rgb(6, 45, 82) 35%,
+        rgb(8, 75, 115) 55%,
+        rgb(12, 105, 145) 75%,
+        rgb(14, 130, 165) 100%
+      );
   }
 
-  /* Wave layers container */
-  .ocean-section::before,
-  .ocean-section::after {
+  /* Caustic light layer - shimmering underwater lights */
+  .ocean-caustics {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0.4;
+    z-index: 1;
+  }
+
+  .ocean-caustics::before,
+  .ocean-caustics::after {
     content: '';
     position: absolute;
-    left: 0;
-    width: 200%;
-    pointer-events: none;
-    /* GPU acceleration */
+    inset: -50%;
     will-change: transform;
     transform: translateZ(0);
   }
 
-  /* Back wave - darker, slower */
-  .ocean-section::before {
+  .ocean-caustics::before {
+    background:
+      radial-gradient(ellipse 40% 30% at 20% 30%, rgba(125, 211, 252, 0.35), transparent),
+      radial-gradient(ellipse 35% 25% at 70% 40%, rgba(56, 189, 248, 0.3), transparent),
+      radial-gradient(ellipse 30% 35% at 40% 70%, rgba(45, 212, 191, 0.25), transparent),
+      radial-gradient(ellipse 45% 20% at 80% 80%, rgba(79, 172, 254, 0.28), transparent);
+    animation: caustic-drift-1 20s ease-in-out infinite;
+  }
+
+  .ocean-caustics::after {
+    background:
+      radial-gradient(ellipse 35% 40% at 30% 60%, rgba(34, 211, 238, 0.25), transparent),
+      radial-gradient(ellipse 40% 25% at 60% 20%, rgba(56, 189, 248, 0.3), transparent),
+      radial-gradient(ellipse 25% 30% at 85% 50%, rgba(45, 212, 191, 0.22), transparent);
+    animation: caustic-drift-2 25s ease-in-out infinite;
+  }
+
+  /* Surface ripples layer */
+  .ocean-ripples {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .ocean-ripples::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    right: -50%;
+    height: 200px;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 100px,
+        rgba(125, 211, 252, 0.08) 100px,
+        rgba(125, 211, 252, 0.08) 102px,
+        transparent 102px,
+        transparent 200px
+      );
+    transform: perspective(500px) rotateX(70deg) translateZ(0);
+    animation: ripple-flow 8s linear infinite;
+    opacity: 0.6;
+  }
+
+  .ocean-ripples::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    right: -50%;
+    height: 150px;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 80px,
+        rgba(56, 189, 248, 0.06) 80px,
+        rgba(56, 189, 248, 0.06) 81px,
+        transparent 81px,
+        transparent 160px
+      );
+    transform: perspective(500px) rotateX(70deg) translateZ(0);
+    animation: ripple-flow 6s linear infinite reverse;
+    opacity: 0.5;
+  }
+
+  /* Floating particles/bubbles layer */
+  .ocean-bubbles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* Multiple bubble particles using box-shadow trick */
+  .ocean-bubbles::before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    bottom: 0;
+    left: 10%;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    box-shadow:
+      30vw 0 0 2px rgba(255, 255, 255, 0.4),
+      50vw 0 0 1px rgba(255, 255, 255, 0.5),
+      70vw 0 0 3px rgba(255, 255, 255, 0.3),
+      15vw 0 0 1.5px rgba(125, 211, 252, 0.5),
+      35vw 0 0 2px rgba(125, 211, 252, 0.4),
+      60vw 0 0 1px rgba(125, 211, 252, 0.6),
+      85vw 0 0 2.5px rgba(56, 189, 248, 0.4),
+      25vw 0 0 1px rgba(56, 189, 248, 0.5),
+      45vw 0 0 2px rgba(45, 212, 191, 0.35),
+      75vw 0 0 1.5px rgba(45, 212, 191, 0.4);
+    animation: bubble-rise 15s ease-in-out infinite;
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  .ocean-bubbles::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    bottom: 0;
+    left: 5%;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    box-shadow:
+      20vw 0 0 1.5px rgba(255, 255, 255, 0.35),
+      40vw 0 0 2px rgba(255, 255, 255, 0.4),
+      55vw 0 0 1px rgba(125, 211, 252, 0.45),
+      80vw 0 0 2px rgba(125, 211, 252, 0.35),
+      12vw 0 0 1px rgba(56, 189, 248, 0.5),
+      65vw 0 0 2.5px rgba(56, 189, 248, 0.3),
+      90vw 0 0 1.5px rgba(45, 212, 191, 0.4);
+    animation: bubble-rise-slow 20s ease-in-out infinite;
+    animation-delay: -7s;
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Wave layers - enhanced with more depth */
+  .ocean-waves {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 180px;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .ocean-wave {
+    position: absolute;
+    left: 0;
+    width: 200%;
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Back wave - deepest, slowest */
+  .ocean-wave--back {
+    bottom: 0;
+    height: 140px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C150,100 350,20 600,60 C850,100 1050,20 1200,60 L1200,120 L0,120 Z' fill='rgba(6,78,114,0.7)'/%3E%3C/svg%3E") repeat-x;
+    background-size: 600px 140px;
+    animation: wave-drift 18s linear infinite;
+    opacity: 0.9;
+  }
+
+  /* Middle wave */
+  .ocean-wave--mid {
     bottom: 0;
     height: 120px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C150,120 350,0 600,60 C850,120 1050,0 1200,60 L1200,120 L0,120 Z' fill='rgba(14,116,144,0.4)'/%3E%3C/svg%3E") repeat-x;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C200,90 400,10 600,50 C800,90 1000,10 1200,50 L1200,120 L0,120 Z' fill='rgba(14,116,144,0.65)'/%3E%3C/svg%3E") repeat-x;
     background-size: 600px 120px;
-    animation: ocean-wave-back 15s linear infinite;
-    opacity: 0.8;
+    animation: wave-drift 14s linear infinite;
+    animation-delay: -3s;
+    opacity: 0.85;
   }
 
-  /* Front wave - lighter, faster */
-  .ocean-section::after {
+  /* Front wave - lightest, fastest */
+  .ocean-wave--front {
     bottom: 0;
     height: 100px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,40 C200,100 400,0 600,50 C800,100 1000,20 1200,40 L1200,120 L0,120 Z' fill='rgba(56,189,248,0.35)'/%3E%3C/svg%3E") repeat-x;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,40 C180,80 380,0 580,40 C780,80 980,0 1200,40 L1200,120 L0,120 Z' fill='rgba(56,189,248,0.5)'/%3E%3C/svg%3E") repeat-x;
     background-size: 600px 100px;
-    animation: ocean-wave-front 10s linear infinite;
+    animation: wave-drift 10s linear infinite;
+    animation-delay: -6s;
   }
 
-  /* Smooth horizontal wave motion */
-  @keyframes ocean-wave-back {
-    0% {
-      transform: translateX(0) translateZ(0);
-    }
-    100% {
-      transform: translateX(-600px) translateZ(0);
-    }
-  }
-
-  @keyframes ocean-wave-front {
-    0% {
-      transform: translateX(0) translateZ(0);
-    }
-    100% {
-      transform: translateX(-600px) translateZ(0);
-    }
-  }
-
-  /* Content stays above waves */
-  .ocean-section > .content-wrapper {
+  /* Content layer - above all effects */
+  .ocean-content {
     position: relative;
-    z-index: 1;
+    z-index: 10;
+  }
+
+  /* Transition divider from previous section */
+  .ocean-divider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(
+      180deg,
+      rgba(2, 6, 23, 0) 0%,
+      rgba(2, 6, 23, 0.3) 30%,
+      rgba(3, 24, 50, 0.6) 60%,
+      rgba(6, 45, 82, 1) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Ocean animations - GPU accelerated */
+  @keyframes caustic-drift-1 {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    33% {
+      transform: translate3d(5%, 3%, 0) scale(1.05);
+    }
+    66% {
+      transform: translate3d(-3%, -2%, 0) scale(0.98);
+    }
+  }
+
+  @keyframes caustic-drift-2 {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(-4%, 4%, 0) scale(1.03);
+    }
+  }
+
+  @keyframes ripple-flow {
+    0% {
+      transform: perspective(500px) rotateX(70deg) translateX(0) translateZ(0);
+    }
+    100% {
+      transform: perspective(500px) rotateX(70deg) translateX(-200px) translateZ(0);
+    }
+  }
+
+  @keyframes bubble-rise {
+    0% {
+      transform: translateY(0) scale(1) translateZ(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.5;
+    }
+    100% {
+      transform: translateY(-100vh) scale(0.6) translateZ(0);
+      opacity: 0;
+    }
+  }
+
+  @keyframes bubble-rise-slow {
+    0% {
+      transform: translateY(0) scale(1) translateZ(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.6;
+    }
+    90% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: translateY(-100vh) scale(0.5) translateZ(0);
+      opacity: 0;
+    }
+  }
+
+  @keyframes wave-drift {
+    0% {
+      transform: translateX(0) translateZ(0);
+    }
+    100% {
+      transform: translateX(-600px) translateZ(0);
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .ocean-caustics::before,
+    .ocean-caustics::after,
+    .ocean-ripples::before,
+    .ocean-ripples::after,
+    .ocean-bubbles::before,
+    .ocean-bubbles::after,
+    .ocean-wave {
+      animation: none;
+    }
+
+    .ocean-bubbles::before,
+    .ocean-bubbles::after {
+      opacity: 0.3;
+      transform: translateY(-50vh);
+    }
   }
 
   .contact-icon {

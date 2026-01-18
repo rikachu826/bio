@@ -131,13 +131,13 @@ function App() {
           <Projects />
         </section>
 
-        {/* Skills Section - Lighter */}
-        <section id="skills" className="relative z-10 bg-gradient-to-b from-white/10 via-baby-blue/15 to-sky-blue/20">
+        {/* Skills Section - Transitions into ocean depths */}
+        <section id="skills" className="relative z-10 bg-gradient-to-b from-white/10 via-baby-blue/15 to-space-black/95">
           <Skills />
         </section>
 
-        {/* Contact Section - Lightest (glass) */}
-        <section id="contact" className="relative z-10 bg-gradient-to-b from-sky-blue/20 to-baby-blue/30">
+        {/* Contact Section - Immersive Ocean Zone */}
+        <section id="contact" className="relative z-10">
           <Contact />
         </section>
 

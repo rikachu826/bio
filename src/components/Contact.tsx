@@ -130,8 +130,21 @@ export default function Contact() {
   }
 
   return (
-    <div id="contact" className="section-container py-20 ocean-section" ref={ref}>
-      <div className="content-wrapper max-w-4xl">
+    <div id="contact" className="ocean-section" ref={ref}>
+      {/* Ocean effect layers */}
+      <div className="ocean-divider" />
+      <div className="ocean-caustics" />
+      <div className="ocean-ripples" />
+      <div className="ocean-bubbles" />
+      <div className="ocean-waves">
+        <div className="ocean-wave ocean-wave--back" />
+        <div className="ocean-wave ocean-wave--mid" />
+        <div className="ocean-wave ocean-wave--front" />
+      </div>
+
+      {/* Content wrapper - above all effects */}
+      <div className="ocean-content section-container py-20">
+        <div className="content-wrapper max-w-4xl">
         <motion.div
           variants={containerVariant}
           initial="hidden"
@@ -272,6 +285,7 @@ export default function Contact() {
             </p>
           </div>
         </motion.footer>
+        </div>
       </div>
     </div>
   )
