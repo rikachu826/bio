@@ -108,7 +108,45 @@ const timelineContainerVariant = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.35 },
+    transition: { staggerChildren: 0.25, delayChildren: 0.4 },
+  },
+}
+
+// Timeline pills pop in from left with bounce
+const timelinePillVariant = {
+  hidden: {
+    opacity: 0,
+    x: -60,
+    scale: 0.8,
+    filter: 'blur(12px)',
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.5,
+      ease: [0.34, 1.56, 0.64, 1], // Bouncy ease
+    },
+  },
+}
+
+// Arrow fades in after pill
+const timelineArrowVariant = {
+  hidden: {
+    opacity: 0,
+    x: -20,
+    scale: 0.5,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: {
+      duration: 0.3,
+      ease: appleEase,
+    },
   },
 }
 
@@ -441,11 +479,18 @@ export default function Experience() {
             {timeline.items.map((item, index) => (
               <div key={`${item.year}-${item.role}`} className="flex items-center gap-4">
                 <motion.div
-                  variants={timelineItemVariant}
+                  variants={timelinePillVariant}
                   className={`glass px-7 py-3 rounded-full border border-white/25 shadow-[0_0_25px_rgba(56,189,248,0.18)] ${
-                    item.highlight ? 'bg-space-black/60' : 'bg-space-black/50'
+                    item.highlight
+                      ? 'bg-space-black/60 border-sky-blue/40 shadow-[0_0_35px_rgba(56,189,248,0.3)]'
+                      : 'bg-space-black/50'
                   }`}
-                  whileHover={{ scale: 1.05, y: -3, transition: { duration: 0.25 } }}
+                  whileHover={{
+                    scale: 1.08,
+                    y: -5,
+                    boxShadow: '0 0 40px rgba(56, 189, 248, 0.35)',
+                    transition: { duration: 0.25 }
+                  }}
                 >
                   <span className="text-pure-white text-sm">{item.year}</span>
                   <p className={`font-semibold ${item.highlight ? 'gradient-text' : 'text-pure-white'}`}>
@@ -455,7 +500,7 @@ export default function Experience() {
 
                 {index < timeline.items.length - 1 && (
                   <motion.span
-                    variants={timelineItemVariant}
+                    variants={timelineArrowVariant}
                     className={`${item.accent} text-2xl`}
                   >
                     →
