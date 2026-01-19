@@ -1,8 +1,8 @@
 # Resume - System Status
 
-**Last Updated**: 2025-12-23
-**Status**: Development (Local)
-**Environment**: Local Development
+**Last Updated**: 2026-01-19  
+**Status**: Production  
+**Environment**: Cloudflare Pages + Functions
 
 ---
 
@@ -10,24 +10,19 @@
 
 ### Frontend Stack
 ```
-React 18.3 + TypeScript 5.x
-├── Vite 5.x (Build tool, dev server)
-├── Three.js + React Three Fiber (3D graphics)
-├── @react-three/drei (Three.js helpers)
-├── Framer Motion (Animations)
-├── Tailwind CSS 3.x (Styling)
-└── React Router (if multi-page needed)
+React 18.3 + TypeScript 5.6
+├── Vite 6.x (build + dev server)
+├── Three.js 0.171 + React Three Fiber + drei (3D scene)
+├── Framer Motion 11.x (animation)
+├── Tailwind CSS 3.4 (styling)
+└── pdf-lib (PDF export)
 ```
 
 ### Deployment Infrastructure
 ```
-GitHub Repository
-    ↓ (git push)
-GitHub Actions CI/CD
-    ↓ (build + deploy)
-Cloudflare Pages
-    ↓ (global CDN)
-Custom Domain (your-domain.com)
+GitHub → GitHub Actions (lint/audit/build) → Cloudflare Pages
+Cloudflare Pages Functions → /api/ask (Gemini + Turnstile)
+Cloudflare KV → rate limits + caching + chat history
 ```
 
 ---
@@ -37,95 +32,71 @@ Custom Domain (your-domain.com)
 ### Page Structure
 ```
 App.tsx
-├── Hero (3D animated introduction)
-├── About (Personal background)
-├── Experience (IT career timeline)
-├── Projects (LuminOS featured + others)
-├── Skills (Tech stack showcase)
-└── Contact (Get in touch)
+├── IntroOverlay
+├── Hero
+├── About
+├── Experience
+├── Projects
+├── CommandCenter
+├── Skills
+├── Contact
+└── AIAssistant (Tifa)
 ```
 
 ### 3D Scene Components
 ```
 Scene/
-├── GeometricShapes.tsx     # Floating animated meshes
-├── ParticleField.tsx       # Background particles
-├── InteractiveMesh.tsx     # Mouse-reactive 3D object
-└── PerformanceMonitor.tsx  # Adaptive quality control
+├── GalaxyBackground.tsx
+├── GeometricShapes.tsx
+└── Starfield.tsx
 ```
 
 ---
 
-## Performance Strategy
+## Performance Strategy (Current)
 
-### 3D Rendering Optimization
-- **Adaptive Quality**: Detect GPU capability, adjust polygon count
-- **Lazy Loading**: Three.js components load on-demand
-- **Frame Throttling**: Cap at 60fps, reduce on low-power devices
-- **Level of Detail (LOD)**: Simpler geometry when object is distant
-- **Instancing**: Reuse geometries for repeated shapes
-
-### Bundle Optimization
-- **Code Splitting**: Separate chunks for each section
-- **Tree Shaking**: Remove unused Three.js modules
-- **Minification**: Terser for production builds
-- **Asset Optimization**: WebP images, compressed videos
-
-### Cloudflare CDN
-- **Edge Caching**: Static assets served from nearest edge
-- **Brotli Compression**: Smaller transfer sizes
-- **HTTP/3**: Faster connection establishment
+- Three.js Canvas uses `antialias: false` and `dpr: [1, 1.5]` to cap GPU load.
+- Starfield uses precomputed positions (5k points) and simple per-frame rotations.
+- Project images are lazy-loaded in grids; the lightbox loads full media only when opened.
+- Large media assets remain the main performance risk on low-end devices.
 
 ---
 
 ## Environment Configuration
 
-### Development
-```bash
-NODE_ENV=development
-VITE_DEV_SERVER=http://localhost:5173
+### Production (Cloudflare Pages)
 ```
-
-### Production
-```bash
-NODE_ENV=production
-CLOUDFLARE_PAGES_URL=https://your-resume.pages.dev
-CUSTOM_DOMAIN=https://your-domain.com
+GEMINI_API_KEY (secret)
+TURNSTILE_SECRET (secret)
+VITE_TURNSTILE_SITE_KEY (plaintext, build-time)
+GEMINI_MODEL_PRIMARY (optional)
+GEMINI_MODEL_FALLBACK (optional)
+RATE_LIMIT_ALLOW_IPS (optional allowlist)
 ```
 
 ---
 
 ## Security Measures
 
-- **HTTPS Only**: Enforced via Cloudflare
-- **CSP Headers**: Content Security Policy configured
-- **No Secrets**: Static site, no API keys exposed
-- **Dependency Scanning**: GitHub Dependabot enabled
-- **SRI**: Subresource Integrity for CDN assets (if used)
+- CSP + security headers enforced via `public/_headers`.
+- Origin allowlist for `/api/ask`.
+- Turnstile required in production (fails closed if not configured).
+- KV-backed rate limits (global + session + IP) plus cooldown/abuse tracking.
+- HttpOnly/Secure/SameSite session cookie.
+- Resume content is repo-controlled (no user-generated content).
 
 ---
 
 ## Monitoring & Analytics
 
-### Planned Integration
-- Cloudflare Analytics (privacy-first, no cookies)
-- Performance monitoring (Core Web Vitals)
-- Error tracking (optional: Sentry)
+- Cloudflare Pages Analytics (traffic + Core Web Vitals).
+- Cloudflare Pages Functions logs for `/api/ask`.
+- GitHub Actions runs lint + `npm audit` on each deploy.
 
 ---
 
 ## Current Limitations
 
-- **Mobile 3D Performance**: May need reduced quality on older devices
-- **Browser Support**: Requires WebGL 2.0 (modern browsers only)
-- **Initial Load**: ~500KB bundle (acceptable for resume site)
-
----
-
-## Future Enhancements
-
-See `ROADMAP.md` for planned features.
-
----
-
-**System Health**: ✅ Scaffolding Phase
+- Large project media assets can be heavy on low-end devices.
+- WebGL scenes may strain older GPUs.
+- No external error tracking (Sentry not configured).

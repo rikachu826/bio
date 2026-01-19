@@ -10,9 +10,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- Hero section with 3D animated geometric shapes
-- Full resume content population
-- Cloudflare Pages deployment
+- TBD
+
+---
+
+## [0.2.0] - 2026-01-19
+
+### Added
+- Tifa assistant UI with Cloudflare Pages Function backend
+- Turnstile verification and KV-backed rate limiting
+- Security headers and CSP via `public/_headers`
+- CI lint + audit checks on deploy
+
+### Changed
+- Documentation refreshed for current production setup
 
 ---
 

@@ -108,15 +108,23 @@ Cloudflare auto-configures DNS:
 
 ---
 
-## Environment Variables (If Needed)
+## Environment Variables (Required for AI Assistant)
 
-If your app needs environment variables:
+If you want the Tifa assistant to work in production, you must set these in
+Cloudflare Pages → **Settings** → **Environment variables** (choose Production, and Preview if you use it),
+then redeploy.
 
-1. Cloudflare Dashboard → Your Pages project → **Settings** → **Environment variables**
-2. Add variables (e.g., `VITE_API_URL`)
-3. Redeploy for changes to take effect
+**Secrets**
+- `GEMINI_API_KEY` (required)
+- `TURNSTILE_SECRET` (required)
 
-**Note**: For this resume site, no secrets are needed (static site).
+**Plaintext**
+- `VITE_TURNSTILE_SITE_KEY` (required, build-time)
+- `GEMINI_MODEL_PRIMARY` (optional override)
+- `GEMINI_MODEL_FALLBACK` (optional override)
+- `RATE_LIMIT_ALLOW_IPS` (optional allowlist, comma/space-separated)
+
+**Important**: Any change to `VITE_` variables requires a redeploy so the frontend build picks them up.
 
 ---
 
@@ -254,14 +262,23 @@ npx vite-bundle-visualizer
 3. **HSTS**: Enabled with preload
 4. **WAF**: Basic rules enabled (free tier)
 
-### Content Security Policy (Optional)
+### Edge Rules (Optional)
+
+If you previously added allowlist or bypass rules, they usually live here:
+- **Security → WAF → Custom rules** (formerly Firewall Rules)
+- **Security → WAF → IP Access Rules** (account or zone-level)
+- **Security → Rate Limiting** (bypass/allowlist for `/api/ask`)
+
+Use these to skip edge challenges for your IP while keeping public protections enabled.
+
+### Content Security Policy
 
 Add CSP headers in Cloudflare Pages:
 
 ```
 // _headers file in public/
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:;
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://static.cloudflareinsights.com; font-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; media-src 'self' blob:; object-src 'none'; frame-src https://challenges.cloudflare.com; child-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
 ```
 
 ---
@@ -278,6 +295,12 @@ Add CSP headers in Cloudflare Pages:
    - Performance metrics (Core Web Vitals)
 
 **Privacy-first**: No cookies, GDPR-compliant
+
+### Function Logs (Ask Tifa)
+
+1. Cloudflare Dashboard → **Pages** → your project
+2. Open **Functions** → **Logs** (or **Logs/Tail**)
+3. Filter for `/api/ask` requests
 
 ---
 
@@ -306,5 +329,5 @@ npm audit fix
 
 ---
 
-**Last Updated**: 2025-12-23
-**Next Review**: 2026-01-23
+**Last Updated**: 2026-01-19
+**Next Review**: 2026-02-19

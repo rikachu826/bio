@@ -43,6 +43,7 @@ npx wrangler pages deploy dist --project-name "your project name"
 - `GEMINI_MODEL_PRIMARY`
 - `GEMINI_MODEL_FALLBACK`
 - `VITE_TURNSTILE_SITE_KEY`
+- `RATE_LIMIT_ALLOW_IPS` (optional, comma/space-separated allowlist)
 
 ## Notes
 - Site copy lives in `src/content/site.json`. Update text there, then commit + push to deploy.

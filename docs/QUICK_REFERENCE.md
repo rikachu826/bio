@@ -3,7 +3,7 @@
 ## 30-Second Overview
 - **What**: 3D animated personal resume website featuring IT leadership experience and LuminOS project
 - **Tech**: React 18 + TypeScript + Vite / Three.js + React Three Fiber / Framer Motion / Tailwind CSS
-- **Status**: Development (Local)
+- **Status**: Production
 - **Deploy**: Cloudflare Pages (via GitHub Actions CI/CD)
 
 ## 🚫 NEVER DO THESE (Lessons Learned)
@@ -19,22 +19,26 @@ Resume/
 │   ├── SYSTEM_STATUS.md           # Architecture overview
 │   ├── DEPLOYMENT_GUIDE.md        # Cloudflare Pages setup
 │   ├── CHANGELOG.md               # Version history
-│   └── ROADMAP.md                 # Future features
+│   └── ROADMAP.md                 # Planning/backlog
 ├── src/
 │   ├── components/                # React components
 │   │   ├── Hero.tsx               # 3D animated hero section
 │   │   ├── About.tsx              # About me section
 │   │   ├── Experience.tsx         # IT career timeline
 │   │   ├── Projects.tsx           # Featured projects (LuminOS)
+│   │   ├── CommandCenter.tsx      # Ops-style highlights
+│   │   ├── IntroOverlay.tsx       # Cinematic intro gate
 │   │   ├── Skills.tsx             # Tech stack showcase
 │   │   ├── Contact.tsx            # Contact information
+│   │   ├── AIAssistant.tsx        # Tifa assistant UI
 │   │   └── Scene/                 # 3D Three.js components
-│   ├── hooks/                     # Custom React hooks
 │   ├── utils/                     # Helpers, constants
-│   ├── styles/                    # Global styles
 │   ├── App.tsx                    # Main app component
 │   └── main.tsx                   # Entry point
-├── public/                        # Static assets
+├── functions/                     # Cloudflare Pages Functions
+│   └── api/ask.ts                  # Tifa assistant API
+├── public/                        # Static assets + headers
+├── Images/                        # Project media (large)
 ├── .github/workflows/             # GitHub Actions CI/CD
 ├── package.json
 ├── vite.config.ts
@@ -68,7 +72,6 @@ git push origin main               # Triggers auto-deploy to Cloudflare Pages
 **Linting/Formatting:**
 ```bash
 npm run lint                       # Check code quality
-npm run format                     # Auto-format code (if configured)
 ```
 
 ## 🎨 Design System
@@ -95,7 +98,8 @@ npm run format                     # Auto-format code (if configured)
 2. **Hero loads** → Three.js initializes 3D scene
 3. **User scrolls** → Framer Motion triggers section animations
 4. **User interacts** → Mouse movements affect 3D elements
-5. **Content renders** → Tailwind-styled components display resume data
+5. **Assistant** → `/api/ask` (Turnstile + rate limits + Gemini)
+6. **Content renders** → Tailwind-styled components display resume data
 
 ## 🌐 Deployment Flow
 
@@ -112,7 +116,7 @@ Local Dev → Git Commit → GitHub Push → GitHub Actions → Build → Cloudf
 
 ## 🔧 Performance Optimizations
 
-- **3D Scene**: Lazy load Three.js components, adaptive quality
+- **3D Scene**: Capped DPR, antialias disabled
 - **Images**: WebP format, lazy loading
 - **Code Splitting**: Route-based chunks
 - **Bundle Size**: Tree-shaking, minification
@@ -126,4 +130,4 @@ Local Dev → Git Commit → GitHub Push → GitHub Actions → Build → Cloudf
 
 ---
 
-**Last Updated**: 2025-12-23
+**Last Updated**: 2026-01-19
