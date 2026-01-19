@@ -87,18 +87,30 @@ const allowedOrigins = new Set([
   'https://www.leochui.tech',
 ])
 
+const SECURITY_HEADERS: HeadersInit = {
+  'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'X-Frame-Options': 'DENY',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+  'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
+  'Cross-Origin-Resource-Policy': 'same-origin',
+  'X-Permitted-Cross-Domain-Policies': 'none',
+}
+
 function jsonResponse(
   body: Record<string, unknown>,
   status = 200,
-  origin?: string,
+  allowedOrigin?: string,
   extraHeaders?: HeadersInit
 ) {
   const headers = new Headers({
     'Content-Type': 'application/json',
     'Cache-Control': 'no-store',
+    ...SECURITY_HEADERS,
   })
-  if (origin) {
-    headers.set('Access-Control-Allow-Origin', origin)
+  if (allowedOrigin) {
+    headers.set('Access-Control-Allow-Origin', allowedOrigin)
     headers.set('Vary', 'Origin')
   }
   if (extraHeaders) {
@@ -109,13 +121,15 @@ function jsonResponse(
   return new Response(JSON.stringify(body), { status, headers })
 }
 
-function corsResponse(origin?: string) {
+function corsResponse(allowedOrigin?: string) {
   const headers = new Headers({
+    ...SECURITY_HEADERS,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '600',
   })
-  if (origin) {
-    headers.set('Access-Control-Allow-Origin', origin)
+  if (allowedOrigin) {
+    headers.set('Access-Control-Allow-Origin', allowedOrigin)
     headers.set('Vary', 'Origin')
   }
   return new Response(null, { status: 204, headers })
@@ -630,28 +644,29 @@ async function callGemini(
 
 export const onRequest = async ({ request, env }: { request: Request; env: Env }) => {
   const origin = request.headers.get('Origin') || undefined
+  const allowedOrigin = origin && allowedOrigins.has(origin) ? origin : undefined
   const respondWithOrigin = (body: Record<string, unknown>, status = 200) =>
-    jsonResponse(body, status, origin)
+    jsonResponse(body, status, allowedOrigin)
 
   try {
 
-  if (!origin || !allowedOrigins.has(origin)) {
-    return jsonResponse({ error: 'Forbidden' }, 403, origin)
+  if (!allowedOrigin) {
+    return jsonResponse({ error: 'Forbidden' }, 403)
   }
 
   if (request.method === 'OPTIONS') {
-    return corsResponse(origin)
+    return corsResponse(allowedOrigin)
   }
 
   if (request.method !== 'POST') {
-    return jsonResponse({ error: 'Method not allowed' }, 405, origin)
+    return jsonResponse({ error: 'Method not allowed' }, 405, allowedOrigin)
   }
 
   const session = getSessionId(request)
   const sessionCookie = session.isNew ? buildSessionCookie(session.id) : null
   const responseHeaders = sessionCookie ? { 'Set-Cookie': sessionCookie } : undefined
   const respond = (body: Record<string, unknown>, status = 200) =>
-    jsonResponse(body, status, origin, responseHeaders)
+    jsonResponse(body, status, allowedOrigin, responseHeaders)
 
   if (!env.GEMINI_API_KEY) {
     return respond({ error: 'Missing API key' }, 500)
@@ -775,7 +790,6 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
   return respond({ reply }, 200)
   } catch (error) {
     console.error('ask handler error', error)
-    const detail = error instanceof Error ? error.message : String(error)
-    return respondWithOrigin({ error: 'Internal error', detail }, 500)
+    return respondWithOrigin({ error: 'Internal error' }, 500)
   }
 }
