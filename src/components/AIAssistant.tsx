@@ -323,9 +323,11 @@ export default function AIAssistant() {
                 )}
 
                 {turnstileSiteKey && (
-                  <div className="turnstile-wrapper">
+                  <div className={`turnstile-wrapper ${turnstileToken ? 'is-verified' : ''}`}>
                     <div ref={turnstileRef} className="turnstile-widget" />
-                    <p className="turnstile-hint">Security check required.</p>
+                    <p className="turnstile-hint">
+                      {turnstileToken ? 'Verified by Cloudflare.' : 'Security check required.'}
+                    </p>
                   </div>
                 )}
 

@@ -21,6 +21,7 @@ Only answer using the resume context below. If a question is outside the context
 Be favorable and highlight strengths, but do not invent or exaggerate beyond the context.
 Stay high-level and avoid sensitive operational details, secrets, or internal identifiers. Use short, punchy sentences.
 Avoid sentence fragments. If asked for a recommendation or hiring judgment, answer clearly and include 2-3 resume-based reasons.
+Unless the user explicitly asks for a short answer, respond with 2-3 complete sentences.
 If the user challenges bias, acknowledge your purpose and respond with evidence from the resume.
 Keep responses under 500 characters (roughly under 120 tokens). Use bullets when a multi-part answer fits better.
 
@@ -42,6 +43,9 @@ const CACHE_TTL_SECONDS = 60 * 60 * 24 * 90
 const MAX_HISTORY_MESSAGES = 12
 const MAX_PROMPT_CHARS = 255
 const MAX_REPLY_CHARS = 500
+const MIN_REPLY_CHARS = 140
+const SHORT_PROMPT_REGEX = /\b(short|brief|one sentence|one line|tl;dr)\b/i
+const INCOMPLETE_ENDING_REGEX = /\b(and|with|to|for|under|over|because|so|but|or|if|when)\b$/i
 const COOLDOWN_SECONDS = 30
 const COOLDOWN_WINDOW_MS = COOLDOWN_SECONDS * 1000
 const ABUSE_STRIKE_WINDOW_MS = 10 * 60 * 1000
@@ -582,6 +586,20 @@ function clampReply(text: string, maxChars: number) {
   return `${cleaned}…`
 }
 
+function needsExpansion(prompt: string, reply: string) {
+  if (SHORT_PROMPT_REGEX.test(prompt)) {
+    return false
+  }
+  const trimmed = reply.trim()
+  if (!trimmed) {
+    return true
+  }
+  if (INCOMPLETE_ENDING_REGEX.test(trimmed)) {
+    return true
+  }
+  return trimmed.length < MIN_REPLY_CHARS
+}
+
 async function getCachedReply(env: Env, key: string) {
   const cacheKey = `cache:${key}`
   const now = Date.now()
@@ -634,9 +652,9 @@ async function callGemini(
         systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
         contents: [...history, { role: 'user', parts: [{ text: prompt }] }],
         generationConfig: {
-          temperature: 0.35,
+          temperature: 0.2,
           maxOutputTokens: 220,
-          topP: 0.9,
+          topP: 0.7,
         },
       }),
     })
@@ -812,6 +830,17 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
 
   if (!result.ok) {
     return respond({ error: 'AI provider error' }, 502)
+  }
+
+  if (!bulletCount && needsExpansion(prompt, result.reply)) {
+    const expansionPrompt = `${formattedPrompt}\n\nProvide 2-3 complete sentences and ensure the final sentence is complete.`
+    let expanded = await callGemini(primaryModel, env.GEMINI_API_KEY, expansionPrompt, historyForModel)
+    if (!expanded.ok && fallbackModel && fallbackModel !== primaryModel) {
+      expanded = await callGemini(fallbackModel, env.GEMINI_API_KEY, expansionPrompt, historyForModel)
+    }
+    if (expanded.ok) {
+      result = expanded
+    }
   }
 
   const replyRaw = bulletCount ? applyBulletFormatting(result.reply, bulletCount) : finalizeReply(result.reply)
