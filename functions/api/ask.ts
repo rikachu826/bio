@@ -154,7 +154,7 @@ function getClientId(request: Request, allowForwarded: boolean) {
   }
   const forwarded = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip')
   if (!forwarded) {
-    return null
+    return 'local'
   }
   return forwarded.split(',')[0]?.trim() || null
 }
