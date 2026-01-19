@@ -329,6 +329,10 @@ export default function AIAssistant() {
                   </div>
                 )}
 
+                <p className="text-[11px] text-soft-gray">
+                  Messages may be stored up to 30 days for abuse prevention.
+                </p>
+
                 <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3">
                   <textarea
                     value={prompt}
