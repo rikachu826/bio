@@ -87,6 +87,11 @@ const allowedOrigins = new Set([
   'https://www.leochui.tech',
 ])
 
+const localOrigins = new Set([
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+])
+
 const SECURITY_HEADERS: HeadersInit = {
   'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
   'X-Content-Type-Options': 'nosniff',
@@ -135,10 +140,23 @@ function corsResponse(allowedOrigin?: string) {
   return new Response(null, { status: 204, headers })
 }
 
-function getClientId(request: Request) {
-  return request.headers.get('cf-connecting-ip')
-    || request.headers.get('x-forwarded-for')
-    || 'unknown'
+function isLocalOrigin(origin?: string) {
+  return origin ? localOrigins.has(origin) : false
+}
+
+function getClientId(request: Request, allowForwarded: boolean) {
+  const cfIp = request.headers.get('cf-connecting-ip')
+  if (cfIp) {
+    return cfIp
+  }
+  if (!allowForwarded) {
+    return null
+  }
+  const forwarded = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip')
+  if (!forwarded) {
+    return null
+  }
+  return forwarded.split(',')[0]?.trim() || null
 }
 
 function getCookieValue(cookieHeader: string | null, name: string) {
@@ -645,6 +663,7 @@ async function callGemini(
 export const onRequest = async ({ request, env }: { request: Request; env: Env }) => {
   const origin = request.headers.get('Origin') || undefined
   const allowedOrigin = origin && allowedOrigins.has(origin) ? origin : undefined
+  const isLocal = isLocalOrigin(allowedOrigin)
   const respondWithOrigin = (body: Record<string, unknown>, status = 200) =>
     jsonResponse(body, status, allowedOrigin)
 
@@ -652,6 +671,11 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
 
   if (!allowedOrigin) {
     return jsonResponse({ error: 'Forbidden' }, 403)
+  }
+
+  const fetchSite = request.headers.get('Sec-Fetch-Site')
+  if (fetchSite === 'cross-site') {
+    return jsonResponse({ error: 'Forbidden' }, 403, allowedOrigin)
   }
 
   if (request.method === 'OPTIONS') {
@@ -688,7 +712,10 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
     return respond({ error: 'Prompt too long' }, 400)
   }
 
-  const clientId = getClientId(request)
+  const clientId = getClientId(request, isLocal)
+  if (!clientId) {
+    return respond({ error: 'Missing client IP' }, 403)
+  }
   const allowlisted = parseAllowlist(env.RATE_LIMIT_ALLOW_IPS).has(clientId)
   if (!allowlisted) {
     const abuseState = await getAbuseState(env, `ip:${clientId}`)
@@ -736,6 +763,10 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
     if (!rateLimit.allowed) {
       return respond({ error: 'Rate limit exceeded', retryAfter: rateLimit.retryAfter }, 429)
     }
+  }
+
+  if (!env.TURNSTILE_SECRET && !isLocal) {
+    return respond({ error: 'Turnstile not configured' }, 500)
   }
 
   if (env.TURNSTILE_SECRET) {

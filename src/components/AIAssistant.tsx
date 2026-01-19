@@ -274,6 +274,9 @@ export default function AIAssistant() {
                 <p className="sr-only">
                   Tifa assistant disclaimer.
                 </p>
+                <p className="mt-2 text-[11px] text-soft-gray uppercase tracking-[0.18em]">
+                  Security: Turnstile · Rate limited · 30-day retention
+                </p>
               </div>
 
               <div
