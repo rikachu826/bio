@@ -24,6 +24,7 @@ export default function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>([])
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [cooldownSeconds, setCooldownSeconds] = useState<number | null>(null)
   const [turnstileToken, setTurnstileToken] = useState('')
   const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -143,6 +144,21 @@ export default function AIAssistant() {
     return () => window.clearTimeout(timeout)
   }, [messages, isLoading, isOpen])
 
+  useEffect(() => {
+    if (!cooldownSeconds || cooldownSeconds <= 0) {
+      return
+    }
+    const interval = window.setInterval(() => {
+      setCooldownSeconds((prev) => {
+        if (!prev || prev <= 1) {
+          return null
+        }
+        return prev - 1
+      })
+    }, 1000)
+    return () => window.clearInterval(interval)
+  }, [cooldownSeconds])
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError('')
@@ -177,12 +193,20 @@ export default function AIAssistant() {
 
       if (!result.ok) {
         const payload = await result.json().catch(() => null)
-        throw new Error(payload?.error || 'Assistant unavailable right now.')
+        const retryAfter = typeof payload?.retryAfter === 'number' ? payload.retryAfter : null
+        if (retryAfter && retryAfter > 0) {
+          setCooldownSeconds(Math.ceil(retryAfter))
+          setError('')
+          return
+        }
+        setError(payload?.error || 'Assistant unavailable right now.')
+        return
       }
 
       const data = await result.json()
       const reply = data?.reply || 'No response yet.'
 
+      setCooldownSeconds(null)
       setMessages((prev) => [
         ...prev,
         {
@@ -306,6 +330,12 @@ export default function AIAssistant() {
                 <p className="px-4 sm:px-5 pb-2 sm:pb-3 text-xs sm:text-sm text-red-300">{error}</p>
               )}
 
+              {cooldownSeconds && (
+                <p className="px-4 sm:px-5 pb-2 sm:pb-3 text-xs sm:text-sm text-amber-300">
+                  Cooldown active. Try again in {cooldownSeconds}s.
+                </p>
+              )}
+
               <div className="px-4 sm:px-5 pb-3 sm:pb-4">
                 {showSuggestions && (
                   <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3">
@@ -344,7 +374,7 @@ export default function AIAssistant() {
                   />
                   <button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isLoading || Boolean(cooldownSeconds)}
                     className="ai-submit"
                   >
                     {isLoading ? 'Briefing...' : 'Ask Tifa'}
