@@ -43,7 +43,7 @@ const SESSION_COOKIE_TTL_SECONDS = 60 * 60 * 24 * 30
 const CACHE_TTL_SECONDS = 60 * 60 * 24 * 90
 const MAX_HISTORY_MESSAGES = 12
 const MAX_PROMPT_CHARS = 255
-const MAX_REPLY_CHARS = 500
+const MAX_REPLY_CHARS = 650
 const MIN_REPLY_CHARS = 110
 const SHORT_PROMPT_REGEX = /\b(short|brief|one sentence|one line|tl;dr)\b/i
 const INCOMPLETE_ENDING_REGEX = /\b(and|with|to|for|under|over|because|so|but|or|if|when)\b$/i
@@ -72,10 +72,22 @@ const SUGGESTED_RESPONSES: Record<string, string> = {
     'Leo led a rapid shift from legacy infrastructure to a secure, cloud-native environment with modern identity and MFA. The result was resilient remote operations, layered backups, and a hardened security posture.',
   'give me a quick technical overview.':
     'Leo runs a cloud-native stack with modern identity, device management, and layered security controls. He builds AI-driven internal tools and ships on React/TypeScript with secure backend services.',
+  'why should i hire him?':
+    'You should hire Leo because he delivers high-impact infrastructure outcomes under pressure, including a 72-hour cloud migration. He builds secure, scalable systems with modern identity, MFA, and layered backups. He also created the LuminOS AI ecosystem to improve security and decision-making.',
+  'would you hire him?':
+    'Yes. He has proven leadership in large-scale infrastructure and security transformations, and he delivers fast under pressure. He also builds AI tools that improve operational efficiency while keeping strict security guardrails in place.',
+  'why should i hire leo?':
+    'You should hire Leo because he delivers high-impact infrastructure outcomes under pressure, including a 72-hour cloud migration. He builds secure, scalable systems with modern identity, MFA, and layered backups. He also created the LuminOS AI ecosystem to improve security and decision-making.',
+  'would you hire leo?':
+    'Yes. He has proven leadership in large-scale infrastructure and security transformations, and he delivers fast under pressure. He also builds AI tools that improve operational efficiency while keeping strict security guardrails in place.',
 }
 
 function getSuggestedReply(prompt: string) {
-  return SUGGESTED_RESPONSES[prompt] ?? null
+  if (SUGGESTED_RESPONSES[prompt]) {
+    return SUGGESTED_RESPONSES[prompt]
+  }
+  const trimmed = prompt.replace(/[.!?]+$/, '')
+  return SUGGESTED_RESPONSES[trimmed] ?? null
 }
 
 type RateLimitState = { count: number; reset: number }
