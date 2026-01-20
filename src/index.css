@@ -1204,6 +1204,28 @@
     margin-bottom: 8px;
   }
 
+  .turnstile-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(134, 239, 172, 0.4);
+    background: rgba(15, 23, 42, 0.7);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(134, 239, 172, 0.95);
+  }
+
+  .turnstile-badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(34, 197, 94, 0.95);
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.45);
+  }
+
   .turnstile-widget {
     min-height: 0;
     height: 52px;
@@ -1219,10 +1241,6 @@
   .turnstile-hint {
     font-size: 0.7rem;
     color: rgba(148, 163, 184, 0.9);
-  }
-
-  .turnstile-wrapper.is-verified .turnstile-hint {
-    color: rgba(134, 239, 172, 0.9);
   }
 
   @media (max-width: 420px) {
