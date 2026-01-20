@@ -14,5 +14,6 @@ interface Window {
       }
     ) => string | number
     reset: (widgetId?: string | number) => void
+    remove: (widgetId: string | number) => void
   }
 }
