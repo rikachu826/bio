@@ -31,6 +31,7 @@ ${RESUME_CONTEXT}
 
 const DEFAULT_MODEL_PRIMARY = 'gemini-3-flash-preview'
 const DEFAULT_MODEL_FALLBACK = 'gemini-2.5-flash'
+const CACHE_VERSION = '2026-01-20'
 const RATE_LIMIT_MAX = 250
 const RATE_LIMIT_WINDOW_MS = 1000 * 60 * 60 * 24 * 30
 const SESSION_RATE_LIMIT_MAX = 250
@@ -621,17 +622,25 @@ function finalizeReply(text: string) {
   if (!trimmed) {
     return trimmed
   }
-  if (/[.!?]$/.test(trimmed)) {
+  const withoutTrailingHyphen = trimmed.replace(/[-–—]\s*$/, '').trimEnd()
+  if (!withoutTrailingHyphen) {
     return trimmed
   }
-  if (/[,:;]$/.test(trimmed)) {
-    return trimmed.replace(/[,:;]+$/, '.')
+  if (/[.!?]$/.test(withoutTrailingHyphen)) {
+    return withoutTrailingHyphen
   }
-  const lastPunct = Math.max(trimmed.lastIndexOf('.'), trimmed.lastIndexOf('!'), trimmed.lastIndexOf('?'))
+  if (/[,:;]$/.test(withoutTrailingHyphen)) {
+    return withoutTrailingHyphen.replace(/[,:;]+$/, '.')
+  }
+  const lastPunct = Math.max(
+    withoutTrailingHyphen.lastIndexOf('.'),
+    withoutTrailingHyphen.lastIndexOf('!'),
+    withoutTrailingHyphen.lastIndexOf('?')
+  )
   if (lastPunct !== -1) {
-    return trimmed.slice(0, lastPunct + 1)
+    return withoutTrailingHyphen.slice(0, lastPunct + 1)
   }
-  return `${trimmed}.`
+  return `${withoutTrailingHyphen}.`
 }
 
 function clampReply(text: string, maxChars: number) {
@@ -914,8 +923,8 @@ export const onRequest = async (
   const normalizedPrompt = normalizePrompt(prompt)
   const bulletCount = getBulletCount(prompt)
   const cacheKey = bulletCount
-    ? `${normalizedPrompt}|bullets:${bulletCount}|history:${historySignature}`
-    : `${normalizedPrompt}|history:${historySignature}`
+    ? `${CACHE_VERSION}|${normalizedPrompt}|bullets:${bulletCount}|history:${historySignature}`
+    : `${CACHE_VERSION}|${normalizedPrompt}|history:${historySignature}`
   const promptKey = hashPrompt(cacheKey)
   const cachedReply = await getCachedReply(env, promptKey)
   if (cachedReply) {

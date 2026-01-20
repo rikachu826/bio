@@ -27,6 +27,7 @@ export default function AIAssistant() {
   const [cooldownSeconds, setCooldownSeconds] = useState<number | null>(null)
   const [turnstileToken, setTurnstileToken] = useState('')
   const [showTurnstile, setShowTurnstile] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
   const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined
   const scrollRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -64,18 +65,45 @@ export default function AIAssistant() {
           if (isMounted) {
             setTurnstileToken(token)
             setShowTurnstile(false)
+            setIsVerified(true)
+            if (window.turnstile && turnstileWidgetId.current !== null) {
+              try {
+                window.turnstile.remove(turnstileWidgetId.current)
+              } catch {
+                // no-op
+              }
+              turnstileWidgetId.current = null
+            }
           }
         },
         'expired-callback': () => {
           if (isMounted) {
             setTurnstileToken('')
             setShowTurnstile(false)
+            setIsVerified(false)
+            if (window.turnstile && turnstileWidgetId.current !== null) {
+              try {
+                window.turnstile.remove(turnstileWidgetId.current)
+              } catch {
+                // no-op
+              }
+              turnstileWidgetId.current = null
+            }
           }
         },
         'error-callback': () => {
           if (isMounted) {
             setTurnstileToken('')
             setShowTurnstile(false)
+            setIsVerified(false)
+            if (window.turnstile && turnstileWidgetId.current !== null) {
+              try {
+                window.turnstile.remove(turnstileWidgetId.current)
+              } catch {
+                // no-op
+              }
+              turnstileWidgetId.current = null
+            }
           }
         },
       })
@@ -107,6 +135,8 @@ export default function AIAssistant() {
 
   useEffect(() => {
     if (!isOpen) {
+      setIsVerified(false)
+      setShowTurnstile(false)
       return
     }
     const handler = (event: KeyboardEvent) => {
@@ -235,7 +265,6 @@ export default function AIAssistant() {
       if (turnstileSiteKey && window.turnstile) {
         window.turnstile.reset(turnstileWidgetId.current ?? undefined)
         setTurnstileToken('')
-        setShowTurnstile(false)
       }
     }
   }
@@ -367,7 +396,7 @@ export default function AIAssistant() {
 
                 {turnstileSiteKey && (
                   <div className="turnstile-wrapper">
-                    {turnstileToken ? (
+                    {isVerified ? (
                       <div className="turnstile-badge" aria-live="polite">
                         <span className="turnstile-badge-dot" aria-hidden="true" />
                         Cloudflare verified
