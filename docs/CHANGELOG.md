@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Optional security alert webhooks for abuse/rate-limit events
+- Optional MailerSend email alerts for security events
 
 ---
 

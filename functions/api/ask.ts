@@ -116,6 +116,10 @@ type Env = {
   ALERT_WEBHOOK_URL?: string
   ALERT_WEBHOOK_SECRET?: string
   ALERT_WEBHOOK_EVENTS?: string
+  MAILERSEND_API_TOKEN?: string
+  MAILERSEND_FROM?: string
+  MAILERSEND_TO?: string
+  MAILERSEND_EVENTS?: string
 }
 
 const allowedOrigins = new Set([
@@ -416,6 +420,10 @@ type AlertPayload = {
   retryAfter?: number
 }
 
+type MailerSendPayload = AlertPayload & {
+  message: string
+}
+
 function parseAlertEvents(value?: string) {
   const raw = value?.trim()
   const defaults = ['abuse_ban', 'turnstile_failed']
@@ -459,6 +467,58 @@ async function sendAlert(env: Env, payload: AlertPayload) {
     headers,
     body,
   })
+}
+
+function buildMailerSendMessage(payload: AlertPayload) {
+  const lines = [
+    `Event: ${payload.event}`,
+    `Timestamp: ${payload.timestamp}`,
+  ]
+  if (payload.origin) {
+    lines.push(`Origin: ${payload.origin}`)
+  }
+  if (payload.ipHash) {
+    lines.push(`IP hash: ${payload.ipHash}`)
+  }
+  if (payload.retryAfter) {
+    lines.push(`Retry after: ${payload.retryAfter}s`)
+  }
+  return lines.join('\n')
+}
+
+async function sendMailerSend(env: Env, payload: MailerSendPayload) {
+  if (!env.MAILERSEND_API_TOKEN || !env.MAILERSEND_FROM || !env.MAILERSEND_TO) {
+    return
+  }
+
+  const body = {
+    from: { email: env.MAILERSEND_FROM },
+    to: [{ email: env.MAILERSEND_TO }],
+    subject: `[Tifa] ${payload.event.replace(/_/g, ' ')}`,
+    text: payload.message,
+  }
+
+  await fetch('https://api.mailersend.com/v1/email', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${env.MAILERSEND_API_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+}
+
+function parseMailersendEvents(value?: string) {
+  const defaults: AlertEvent[] = ['abuse_ban', 'turnstile_failed', 'origin_block', 'cross_site_block']
+  if (!value) {
+    return new Set<AlertEvent>(defaults)
+  }
+  return new Set(
+    value
+      .split(/[\s,]+/)
+      .map((entry) => entry.trim())
+      .filter(Boolean) as AlertEvent[]
+  )
 }
 
 function buildHistorySignature(history: ChatMessage[]) {
@@ -805,6 +865,7 @@ export const onRequest = async (
   const allowedOrigin = origin && allowedOrigins.has(origin) ? origin : undefined
   const isLocal = isLocalOrigin(allowedOrigin)
   const alertEvents = parseAlertEvents(env.ALERT_WEBHOOK_EVENTS)
+  const mailerEvents = parseMailersendEvents(env.MAILERSEND_EVENTS)
   const queueAlert = (event: AlertEvent, data: Omit<AlertPayload, 'event' | 'timestamp'> = {}) => {
     if (!env.ALERT_WEBHOOK_URL || !alertEvents.has(event)) {
       return
@@ -819,6 +880,21 @@ export const onRequest = async (
       waitUntil(task)
     }
   }
+  const queueEmail = (event: AlertEvent, data: Omit<AlertPayload, 'event' | 'timestamp'> = {}) => {
+    if (!env.MAILERSEND_API_TOKEN || !env.MAILERSEND_FROM || !env.MAILERSEND_TO || !mailerEvents.has(event)) {
+      return
+    }
+    const payload: AlertPayload = {
+      event,
+      timestamp: new Date().toISOString(),
+      ...data,
+    }
+    const message = buildMailerSendMessage(payload)
+    const task = sendMailerSend(env, { ...payload, message }).catch(() => {})
+    if (waitUntil) {
+      waitUntil(task)
+    }
+  }
   const respondWithOrigin = (body: Record<string, unknown>, status = 200) =>
     jsonResponse(body, status, allowedOrigin)
 
@@ -826,12 +902,14 @@ export const onRequest = async (
 
   if (!allowedOrigin) {
     queueAlert('origin_block', { origin })
+    queueEmail('origin_block', { origin })
     return jsonResponse({ error: 'Forbidden' }, 403)
   }
 
   const fetchSite = request.headers.get('Sec-Fetch-Site')
   if (fetchSite === 'cross-site') {
     queueAlert('cross_site_block', { origin })
+    queueEmail('cross_site_block', { origin })
     return jsonResponse({ error: 'Forbidden' }, 403, allowedOrigin)
   }
 
@@ -879,6 +957,7 @@ export const onRequest = async (
     const abuseState = await getAbuseState(env, `ip:${clientId}`)
     if (abuseState?.bannedUntil && abuseState.bannedUntil > Date.now()) {
       queueAlert('abuse_ban', { ipHash, origin })
+      queueEmail('abuse_ban', { ipHash, origin })
       return respond(
         { error: 'Temporarily blocked', retryAfter: Math.ceil((abuseState.bannedUntil - Date.now()) / 1000) },
         429
@@ -890,12 +969,14 @@ export const onRequest = async (
       const updated = await registerAbuse(env, `ip:${clientId}`)
       if (updated.bannedUntil > Date.now()) {
         queueAlert('abuse_ban', { ipHash, origin })
+        queueEmail('abuse_ban', { ipHash, origin })
         return respond(
           { error: 'Temporarily blocked', retryAfter: Math.ceil((updated.bannedUntil - Date.now()) / 1000) },
           429
         )
       }
       queueAlert('cooldown', { ipHash, origin, retryAfter: sessionCooldown.retryAfter })
+      queueEmail('cooldown', { ipHash, origin, retryAfter: sessionCooldown.retryAfter })
       return respond({ error: 'Cooldown active', retryAfter: sessionCooldown.retryAfter }, 429)
     }
     const ipCooldown = await checkCooldown(env, `ip:${clientId}`, COOLDOWN_WINDOW_MS)
@@ -903,30 +984,35 @@ export const onRequest = async (
       const updated = await registerAbuse(env, `ip:${clientId}`)
       if (updated.bannedUntil > Date.now()) {
         queueAlert('abuse_ban', { ipHash, origin })
+        queueEmail('abuse_ban', { ipHash, origin })
         return respond(
           { error: 'Temporarily blocked', retryAfter: Math.ceil((updated.bannedUntil - Date.now()) / 1000) },
           429
         )
       }
       queueAlert('cooldown', { ipHash, origin, retryAfter: ipCooldown.retryAfter })
+      queueEmail('cooldown', { ipHash, origin, retryAfter: ipCooldown.retryAfter })
       return respond({ error: 'Cooldown active', retryAfter: ipCooldown.retryAfter }, 429)
     }
 
     const globalLimit = await checkRateLimit(env, 'global', GLOBAL_RATE_LIMIT_MAX, GLOBAL_RATE_LIMIT_WINDOW_MS)
     if (!globalLimit.allowed) {
       queueAlert('rate_limited', { ipHash, origin, retryAfter: globalLimit.retryAfter })
+      queueEmail('rate_limited', { ipHash, origin, retryAfter: globalLimit.retryAfter })
       return respond({ error: 'Rate limit exceeded', retryAfter: globalLimit.retryAfter }, 429)
     }
 
     const sessionLimit = await checkRateLimit(env, `session:${session.id}`, SESSION_RATE_LIMIT_MAX, SESSION_RATE_LIMIT_WINDOW_MS)
     if (!sessionLimit.allowed) {
       queueAlert('rate_limited', { ipHash, origin, retryAfter: sessionLimit.retryAfter })
+      queueEmail('rate_limited', { ipHash, origin, retryAfter: sessionLimit.retryAfter })
       return respond({ error: 'Rate limit exceeded', retryAfter: sessionLimit.retryAfter }, 429)
     }
 
     const rateLimit = await checkRateLimit(env, `ip:${clientId}`, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS)
     if (!rateLimit.allowed) {
       queueAlert('rate_limited', { ipHash, origin, retryAfter: rateLimit.retryAfter })
+      queueEmail('rate_limited', { ipHash, origin, retryAfter: rateLimit.retryAfter })
       return respond({ error: 'Rate limit exceeded', retryAfter: rateLimit.retryAfter }, 429)
     }
   }
@@ -938,11 +1024,13 @@ export const onRequest = async (
   if (env.TURNSTILE_SECRET) {
     if (!payload?.turnstileToken) {
       queueAlert('turnstile_missing', { ipHash, origin })
+      queueEmail('turnstile_missing', { ipHash, origin })
       return respond({ error: 'Turnstile required' }, 400)
     }
     const verified = await verifyTurnstile(env.TURNSTILE_SECRET, payload.turnstileToken, clientId)
     if (!verified) {
       queueAlert('turnstile_failed', { ipHash, origin })
+      queueEmail('turnstile_failed', { ipHash, origin })
       return respond({ error: 'Turnstile failed' }, 403)
     }
   }

@@ -46,9 +46,13 @@ npx wrangler pages deploy dist --project-name "your project name"
 - `RATE_LIMIT_ALLOW_IPS` (optional, comma/space-separated allowlist)
 - `ALERT_WEBHOOK_URL` (optional)
 - `ALERT_WEBHOOK_EVENTS` (optional, comma/space-separated)
+- `MAILERSEND_FROM` (optional)
+- `MAILERSEND_TO` (optional)
+- `MAILERSEND_EVENTS` (optional, comma/space-separated)
 
 **Secrets (optional)**
 - `ALERT_WEBHOOK_SECRET` (HMAC signature for alert payloads)
+- `MAILERSEND_API_TOKEN`
 
 ## Notes
 - Site copy lives in `src/content/site.json`. Update text there, then commit + push to deploy.
