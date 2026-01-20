@@ -213,6 +213,7 @@ export default function AIAssistant() {
     if (turnstileSiteKey && !turnstileToken) {
       setError('Complete the security check to continue.')
       setShowTurnstile(true)
+      setIsVerified(false)
       return
     }
 
@@ -267,6 +268,8 @@ export default function AIAssistant() {
           window.turnstile.reset(turnstileWidgetId.current)
         }
         setTurnstileToken('')
+        setIsVerified(false)
+        setShowTurnstile(false)
       }
     }
   }
@@ -398,16 +401,16 @@ export default function AIAssistant() {
 
                 {turnstileSiteKey && (
                   <div className="turnstile-wrapper">
-                    {isVerified ? (
-                      <div className="turnstile-badge" aria-live="polite">
-                        <span className="turnstile-badge-dot" aria-hidden="true" />
-                        Cloudflare verified
-                      </div>
-                    ) : showTurnstile ? (
+                    {showTurnstile ? (
                       <>
                         <div ref={turnstileRef} className="turnstile-widget" />
                         <p className="turnstile-hint">Security check required.</p>
                       </>
+                    ) : isVerified ? (
+                      <div className="turnstile-badge" aria-live="polite">
+                        <span className="turnstile-badge-dot" aria-hidden="true" />
+                        Cloudflare verified
+                      </div>
                     ) : (
                       <button
                         type="button"
