@@ -72,6 +72,9 @@ VITE_TURNSTILE_SITE_KEY (plaintext, build-time)
 GEMINI_MODEL_PRIMARY (optional)
 GEMINI_MODEL_FALLBACK (optional)
 RATE_LIMIT_ALLOW_IPS (optional allowlist)
+ALERT_WEBHOOK_URL (optional)
+ALERT_WEBHOOK_EVENTS (optional)
+ALERT_WEBHOOK_SECRET (optional, HMAC for alerts)
 ```
 
 ---

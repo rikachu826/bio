@@ -82,6 +82,9 @@ type Env = {
     put: (key: string, value: string, options?: { expirationTtl?: number }) => Promise<void>
   }
   TURNSTILE_SECRET?: string
+  ALERT_WEBHOOK_URL?: string
+  ALERT_WEBHOOK_SECRET?: string
+  ALERT_WEBHOOK_EVENTS?: string
 }
 
 const allowedOrigins = new Set([
@@ -363,6 +366,68 @@ function hashPrompt(prompt: string) {
     hash = ((hash << 5) + hash) ^ prompt.charCodeAt(i)
   }
   return (hash >>> 0).toString(36)
+}
+
+type AlertEvent =
+  | 'origin_block'
+  | 'cross_site_block'
+  | 'rate_limited'
+  | 'cooldown'
+  | 'abuse_ban'
+  | 'turnstile_failed'
+  | 'turnstile_missing'
+
+type AlertPayload = {
+  event: AlertEvent
+  timestamp: string
+  ipHash?: string
+  origin?: string
+  retryAfter?: number
+}
+
+function parseAlertEvents(value?: string) {
+  const raw = value?.trim()
+  const defaults = ['abuse_ban', 'turnstile_failed']
+  if (!raw) {
+    return new Set<AlertEvent>(defaults)
+  }
+  return new Set(
+    raw
+      .split(/[\s,]+/)
+      .map((entry) => entry.trim())
+      .filter(Boolean) as AlertEvent[]
+  )
+}
+
+async function signAlert(secret: string, body: string) {
+  const encoder = new TextEncoder()
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  )
+  const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(body))
+  return btoa(String.fromCharCode(...new Uint8Array(signature)))
+}
+
+async function sendAlert(env: Env, payload: AlertPayload) {
+  if (!env.ALERT_WEBHOOK_URL) {
+    return
+  }
+  const body = JSON.stringify(payload)
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+  if (env.ALERT_WEBHOOK_SECRET) {
+    headers['X-Alert-Signature'] = await signAlert(env.ALERT_WEBHOOK_SECRET, body)
+  }
+  await fetch(env.ALERT_WEBHOOK_URL, {
+    method: 'POST',
+    headers,
+    body,
+  })
 }
 
 function buildHistorySignature(history: ChatMessage[]) {
@@ -678,21 +743,40 @@ async function callGemini(
   return { ok: true, reply } satisfies GeminiResult
 }
 
-export const onRequest = async ({ request, env }: { request: Request; env: Env }) => {
+export const onRequest = async (
+  { request, env, waitUntil }: { request: Request; env: Env; waitUntil?: (promise: Promise<unknown>) => void }
+) => {
   const origin = request.headers.get('Origin') || undefined
   const allowedOrigin = origin && allowedOrigins.has(origin) ? origin : undefined
   const isLocal = isLocalOrigin(allowedOrigin)
+  const alertEvents = parseAlertEvents(env.ALERT_WEBHOOK_EVENTS)
+  const queueAlert = (event: AlertEvent, data: Omit<AlertPayload, 'event' | 'timestamp'> = {}) => {
+    if (!env.ALERT_WEBHOOK_URL || !alertEvents.has(event)) {
+      return
+    }
+    const payload: AlertPayload = {
+      event,
+      timestamp: new Date().toISOString(),
+      ...data,
+    }
+    const task = sendAlert(env, payload).catch(() => {})
+    if (waitUntil) {
+      waitUntil(task)
+    }
+  }
   const respondWithOrigin = (body: Record<string, unknown>, status = 200) =>
     jsonResponse(body, status, allowedOrigin)
 
   try {
 
   if (!allowedOrigin) {
+    queueAlert('origin_block', { origin })
     return jsonResponse({ error: 'Forbidden' }, 403)
   }
 
   const fetchSite = request.headers.get('Sec-Fetch-Site')
   if (fetchSite === 'cross-site') {
+    queueAlert('cross_site_block', { origin })
     return jsonResponse({ error: 'Forbidden' }, 403, allowedOrigin)
   }
 
@@ -734,10 +818,12 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
   if (!clientId) {
     return respond({ error: 'Missing client IP' }, 403)
   }
+  const ipHash = hashPrompt(clientId)
   const allowlisted = parseAllowlist(env.RATE_LIMIT_ALLOW_IPS).has(clientId)
   if (!allowlisted) {
     const abuseState = await getAbuseState(env, `ip:${clientId}`)
     if (abuseState?.bannedUntil && abuseState.bannedUntil > Date.now()) {
+      queueAlert('abuse_ban', { ipHash, origin })
       return respond(
         { error: 'Temporarily blocked', retryAfter: Math.ceil((abuseState.bannedUntil - Date.now()) / 1000) },
         429
@@ -748,37 +834,44 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
     if (!sessionCooldown.allowed) {
       const updated = await registerAbuse(env, `ip:${clientId}`)
       if (updated.bannedUntil > Date.now()) {
+        queueAlert('abuse_ban', { ipHash, origin })
         return respond(
           { error: 'Temporarily blocked', retryAfter: Math.ceil((updated.bannedUntil - Date.now()) / 1000) },
           429
         )
       }
+      queueAlert('cooldown', { ipHash, origin, retryAfter: sessionCooldown.retryAfter })
       return respond({ error: 'Cooldown active', retryAfter: sessionCooldown.retryAfter }, 429)
     }
     const ipCooldown = await checkCooldown(env, `ip:${clientId}`, COOLDOWN_WINDOW_MS)
     if (!ipCooldown.allowed) {
       const updated = await registerAbuse(env, `ip:${clientId}`)
       if (updated.bannedUntil > Date.now()) {
+        queueAlert('abuse_ban', { ipHash, origin })
         return respond(
           { error: 'Temporarily blocked', retryAfter: Math.ceil((updated.bannedUntil - Date.now()) / 1000) },
           429
         )
       }
+      queueAlert('cooldown', { ipHash, origin, retryAfter: ipCooldown.retryAfter })
       return respond({ error: 'Cooldown active', retryAfter: ipCooldown.retryAfter }, 429)
     }
 
     const globalLimit = await checkRateLimit(env, 'global', GLOBAL_RATE_LIMIT_MAX, GLOBAL_RATE_LIMIT_WINDOW_MS)
     if (!globalLimit.allowed) {
+      queueAlert('rate_limited', { ipHash, origin, retryAfter: globalLimit.retryAfter })
       return respond({ error: 'Rate limit exceeded', retryAfter: globalLimit.retryAfter }, 429)
     }
 
     const sessionLimit = await checkRateLimit(env, `session:${session.id}`, SESSION_RATE_LIMIT_MAX, SESSION_RATE_LIMIT_WINDOW_MS)
     if (!sessionLimit.allowed) {
+      queueAlert('rate_limited', { ipHash, origin, retryAfter: sessionLimit.retryAfter })
       return respond({ error: 'Rate limit exceeded', retryAfter: sessionLimit.retryAfter }, 429)
     }
 
     const rateLimit = await checkRateLimit(env, `ip:${clientId}`, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS)
     if (!rateLimit.allowed) {
+      queueAlert('rate_limited', { ipHash, origin, retryAfter: rateLimit.retryAfter })
       return respond({ error: 'Rate limit exceeded', retryAfter: rateLimit.retryAfter }, 429)
     }
   }
@@ -789,10 +882,12 @@ export const onRequest = async ({ request, env }: { request: Request; env: Env }
 
   if (env.TURNSTILE_SECRET) {
     if (!payload?.turnstileToken) {
+      queueAlert('turnstile_missing', { ipHash, origin })
       return respond({ error: 'Turnstile required' }, 400)
     }
     const verified = await verifyTurnstile(env.TURNSTILE_SECRET, payload.turnstileToken, clientId)
     if (!verified) {
+      queueAlert('turnstile_failed', { ipHash, origin })
       return respond({ error: 'Turnstile failed' }, 403)
     }
   }

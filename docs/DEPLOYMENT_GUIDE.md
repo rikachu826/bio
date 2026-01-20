@@ -123,6 +123,11 @@ then redeploy.
 - `GEMINI_MODEL_PRIMARY` (optional override)
 - `GEMINI_MODEL_FALLBACK` (optional override)
 - `RATE_LIMIT_ALLOW_IPS` (optional allowlist, comma/space-separated)
+- `ALERT_WEBHOOK_URL` (optional, for security alerts)
+- `ALERT_WEBHOOK_EVENTS` (optional, comma/space-separated)
+
+**Secrets (optional)**
+- `ALERT_WEBHOOK_SECRET` (HMAC signature for alert payloads)
 
 **Important**: Any change to `VITE_` variables requires a redeploy so the frontend build picks them up.
 
@@ -301,6 +306,11 @@ Add CSP headers in Cloudflare Pages:
 1. Cloudflare Dashboard → **Pages** → your project
 2. Open **Functions** → **Logs** (or **Logs/Tail**)
 3. Filter for `/api/ask` requests
+
+### Alerting (Optional)
+
+Set `ALERT_WEBHOOK_URL` to receive JSON alerts for security events.
+Default events: `abuse_ban`, `turnstile_failed`. Customize with `ALERT_WEBHOOK_EVENTS`.
 
 ---
 
