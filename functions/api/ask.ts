@@ -43,7 +43,7 @@ const CACHE_TTL_SECONDS = 60 * 60 * 24 * 90
 const MAX_HISTORY_MESSAGES = 12
 const MAX_PROMPT_CHARS = 255
 const MAX_REPLY_CHARS = 500
-const MIN_REPLY_CHARS = 140
+const MIN_REPLY_CHARS = 110
 const SHORT_PROMPT_REGEX = /\b(short|brief|one sentence|one line|tl;dr)\b/i
 const INCOMPLETE_ENDING_REGEX = /\b(and|with|to|for|under|over|because|so|but|or|if|when)\b$/i
 const COOLDOWN_SECONDS = 30
@@ -651,6 +651,10 @@ function clampReply(text: string, maxChars: number) {
   return `${cleaned}…`
 }
 
+function countWords(text: string) {
+  return text.split(/\s+/).filter(Boolean).length
+}
+
 function needsExpansion(prompt: string, reply: string) {
   if (SHORT_PROMPT_REGEX.test(prompt)) {
     return false
@@ -659,10 +663,22 @@ function needsExpansion(prompt: string, reply: string) {
   if (!trimmed) {
     return true
   }
+  const segments = splitIntoSegments(trimmed)
+  if (segments.length < 2) {
+    return true
+  }
+  if (segments.some((segment) => countWords(segment) < 6)) {
+    return true
+  }
   if (INCOMPLETE_ENDING_REGEX.test(trimmed)) {
     return true
   }
   return trimmed.length < MIN_REPLY_CHARS
+}
+
+function buildFallbackSummary() {
+  const items = BULLET_FALLBACKS.slice(0, 2)
+  return `${items[0]}. ${items[1]}.`
 }
 
 async function getCachedReply(env: Env, key: string) {
@@ -938,7 +954,12 @@ export const onRequest = async (
     }
   }
 
-  const replyRaw = bulletCount ? applyBulletFormatting(result.reply, bulletCount) : finalizeReply(result.reply)
+  let replyText = result.reply
+  if (!bulletCount && needsExpansion(prompt, replyText)) {
+    replyText = buildFallbackSummary()
+  }
+
+  const replyRaw = bulletCount ? applyBulletFormatting(result.reply, bulletCount) : finalizeReply(replyText)
   const reply = clampReply(replyRaw, MAX_REPLY_CHARS)
   await setCachedReply(env, promptKey, reply)
   await setChatHistory(env, session.id, [...chatHistory, { role: 'user', text: prompt }, { role: 'assistant', text: reply }])

@@ -1226,6 +1226,23 @@
     box-shadow: 0 0 8px rgba(34, 197, 94, 0.45);
   }
 
+  .turnstile-inline {
+    border-radius: 999px;
+    padding: 6px 12px;
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    background: rgba(8, 12, 20, 0.7);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(186, 230, 253, 0.95);
+    transition: all 0.2s ease;
+  }
+
+  .turnstile-inline:hover {
+    border-color: rgba(56, 189, 248, 0.6);
+    color: #f8fafc;
+  }
+
   .turnstile-widget {
     min-height: 0;
     height: 52px;

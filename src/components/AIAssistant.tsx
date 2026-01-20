@@ -26,6 +26,7 @@ export default function AIAssistant() {
   const [isLoading, setIsLoading] = useState(false)
   const [cooldownSeconds, setCooldownSeconds] = useState<number | null>(null)
   const [turnstileToken, setTurnstileToken] = useState('')
+  const [showTurnstile, setShowTurnstile] = useState(false)
   const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined
   const scrollRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -41,7 +42,7 @@ export default function AIAssistant() {
   const showSuggestions = messages.length === 0 && !isLoading
 
   useEffect(() => {
-    if (!turnstileSiteKey || !isOpen || !turnstileRef.current) {
+    if (!turnstileSiteKey || !isOpen || !showTurnstile || !turnstileRef.current) {
       return
     }
 
@@ -62,16 +63,19 @@ export default function AIAssistant() {
         callback: (token: string) => {
           if (isMounted) {
             setTurnstileToken(token)
+            setShowTurnstile(false)
           }
         },
         'expired-callback': () => {
           if (isMounted) {
             setTurnstileToken('')
+            setShowTurnstile(false)
           }
         },
         'error-callback': () => {
           if (isMounted) {
             setTurnstileToken('')
+            setShowTurnstile(false)
           }
         },
       })
@@ -90,9 +94,16 @@ export default function AIAssistant() {
     return () => {
       isMounted = false
       window.clearInterval(interval)
+      if (window.turnstile && turnstileWidgetId.current !== null) {
+        try {
+          window.turnstile.remove(turnstileWidgetId.current)
+        } catch {
+          // no-op
+        }
+      }
       turnstileWidgetId.current = null
     }
-  }, [isOpen, turnstileSiteKey])
+  }, [isOpen, turnstileSiteKey, showTurnstile])
 
   useEffect(() => {
     if (!isOpen) {
@@ -171,6 +182,7 @@ export default function AIAssistant() {
 
     if (turnstileSiteKey && !turnstileToken) {
       setError('Complete the security check to continue.')
+      setShowTurnstile(true)
       return
     }
 
@@ -223,6 +235,7 @@ export default function AIAssistant() {
       if (turnstileSiteKey && window.turnstile) {
         window.turnstile.reset(turnstileWidgetId.current ?? undefined)
         setTurnstileToken('')
+        setShowTurnstile(false)
       }
     }
   }
@@ -359,11 +372,19 @@ export default function AIAssistant() {
                         <span className="turnstile-badge-dot" aria-hidden="true" />
                         Cloudflare verified
                       </div>
-                    ) : (
+                    ) : showTurnstile ? (
                       <>
                         <div ref={turnstileRef} className="turnstile-widget" />
                         <p className="turnstile-hint">Security check required.</p>
                       </>
+                    ) : (
+                      <button
+                        type="button"
+                        className="turnstile-inline"
+                        onClick={() => setShowTurnstile(true)}
+                      >
+                        Verify to continue
+                      </button>
                     )}
                   </div>
                 )}
