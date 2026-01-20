@@ -33,7 +33,7 @@ export default function AIAssistant() {
   const panelRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const turnstileRef = useRef<HTMLDivElement>(null)
-  const turnstileWidgetId = useRef<number | null>(null)
+  const turnstileWidgetId = useRef<string | null>(null)
 
   const greeting = useMemo(
     () =>
@@ -108,7 +108,7 @@ export default function AIAssistant() {
         },
       })
 
-      turnstileWidgetId.current = typeof id === 'number' ? id : Number(id)
+      turnstileWidgetId.current = typeof id === 'string' ? id : String(id)
     }
 
     renderWidget()
@@ -263,7 +263,9 @@ export default function AIAssistant() {
     } finally {
       setIsLoading(false)
       if (turnstileSiteKey && window.turnstile) {
-        window.turnstile.reset(turnstileWidgetId.current ?? undefined)
+        if (turnstileWidgetId.current) {
+          window.turnstile.reset(turnstileWidgetId.current)
+        }
         setTurnstileToken('')
       }
     }

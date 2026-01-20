@@ -31,7 +31,7 @@ ${RESUME_CONTEXT}
 
 const DEFAULT_MODEL_PRIMARY = 'gemini-3-flash-preview'
 const DEFAULT_MODEL_FALLBACK = 'gemini-2.5-flash'
-const CACHE_VERSION = '2026-01-20'
+const CACHE_VERSION = '2026-01-20b'
 const RATE_LIMIT_MAX = 250
 const RATE_LIMIT_WINDOW_MS = 1000 * 60 * 60 * 24 * 30
 const SESSION_RATE_LIMIT_MAX = 250
@@ -59,6 +59,24 @@ const BULLET_FALLBACKS = [
   'Supports high-visibility events and media operations with resilient infrastructure and rapid delivery.',
   'Leads with an AI-augmented, automation-first mindset while maintaining strict security guardrails.',
 ]
+
+const SUGGESTED_RESPONSES: Record<string, string> = {
+  "summarize leo's strengths in 3 bullets.": [
+    '- Led a 72-hour migration from legacy infrastructure to a cloud-native, remote-first stack.',
+    '- Built the LuminOS AI application ecosystem across security, finance, media intelligence, and legal workflows.',
+    '- Designed a security-first environment with modern identity, device lifecycle automation, and layered backups.',
+  ].join('\n'),
+  'what is luminos and why it matters?':
+    'LuminOS is a suite of AI apps that streamline security, finance, media intelligence, and legal workflows. It matters because it turns complex ops into fast, reliable decisions while keeping security guardrails in place.',
+  'highlight the cloud/security transformation.':
+    'Leo led a rapid shift from legacy infrastructure to a secure, cloud-native environment with modern identity and MFA. The result was resilient remote operations, layered backups, and a hardened security posture.',
+  'give me a quick technical overview.':
+    'Leo runs a cloud-native stack with modern identity, device management, and layered security controls. He builds AI-driven internal tools and ships on React/TypeScript with secure backend services.',
+}
+
+function getSuggestedReply(prompt: string) {
+  return SUGGESTED_RESPONSES[prompt] ?? null
+}
 
 type RateLimitState = { count: number; reset: number }
 type CacheState = { reply: string; expires: number }
@@ -922,6 +940,14 @@ export const onRequest = async (
 
   const normalizedPrompt = normalizePrompt(prompt)
   const bulletCount = getBulletCount(prompt)
+  const suggestedReply = getSuggestedReply(normalizedPrompt)
+  if (suggestedReply) {
+    const replyRaw = bulletCount ? applyBulletFormatting(suggestedReply, bulletCount) : finalizeReply(suggestedReply)
+    const reply = clampReply(replyRaw, MAX_REPLY_CHARS)
+    await setCachedReply(env, hashPrompt(`${CACHE_VERSION}|suggested|${normalizedPrompt}`), reply)
+    await setChatHistory(env, session.id, [...chatHistory, { role: 'user', text: prompt }, { role: 'assistant', text: reply }])
+    return respond({ reply }, 200)
+  }
   const cacheKey = bulletCount
     ? `${CACHE_VERSION}|${normalizedPrompt}|bullets:${bulletCount}|history:${historySignature}`
     : `${CACHE_VERSION}|${normalizedPrompt}|history:${historySignature}`
