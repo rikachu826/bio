@@ -490,6 +490,12 @@ function buildMailerSendMessage(payload: AlertPayload) {
 
 async function sendMailerSend(env: Env, payload: MailerSendPayload) {
   if (!env.MAILERSEND_API_TOKEN || !env.MAILERSEND_FROM || !env.MAILERSEND_TO) {
+    console.error('mailersend: missing configuration')
+    return
+  }
+
+  if (!env.MAILERSEND_FROM.includes('@') || !env.MAILERSEND_TO.includes('@')) {
+    console.error('mailersend: invalid from/to address')
     return
   }
 
@@ -500,7 +506,7 @@ async function sendMailerSend(env: Env, payload: MailerSendPayload) {
     text: payload.message,
   }
 
-  await fetch('https://api.mailersend.com/v1/email', {
+  const response = await fetch('https://api.mailersend.com/v1/email', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${env.MAILERSEND_API_TOKEN}`,
@@ -508,6 +514,11 @@ async function sendMailerSend(env: Env, payload: MailerSendPayload) {
     },
     body: JSON.stringify(body),
   })
+
+  if (!response.ok) {
+    const text = await response.text().catch(() => '')
+    console.error('mailersend: request failed', response.status, text)
+  }
 }
 
 function parseMailersendEvents(value?: string) {
