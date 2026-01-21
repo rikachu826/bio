@@ -31,7 +31,7 @@ ${RESUME_CONTEXT}
 
 const DEFAULT_MODEL_PRIMARY = 'gemini-3-flash-preview'
 const DEFAULT_MODEL_FALLBACK = 'gemini-2.5-flash'
-const CACHE_VERSION = '2026-01-20b'
+const CACHE_VERSION = '2026-01-20c'
 const RATE_LIMIT_MAX = 250
 const RATE_LIMIT_WINDOW_MS = 1000 * 60 * 60 * 24 * 30
 const SESSION_RATE_LIMIT_MAX = 250
@@ -80,6 +80,8 @@ const SUGGESTED_RESPONSES: Record<string, string> = {
     'You should hire Leo because he delivers high-impact infrastructure outcomes under pressure, including a 72-hour cloud migration. He builds secure, scalable systems with modern identity, MFA, and layered backups. He also created the LuminOS AI ecosystem to improve security and decision-making.',
   'would you hire leo?':
     'Yes. He has proven leadership in large-scale infrastructure and security transformations, and he delivers fast under pressure. He also builds AI tools that improve operational efficiency while keeping strict security guardrails in place.',
+  "should i hire him? what do you think he's worth?":
+    'Yes. He has delivered high-impact infrastructure and security outcomes under pressure, and he built the LuminOS AI ecosystem to speed up critical workflows. I can’t price him without role scope and market data, but his resume reflects senior leadership value.',
 }
 
 function getSuggestedReply(prompt: string) {
@@ -708,7 +710,8 @@ function applyBulletFormatting(text: string, count: number) {
 }
 
 function finalizeReply(text: string) {
-  const trimmed = text.trim()
+  const normalized = text.replace(/\.{2,}/g, '.')
+  const trimmed = normalized.trim()
   if (!trimmed) {
     return trimmed
   }
