@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import content from '../content/site.json'
 import { appleEase, sectionTitle, defaultViewport } from '../utils/animations'
+import { sanitizeHtml } from '../utils/sanitizeHtml'
 
 // Holographic project card animation variants
 const introVariant = {
@@ -364,7 +365,7 @@ export default function Projects() {
             variants={introVariant}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
-            dangerouslySetInnerHTML={{ __html: projectsSection.intro }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(projectsSection.intro) }}
           />
 
           {/* Featured Projects */}

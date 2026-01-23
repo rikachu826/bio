@@ -2,6 +2,7 @@ import { motion, useInView } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import content from '../content/site.json'
 import { appleEase, sectionTitle, defaultViewport } from '../utils/animations'
+import { sanitizeHtml } from '../utils/sanitizeHtml'
 
 // Holographic panel variants with blur and glow
 const storyPanelVariant = {
@@ -194,7 +195,7 @@ export default function Experience() {
   const outcome = experience.outcome
   const timeline = experience.timeline
 
-  const renderHtml = (value: string) => ({ __html: value })
+  const renderHtml = (value: string) => ({ __html: sanitizeHtml(value) })
 
   return (
     <div id="experience" className="section-container py-20" ref={ref}>
