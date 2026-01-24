@@ -118,10 +118,10 @@ type Env = {
   ALERT_WEBHOOK_URL?: string
   ALERT_WEBHOOK_SECRET?: string
   ALERT_WEBHOOK_EVENTS?: string
-  MAILERSEND_API_TOKEN?: string
-  MAILERSEND_FROM?: string
-  MAILERSEND_TO?: string
-  MAILERSEND_EVENTS?: string
+  RESEND_API_KEY?: string
+  RESEND_FROM?: string
+  RESEND_TO?: string
+  RESEND_EVENTS?: string
 }
 
 const allowedOrigins = new Set([
@@ -422,7 +422,7 @@ type AlertPayload = {
   retryAfter?: number
 }
 
-type MailerSendPayload = AlertPayload & {
+type ResendPayload = AlertPayload & {
   message: string
 }
 
@@ -471,7 +471,7 @@ async function sendAlert(env: Env, payload: AlertPayload) {
   })
 }
 
-function buildMailerSendMessage(payload: AlertPayload) {
+function buildResendMessage(payload: AlertPayload) {
   const lines = [
     `Event: ${payload.event}`,
     `Timestamp: ${payload.timestamp}`,
@@ -488,28 +488,43 @@ function buildMailerSendMessage(payload: AlertPayload) {
   return lines.join('\n')
 }
 
-async function sendMailerSend(env: Env, payload: MailerSendPayload) {
-  if (!env.MAILERSEND_API_TOKEN || !env.MAILERSEND_FROM || !env.MAILERSEND_TO) {
-    console.error('mailersend: missing configuration')
+function parseResendRecipients(value?: string) {
+  if (!value) {
+    return []
+  }
+  return value
+    .split(/[\s,]+/)
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+}
+
+async function sendResend(env: Env, payload: ResendPayload) {
+  if (!env.RESEND_API_KEY || !env.RESEND_FROM || !env.RESEND_TO) {
+    console.error('resend: missing configuration')
     return
   }
 
-  if (!env.MAILERSEND_FROM.includes('@') || !env.MAILERSEND_TO.includes('@')) {
-    console.error('mailersend: invalid from/to address')
+  const recipients = parseResendRecipients(env.RESEND_TO)
+  if (!env.RESEND_FROM.includes('@') || recipients.length === 0) {
+    console.error('resend: invalid from/to address')
+    return
+  }
+  if (!recipients.every((recipient) => recipient.includes('@'))) {
+    console.error('resend: invalid recipient address')
     return
   }
 
   const body = {
-    from: { email: env.MAILERSEND_FROM },
-    to: [{ email: env.MAILERSEND_TO }],
+    from: env.RESEND_FROM,
+    to: recipients,
     subject: `[Tifa] ${payload.event.replace(/_/g, ' ')}`,
     text: payload.message,
   }
 
-  const response = await fetch('https://api.mailersend.com/v1/email', {
+  const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${env.MAILERSEND_API_TOKEN}`,
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),
@@ -517,11 +532,11 @@ async function sendMailerSend(env: Env, payload: MailerSendPayload) {
 
   if (!response.ok) {
     const text = await response.text().catch(() => '')
-    console.error('mailersend: request failed', response.status, text)
+    console.error('resend: request failed', response.status, text)
   }
 }
 
-function parseMailersendEvents(value?: string) {
+function parseResendEvents(value?: string) {
   const defaults: AlertEvent[] = ['abuse_ban', 'turnstile_failed', 'origin_block', 'cross_site_block']
   if (!value) {
     return new Set<AlertEvent>(defaults)
@@ -879,7 +894,7 @@ export const onRequest = async (
   const allowedOrigin = origin && allowedOrigins.has(origin) ? origin : undefined
   const isLocal = isLocalOrigin(allowedOrigin)
   const alertEvents = parseAlertEvents(env.ALERT_WEBHOOK_EVENTS)
-  const mailerEvents = parseMailersendEvents(env.MAILERSEND_EVENTS)
+  const resendEvents = parseResendEvents(env.RESEND_EVENTS)
   const queueAlert = (event: AlertEvent, data: Omit<AlertPayload, 'event' | 'timestamp'> = {}) => {
     if (!env.ALERT_WEBHOOK_URL || !alertEvents.has(event)) {
       return
@@ -895,7 +910,7 @@ export const onRequest = async (
     }
   }
   const queueEmail = (event: AlertEvent, data: Omit<AlertPayload, 'event' | 'timestamp'> = {}) => {
-    if (!env.MAILERSEND_API_TOKEN || !env.MAILERSEND_FROM || !env.MAILERSEND_TO || !mailerEvents.has(event)) {
+    if (!env.RESEND_API_KEY || !env.RESEND_FROM || !env.RESEND_TO || !resendEvents.has(event)) {
       return
     }
     const payload: AlertPayload = {
@@ -903,8 +918,8 @@ export const onRequest = async (
       timestamp: new Date().toISOString(),
       ...data,
     }
-    const message = buildMailerSendMessage(payload)
-    const task = sendMailerSend(env, { ...payload, message }).catch(() => {})
+    const message = buildResendMessage(payload)
+    const task = sendResend(env, { ...payload, message }).catch(() => {})
     if (waitUntil) {
       waitUntil(task)
     }

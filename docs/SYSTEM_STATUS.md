@@ -75,10 +75,10 @@ RATE_LIMIT_ALLOW_IPS (optional allowlist)
 ALERT_WEBHOOK_URL (optional)
 ALERT_WEBHOOK_EVENTS (optional)
 ALERT_WEBHOOK_SECRET (optional, HMAC for alerts)
-MAILERSEND_API_TOKEN (optional, secret)
-MAILERSEND_FROM (optional)
-MAILERSEND_TO (optional)
-MAILERSEND_EVENTS (optional)
+RESEND_API_KEY (optional, secret)
+RESEND_FROM (optional)
+RESEND_TO (optional)
+RESEND_EVENTS (optional)
 ```
 
 ---
