@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+set -e
+
+echo "[pre-push] Running lint…"
+npm run -s lint
+
+echo "[pre-push] Running production dependency audit (high+ blocks)…"
+# npm exits nonzero for vulnerabilities at/above level
+npm audit --omit=dev --audit-level=high
+
+echo "[pre-push] Building…"
+npm run -s build
+
+echo "[pre-push] OK"

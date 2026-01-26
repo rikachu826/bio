@@ -1,0 +1,81 @@
+name: CI (Quality + Security)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint + Build + Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Audit (prod deps only)
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
+
+  secrets:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deps:
+    name: Dependency vuln scan (OSV)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: OSV-Scanner
+        uses: google/osv-scanner-action@v1
+        with:
+          scan-args: |-
+            --lockfile=package-lock.json
+
+  sast:
+    name: SAST (Semgrep)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/ci

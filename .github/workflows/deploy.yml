@@ -1,10 +1,7 @@
-name: CI + Deploy to Cloudflare Pages
+name: Deploy to Cloudflare Pages
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -40,7 +37,6 @@ jobs:
           VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
 
       - name: Deploy to Cloudflare Pages
-        if: github.event_name == 'push'
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
