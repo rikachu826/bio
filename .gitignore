@@ -10,3 +10,6 @@ dist/
 
 # Local/private assets
 # (Images are now tracked for project screenshots and command center)
+
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo
