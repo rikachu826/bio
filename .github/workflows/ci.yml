@@ -35,6 +35,10 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # Turnstile site key is public; use a GitHub repo Variable (NOT a Secret).
+          # Set in GitHub → Settings → Secrets and variables → Actions → Variables.
+          VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
 
   secrets:
     name: Secret scan (gitleaks)
