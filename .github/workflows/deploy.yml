@@ -34,9 +34,9 @@ jobs:
       - name: Build application
         run: npm run build
         env:
-          # Turnstile site key is public; use a GitHub repo Variable (NOT a Secret).
-          # Set in GitHub → Settings → Secrets and variables → Actions → Variables.
-          VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
+          # Turnstile site key is public; prefer a GitHub repo Variable.
+          # Falls back to Secrets to keep legacy setups working.
+          VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY || secrets.VITE_TURNSTILE_SITE_KEY }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@f0a1cd58cd66095dee69bfa18fa5efd1dde93bca # v1
