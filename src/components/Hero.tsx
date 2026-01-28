@@ -14,7 +14,7 @@ const heroContainer = {
   },
 }
 
-// Dramatic name reveal - materializes from bright blur
+// Dramatic name reveal - materializes from bright blur (keep filter for this one-time hero reveal)
 const heroName = {
   hidden: {
     opacity: 0,
@@ -42,15 +42,11 @@ const heroSubtitle = {
     opacity: 0,
     y: 50,
     letterSpacing: '0.4em',
-    filter: 'blur(20px)',
-    textShadow: '0 0 0px rgba(56, 189, 248, 0)',
   },
   visible: {
     opacity: 1,
     y: 0,
     letterSpacing: '0em',
-    filter: 'blur(0px)',
-    textShadow: '0 0 15px rgba(56, 189, 248, 0.3)',
     transition: {
       duration: 1.1,
       ease: appleEase,
@@ -58,17 +54,15 @@ const heroSubtitle = {
   },
 }
 
-// Summary text fades in with soft blur
+// Summary text fades in
 const heroSummary = {
   hidden: {
     opacity: 0,
     y: 40,
-    filter: 'blur(12px)',
   },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.9,
       ease: appleEase,
@@ -76,19 +70,17 @@ const heroSummary = {
   },
 }
 
-// CTA buttons materialize with glow
+// CTA buttons materialize
 const heroCTA = {
   hidden: {
     opacity: 0,
     y: 50,
     scale: 0.85,
-    filter: 'blur(15px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.8,
       ease: cyberBounce,
@@ -102,13 +94,11 @@ const buttonVariant = {
     opacity: 0,
     y: 30,
     scale: 0.9,
-    filter: 'blur(10px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.6,
       ease: appleEase,
@@ -207,8 +197,8 @@ export default function Hero() {
         {/* Scroll indicator - Holographic pulse */}
         <motion.div
           className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
-          initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1.8, ease: appleEase }}
         >
           <motion.div

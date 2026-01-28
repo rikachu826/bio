@@ -52,14 +52,12 @@ export const holoMaterialize: Variants = {
     opacity: 0,
     y: 60,
     scale: 0.85,
-    filter: 'blur(20px) brightness(2)',
     rotateX: 15,
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px) brightness(1)',
     rotateX: 0,
     transition: {
       duration: 1,
@@ -73,14 +71,10 @@ export const holoTextReveal: Variants = {
   hidden: {
     opacity: 0,
     y: 30,
-    filter: 'blur(12px)',
-    textShadow: '0 0 0px rgba(56, 189, 248, 0)',
   },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
-    textShadow: '0 0 30px rgba(56, 189, 248, 0.5)',
     transition: {
       duration: 0.9,
       ease: appleEase,
@@ -94,14 +88,12 @@ export const holoFloat: Variants = {
     opacity: 0,
     y: 80,
     scale: 0.9,
-    filter: 'blur(15px)',
     rotateY: -10,
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     rotateY: 0,
     transition: {
       duration: 0.9,
@@ -116,14 +108,12 @@ export const holoGlitch: Variants = {
     opacity: 0,
     x: -100,
     scale: 1.1,
-    filter: 'blur(25px) hue-rotate(90deg)',
     skewX: 10,
   },
   visible: {
     opacity: 1,
     x: 0,
     scale: 1,
-    filter: 'blur(0px) hue-rotate(0deg)',
     skewX: 0,
     transition: {
       duration: 0.7,
@@ -142,13 +132,11 @@ export const fadeUp: Variants = {
     opacity: 0,
     y: 60,
     scale: 0.92,
-    filter: 'blur(10px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: standardTransition,
   },
 }
@@ -158,12 +146,10 @@ export const fadeDown: Variants = {
   hidden: {
     opacity: 0,
     y: -50,
-    filter: 'blur(8px)',
   },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: standardTransition,
   },
 }
@@ -174,14 +160,12 @@ export const slideFromLeft: Variants = {
     opacity: 0,
     x: -100,
     scale: 0.9,
-    filter: 'blur(12px)',
     rotateY: 15,
   },
   visible: {
     opacity: 1,
     x: 0,
     scale: 1,
-    filter: 'blur(0px)',
     rotateY: 0,
     transition: standardTransition,
   },
@@ -193,14 +177,12 @@ export const slideFromRight: Variants = {
     opacity: 0,
     x: 100,
     scale: 0.9,
-    filter: 'blur(12px)',
     rotateY: -15,
   },
   visible: {
     opacity: 1,
     x: 0,
     scale: 1,
-    filter: 'blur(0px)',
     rotateY: 0,
     transition: standardTransition,
   },
@@ -211,12 +193,10 @@ export const scaleUp: Variants = {
   hidden: {
     opacity: 0,
     scale: 0.7,
-    filter: 'blur(20px) brightness(1.5)',
   },
   visible: {
     opacity: 1,
     scale: 1,
-    filter: 'blur(0px) brightness(1)',
     transition: {
       duration: 0.8,
       ease: cyberBounce,
@@ -265,7 +245,7 @@ export const staggerContainerSlow: Variants = {
 // SPECIAL HOLOGRAPHIC EFFECTS
 // ============================================
 
-// Hero name - dramatic entrance
+// Hero name - dramatic entrance (keep filter for this one-time reveal)
 export const heroReveal: Variants = {
   hidden: {
     opacity: 0,
@@ -293,13 +273,11 @@ export const subtitleScan: Variants = {
     opacity: 0,
     y: 40,
     letterSpacing: '0.3em',
-    filter: 'blur(15px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     letterSpacing: '0em',
-    filter: 'blur(0px)',
     transition: {
       duration: 1,
       ease: appleEase,
@@ -313,15 +291,11 @@ export const glassReveal: Variants = {
     opacity: 0,
     y: 50,
     scale: 0.9,
-    filter: 'blur(15px)',
-    backdropFilter: 'blur(0px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
-    backdropFilter: 'blur(20px)',
     transition: {
       duration: 0.9,
       ease: appleEase,
@@ -336,7 +310,6 @@ export const cardFloat: Variants = {
     y: 70,
     z: -100,
     scale: 0.85,
-    filter: 'blur(12px)',
     rotateX: 20,
   },
   visible: {
@@ -344,7 +317,6 @@ export const cardFloat: Variants = {
     y: 0,
     z: 0,
     scale: 1,
-    filter: 'blur(0px)',
     rotateX: 0,
     transition: {
       duration: 0.85,
@@ -371,7 +343,6 @@ export const floatIdle = {
 export const hoverLift = {
   y: -8,
   scale: 1.03,
-  filter: 'brightness(1.05)',
   boxShadow: '0 25px 50px rgba(56, 189, 248, 0.2)',
   transition: { duration: 0.35, ease: appleEase },
 }
@@ -405,15 +376,11 @@ export const sectionTitle: Variants = {
     opacity: 0,
     y: 40,
     scale: 0.95,
-    filter: 'blur(15px)',
-    textShadow: '0 0 0px rgba(56, 189, 248, 0)',
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
-    textShadow: '0 0 20px rgba(56, 189, 248, 0.3)',
     transition: {
       duration: 0.8,
       ease: appleEase,
@@ -426,12 +393,10 @@ export const introParagraph: Variants = {
   hidden: {
     opacity: 0,
     y: 30,
-    filter: 'blur(8px)',
   },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.7,
       ease: appleEase,
@@ -445,12 +410,10 @@ export const listItem: Variants = {
   hidden: {
     opacity: 0,
     x: -40,
-    filter: 'blur(6px)',
   },
   visible: {
     opacity: 1,
     x: 0,
-    filter: 'blur(0px)',
     transition: quickTransition,
   },
 }
@@ -461,13 +424,11 @@ export const gridItem: Variants = {
     opacity: 0,
     y: 50,
     scale: 0.9,
-    filter: 'blur(10px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: standardTransition,
   },
 }

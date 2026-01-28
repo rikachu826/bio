@@ -280,16 +280,6 @@
     transform: translateZ(0);
   }
 
-  /* Back wave - deepest, slowest */
-  .ocean-wave--back {
-    bottom: 0;
-    height: 140px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C150,100 350,20 600,60 C850,100 1050,20 1200,60 L1200,120 L0,120 Z' fill='rgba(6,78,114,0.7)'/%3E%3C/svg%3E") repeat-x;
-    background-size: 600px 140px;
-    animation: wave-drift 18s linear infinite;
-    opacity: 0.9;
-  }
-
   /* Middle wave */
   .ocean-wave--mid {
     bottom: 0;
@@ -349,9 +339,6 @@
 
   .kelp--1 { left: 5%; height: 180px; animation-delay: 0s; }
   .kelp--2 { left: 15%; height: 150px; animation-delay: -1s; }
-  .kelp--3 { left: 80%; height: 200px; animation-delay: -2s; }
-  .kelp--4 { left: 88%; height: 130px; animation-delay: -0.5s; }
-  .kelp--5 { left: 92%; height: 170px; animation-delay: -1.5s; }
 
   /* Swimming fish - flipped to face swimming direction */
   .fish {
@@ -373,28 +360,6 @@
     animation-delay: -12s;
   }
 
-  .fish--3 {
-    top: 60%;
-    animation-duration: 34s;
-    animation-delay: -6s;
-  }
-
-  .fish--4 {
-    top: 35%;
-    animation-duration: 42s;
-    animation-delay: -18s;
-  }
-
-  /* Sea turtle */
-  .turtle {
-    position: absolute;
-    top: 40%;
-    width: 80px;
-    height: 50px;
-    animation: turtle-swim 48s linear infinite;
-    will-change: transform;
-  }
-
   /* Jellyfish */
   .jellyfish {
     position: absolute;
@@ -402,17 +367,6 @@
     width: 60px;
     height: 80px;
     animation: jellyfish-float 30s ease-in-out infinite, jellyfish-pulse 3s ease-in-out infinite;
-    will-change: transform;
-  }
-
-  /* Rays */
-  .ray {
-    position: absolute;
-    top: 55%;
-    width: 90px;
-    height: 55px;
-    opacity: 0.85;
-    animation: ray-glide 52s linear infinite;
     will-change: transform;
   }
 
@@ -440,24 +394,6 @@
 
   .coral--1 { left: 8%; height: 140px; animation-delay: -1s; }
   .coral--2 { left: 22%; height: 120px; animation-delay: -2s; }
-  .coral--3 { left: 58%; height: 150px; animation-delay: -3s; }
-  .coral--4 { left: 70%; height: 130px; animation-delay: -1.5s; }
-  .coral--5 { left: 84%; height: 110px; animation-delay: -2.5s; }
-
-  .reef-accent {
-    position: absolute;
-    bottom: 8px;
-    opacity: 0.9;
-    transform-origin: center;
-  }
-
-  .starfish { width: 48px; height: 48px; }
-  .starfish--1 { left: 35%; bottom: 10px; transform: rotate(-12deg); }
-  .starfish--2 { left: 64%; bottom: 14px; transform: rotate(8deg); }
-
-  .shell { width: 60px; height: 40px; }
-  .shell--1 { left: 12%; bottom: 6px; }
-  .shell--2 { left: 78%; bottom: 8px; }
 
   /* Ocean animations - GPU accelerated */
   @keyframes caustic-drift-1 {
@@ -571,26 +507,6 @@
     }
   }
 
-  @keyframes turtle-swim {
-    0% {
-      left: -100px;
-      transform: translateY(0) rotate(0deg);
-    }
-    25% {
-      transform: translateY(-30px) rotate(-5deg);
-    }
-    50% {
-      transform: translateY(0) rotate(0deg);
-    }
-    75% {
-      transform: translateY(20px) rotate(5deg);
-    }
-    100% {
-      left: calc(100% + 100px);
-      transform: translateY(0) rotate(0deg);
-    }
-  }
-
   @keyframes jellyfish-float {
     0% {
       left: 70%;
@@ -621,23 +537,6 @@
     }
   }
 
-  @keyframes ray-glide {
-    0% {
-      left: calc(100% + 120px);
-      transform: translateY(10px) rotate(0deg);
-    }
-    40% {
-      transform: translateY(-25px) rotate(-4deg);
-    }
-    70% {
-      transform: translateY(15px) rotate(3deg);
-    }
-    100% {
-      left: -140px;
-      transform: translateY(0) rotate(0deg);
-    }
-  }
-
   @keyframes coral-sway {
     0%, 100% {
       transform: rotate(-2deg);
@@ -645,6 +544,19 @@
     50% {
       transform: rotate(2.5deg);
     }
+  }
+
+  /* Pause ocean animations when section is off-screen */
+  .ocean-paused .ocean-caustics::before,
+  .ocean-paused .ocean-caustics::after,
+  .ocean-paused .ocean-bubbles::before,
+  .ocean-paused .ocean-bubbles::after,
+  .ocean-paused .ocean-wave,
+  .ocean-paused .kelp,
+  .ocean-paused .fish,
+  .ocean-paused .jellyfish,
+  .ocean-paused .coral {
+    animation-play-state: paused;
   }
 
   /* Reduced motion support */
@@ -656,9 +568,7 @@
     .ocean-wave,
     .kelp,
     .fish,
-    .turtle,
     .jellyfish,
-    .ray,
     .coral {
       animation: none;
     }
@@ -670,9 +580,7 @@
     }
 
     .fish { left: 50%; }
-    .turtle { left: 30%; }
     .jellyfish { left: 70%; }
-    .ray { left: 60%; }
   }
 
   .contact-icon {
@@ -1267,171 +1175,6 @@
     }
   }
 
-  .intro-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle at top, rgb(54, 112, 199), rgb(12, 20, 36) 55%, rgb(2, 6, 23) 100%);
-    background-color: rgb(2, 6, 23);
-    overflow: hidden;
-    perspective: 1200px;
-  }
-
-  .intro-stars {
-    position: absolute;
-    inset: -40%;
-    background-image:
-      radial-gradient(circle, rgba(148, 163, 184, 0.35) 1px, transparent 1px),
-      radial-gradient(circle, rgba(56, 189, 248, 0.45) 1px, transparent 1px),
-      radial-gradient(circle, rgba(226, 232, 240, 0.55) 1px, transparent 1px);
-    background-size: 140px 140px, 220px 220px, 320px 320px;
-    animation: intro-stars 40s linear infinite;
-    opacity: 0.6;
-  }
-
-  .intro-nebula {
-    position: absolute;
-    inset: -20%;
-    background:
-      radial-gradient(circle at var(--nebula-x, 50%) var(--nebula-y, 40%), rgba(56, 189, 248, 0.5), transparent 48%),
-      radial-gradient(circle at calc(var(--nebula-x, 50%) + 20%) calc(var(--nebula-y, 40%) - 15%), rgba(45, 212, 191, 0.45), transparent 45%),
-      radial-gradient(circle at calc(var(--nebula-x, 50%) + 10%) calc(var(--nebula-y, 40%) + 25%), rgba(99, 102, 241, 0.4), transparent 50%);
-    filter: blur(1px);
-    opacity: 0.7;
-  }
-
-  .intro-waves {
-    position: absolute;
-    inset: -30%;
-    background:
-      radial-gradient(circle at calc(var(--nebula-x, 50%) - 20%) calc(var(--nebula-y, 40%) + 30%), rgba(56, 189, 248, 0.35), transparent 50%),
-      radial-gradient(circle at calc(var(--nebula-x, 50%) + 30%) calc(var(--nebula-y, 40%) + 15%), rgba(45, 212, 191, 0.32), transparent 52%),
-      radial-gradient(circle at calc(var(--nebula-x, 50%) + 5%) calc(var(--nebula-y, 40%) - 25%), rgba(129, 140, 248, 0.3), transparent 48%);
-    opacity: 0.5;
-    animation: intro-waves 28s ease-in-out infinite;
-  }
-
-  .intro-glow {
-    position: absolute;
-    width: 70vw;
-    height: 70vw;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(125, 211, 252, 0.35), transparent 60%);
-    filter: blur(2px);
-    opacity: 0.8;
-  }
-
-  .intro-panel {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    padding: 48px 40px;
-    border-radius: 32px;
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.78), rgba(2, 6, 23, 0.92));
-    border: 1px solid rgba(148, 163, 184, 0.6);
-    box-shadow:
-      0 30px 80px rgba(15, 23, 42, 0.7),
-      inset 0 1px 1px rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-  }
-
-  .intro-panel::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 32px;
-    background: linear-gradient(140deg, rgba(255, 255, 255, 0.35), transparent 55%);
-    opacity: 0.5;
-    pointer-events: none;
-  }
-
-  .intro-sheen {
-    position: absolute;
-    inset: -40%;
-    background: radial-gradient(circle, rgba(148, 163, 184, 0.3), transparent 50%);
-    opacity: 0.35;
-    pointer-events: none;
-  }
-
-  .intro-eyebrow {
-    font-size: 0.75rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: rgba(148, 163, 184, 0.85);
-    margin-bottom: 12px;
-  }
-
-  .intro-title {
-    font-size: clamp(2.5rem, 5vw, 3.6rem);
-    font-weight: 700;
-    color: #f8fafc;
-    letter-spacing: 0.06em;
-    margin-bottom: 12px;
-  }
-
-  .intro-subtitle {
-    font-size: 1rem;
-    color: rgba(226, 232, 240, 0.88);
-    max-width: 420px;
-    margin: 0 auto 28px;
-    line-height: 1.6;
-  }
-
-  .intro-button {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 36px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #0b1220;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #7dd3fc, #22d3ee);
-    box-shadow:
-      0 20px 40px rgba(56, 189, 248, 0.35),
-      inset 0 1px 2px rgba(255, 255, 255, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    overflow: hidden;
-  }
-
-  .intro-button::before {
-    content: '';
-    position: absolute;
-    inset: -20% 0;
-    background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.85) 50%, transparent 75%);
-    transform: translateX(-140%) skewX(-12deg);
-    animation: intro-button-sheen 4.5s ease-in-out infinite;
-    filter: blur(2px);
-    pointer-events: none;
-  }
-
-  .intro-button::after {
-    content: '';
-    position: absolute;
-    inset: 2px;
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent 60%);
-    opacity: 0.7;
-    pointer-events: none;
-  }
-
-  .intro-curtain {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgb(2, 6, 23), rgb(2, 6, 23));
-    z-index: 4;
-    pointer-events: none;
-  }
-
-  .intro-curtain-drop {
-    width: 100%;
-    height: 100%;
-  }
-
   /* Gradient text */
   .gradient-text {
     background: linear-gradient(135deg, #0066cc 0%, #4facfe 33%, #89cff0 66%, #00d4aa 100%);
@@ -1474,57 +1217,6 @@
   85%, 100% {
     transform: translateY(8px);
     opacity: 0;
-  }
-}
-
-@keyframes intro-stars {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(12%, 8%, 0);
-  }
-}
-
-@keyframes intro-waves {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(-4%, 3%, 0) scale(1.05);
-  }
-}
-
-@keyframes intro-shimmer {
-  0%, 100% {
-    transform: translate3d(-6%, -4%, 0);
-    opacity: 0.35;
-  }
-  50% {
-    transform: translate3d(6%, 4%, 0);
-    opacity: 0.6;
-  }
-}
-
-@keyframes intro-button-sheen {
-  0%, 60% {
-    transform: translateX(-140%) skewX(-12deg);
-    opacity: 0;
-  }
-  72% {
-    opacity: 0.7;
-  }
-  100% {
-    transform: translateX(140%) skewX(-12deg);
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .intro-stars,
-  .intro-waves,
-  .intro-button::before {
-    animation: none;
   }
 }
 

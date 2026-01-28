@@ -1,12 +1,12 @@
 {
   "hero": {
     "name": "Leo Chui",
-    "role": "IT Director & AI-Augmented Builder",
+    "role": "Associate IT Director & AI-Augmented Builder",
     "org": "GLAAD",
     "summaryParts": [
       {
         "type": "text",
-        "value": "I'm not a developer — but I've shipped five production apps anyway. I design systems, think through security, and collaborate with AI to bring ideas to life. It's a new way of building, and I'm all in. Featured by "
+        "value": "I lead IT infrastructure and security at GLAAD, and I build production software by collaborating with AI. Five apps shipped, zero dev team. Featured by "
       },
       {
         "type": "link",
@@ -45,28 +45,28 @@
     },
     "paragraphs": [
       {
-        "label": "Here's the thing:",
-        "text": "I'm not a traditional developer. I can't whiteboard a binary tree or rattle off algorithms. But I've figured out something that works for me — I design the system in my head, think through security and architecture, and then collaborate with AI tools to actually build it. It's like having a brilliant team that never sleeps, and my job is to be the one who knows what we're building and why."
+        "label": "The approach:",
+        "text": "I design systems — security model, architecture, data flow — then collaborate with AI tools to implement them. I specify the requirements and constraints, review every output, and iterate until it ships. It's a different kind of engineering, and it produces production-grade results."
       },
       {
-        "label": "It actually works.",
-        "text": "I've shipped five production apps this way (the LuminOS suite), led a 72-hour infrastructure transformation when COVID hit, and somehow maintain a 98/100 average on SecurityScorecard. No dev team. Just me, some really good AI tools, and a lot of iteration. The site you're on right now? Same approach."
+        "label": "The track record:",
+        "text": "Five production apps shipped this way (the LuminOS suite), a 72-hour emergency cloud migration during COVID, and a 98/100 average on SecurityScorecard over five years. This site was built the same way."
       },
       {
-        "label": "Security comes first, always.",
-        "text": "Before I ask AI to generate anything, I've already thought through auth flows, rate limiting, secrets management, and what could go wrong. AI is powerful, but it needs guardrails. I'm the human in the loop — the one who says 'wait, that's not secure enough' before it ships."
+        "label": "Security-first:",
+        "text": "Every build starts with auth flows, rate limiting, secrets management, and threat modeling. AI generates code fast — the human in the loop ensures it ships secure."
       },
       {
         "label": "The toolkit:",
-        "text": "Claude Code, Gemini CLI, Cursor IDE, MCP servers for orchestration. Usually multiple terminals running different agents for different parts of the system. It sounds chaotic, but there's a rhythm to it. Design, direct, review, ship, iterate."
+        "text": "Claude Code, Gemini CLI, Cursor IDE, MCP servers for orchestration. Multiple terminals running different agents for different parts of the system. Design, direct, review, ship, iterate."
       },
       {
-        "label": "The unlikely path:",
-        "text": "I spent 12 years as a personal trainer and nutritionist before pivoting to IT in 2018. Joined GLAAD as help desk in 2019 and worked my way up to Associate IT Director. Turns out the discipline from bodybuilding — showing up every day, tracking progress, iterating on what works — translates pretty well to infrastructure and building software."
+        "label": "Background:",
+        "text": "12 years as a personal trainer and nutritionist before pivoting to IT in 2018. Joined GLAAD as help desk in 2019, now Associate IT Director. The discipline of consistent iteration translates directly to infrastructure and software delivery."
       },
       {
-        "label": "Gaming roots:",
-        "text": "I used to be a competitive World of Warcraft raider and guild leader, theorycrafting strategies before guides existed. That systems thinking — understanding how everything connects, optimizing under constraints, coordinating a team — is honestly how I still approach problems today. Nerdier origin story than most, but it's mine."
+        "label": "Origin story:",
+        "text": "Former competitive World of Warcraft raider and guild leader — theorycrafting strategies before guides existed. That systems thinking, optimization under constraints, and team coordination is how I still approach technical problems."
       }
     ],
     "pills": [
@@ -90,7 +90,7 @@
       "leading": "The",
       "accent": "Setup"
     },
-    "intro": "Yeah, it's a lot of screens. But when you're juggling AI agents, monitoring systems, and trying to ship something before the day ends, you need the real estate. This is where the work happens."
+    "intro": "Multi-monitor workspace optimized for parallel AI agent workflows, system monitoring, and rapid iteration."
   },
   "experience": {
     "title": {
@@ -101,8 +101,8 @@
       "badge": "🚀 Associate IT Director • GLAAD • September 2019 - Present",
       "headline": "72-Hour Emergency Cloud Transformation During COVID-19",
       "paragraphs": [
-        "When COVID hit, I was still pretty new to IT. The MSP had just been let go, and suddenly I was looking at a legacy stack that needed to become fully remote in <strong class=\"text-pure-white\">72 hours</strong>. No consultants coming to save the day. Just me, a lot of coffee, and the realization that if I didn't figure this out, people couldn't do their jobs. So I figured it out.",
-        "<strong class=\"text-pure-white\">GLAAD Media Awards (2019-Present):</strong> I handle IT infrastructure and security for the bi-annual flagship events in LA and NYC. In 2020, we had to pivot the entire thing to virtual broadcast with almost no lead time — streaming infrastructure, security, production support. It was chaos, but good chaos."
+        "When COVID hit, the MSP had just been let go, and a legacy stack needed to become fully remote in <strong class=\"text-pure-white\">72 hours</strong>. No consultants — I mapped the dependencies, prioritized critical path items, and executed the migration.",
+        "<strong class=\"text-pure-white\">GLAAD Media Awards (2019-Present):</strong> IT infrastructure and security for the bi-annual flagship events in LA and NYC. In 2020, pivoted the entire event to virtual broadcast under compressed timelines — streaming infrastructure, security, and production support delivered on schedule."
       ]
     },
     "legacy": {
@@ -209,7 +209,7 @@
     },
     "luminos": {
       "title": "🤖 LuminOS: The Apps I Built",
-      "intro": "This is the part I'm most proud of. Five production apps, all built by collaborating with AI. I designed each system, obsessed over the security, and worked with Codex, Claude, and Gemini to actually build them. Each app has its own AI persona that knows the domain — Aegis for security, Astraea for finance, etc. The naming scheme? GLAAD is a light pillar for LGBTQ rights, so everything follows the 'light reveals truth' metaphor.",
+      "intro": "Five production apps, each built by designing the system architecture and security model, then collaborating with AI to implement. Each app has a domain-specific AI persona — Aegis for security, Astraea for finance, LUMOS for media. The naming follows GLAAD's role as a light pillar for LGBTQ rights: everything maps to the 'light reveals truth' metaphor.",
       "items": [
         "<strong class=\"text-pure-white\">Diffract</strong>: Executive security dashboard — real-time threat intel",
         "<strong class=\"text-pure-white\">Refract</strong>: Salesforce + NetSuite analytics — financial intelligence",
@@ -230,7 +230,7 @@
     },
     "team": {
       "headline": "Small Team, Big Output",
-      "body": "It's me and a junior technician for day-to-day support — that's the IT department. No developers on staff. Every app in LuminOS was designed and shipped by me using AI tools. I also help out with creative and media production for events, because at a nonprofit, you wear a lot of hats."
+      "body": "Two-person IT team handling day-to-day support and infrastructure. Every LuminOS app was designed and shipped by me using AI tools. I also contribute to creative and media production for events — at a nonprofit, roles overlap."
     },
     "outcome": {
       "title": "✨ Outcomes",
@@ -262,12 +262,12 @@
       "leading": "What I've",
       "accent": "Built"
     },
-    "intro": "All of these were built the same way — I figured out what I needed, designed how it should work, thought through security, and collaborated with AI to make it real. Click any project to see how it came together."
+    "intro": "Each project follows the same process: define requirements, design architecture and security model, collaborate with AI to implement, review and iterate, ship. Click any project to see how it came together."
   },
   "projects": [
     {
       "title": "LuminOS",
-      "description": "Five apps that actually get used every day at GLAAD — security, finance, media intelligence, and legal analysis. All built by me and AI working together. I'm genuinely proud of this one.",
+      "description": "Five production apps used daily at GLAAD — security, finance, media intelligence, and legal analysis. All built through AI-directed development.",
       "origin": "Named for GLAAD as a light pillar. Each product follows the 'light reveals truth' metaphor — Diffract exposes weaknesses, Refract bends signals into clarity, Prism splits information into sources.",
       "category": "Internal Tool Ecosystem",
       "tech": ["Firebase", "GCP", "React", "TypeScript", "Python", "Vertex AI", "Perplexity", "Electron"],
@@ -535,8 +535,8 @@
     },
     {
       "title": "This Website",
-      "description": "You're looking at it! Built the same way as everything else — I designed how it should work, thought through the security, and collaborated with AI to build it. Felt right to include it here.",
-      "origin": "If I'm going to talk about AI-augmented building, the portfolio itself should be proof of concept.",
+      "description": "This portfolio site, built with the same AI-directed process as LuminOS. Edge-deployed on Cloudflare Pages with a serverless AI assistant.",
+      "origin": "The portfolio itself demonstrates the AI-augmented development process described throughout.",
       "category": "Portfolio Site",
       "tech": ["React", "TypeScript", "Vite", "Tailwind", "Cloudflare Workers", "Gemini API"],
       "highlights": [
@@ -662,7 +662,7 @@
       "leading": "Say",
       "accent": "Hi"
     },
-    "blurb": "I'm always happy to chat about AI-augmented building, security, IT leadership, or honestly just nerd out about how wild this technology moment is. No social media presence — just email and GitHub.",
+    "blurb": "Open to conversations about AI-augmented development, security architecture, IT leadership, or the intersection of all three. No social media — just email and GitHub.",
     "methods": [
       {
         "type": "email",

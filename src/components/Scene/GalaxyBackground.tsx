@@ -104,8 +104,8 @@ export default function GalaxyBackground({ paused = false }: GalaxyBackgroundPro
     let height = window.innerHeight
 
     const particles: Particle[] = []
-    const particleCount = Math.floor((width * height) / 9000) // Dense starfield
-    const maxDistance = 120
+    const particleCount = Math.min(300, Math.floor((width * height) / 12000))
+    const maxDistance = 100
     const maxDistanceSq = maxDistance * maxDistance
     const cellSize = maxDistance
     let cols = Math.ceil(width / cellSize)
@@ -231,7 +231,7 @@ export default function GalaxyBackground({ paused = false }: GalaxyBackgroundPro
       canvas.width = width
       canvas.height = height
       particles.length = 0
-      const newCount = Math.floor((width * height) / 9000)
+      const newCount = Math.min(300, Math.floor((width * height) / 12000))
       for (let i = 0; i < newCount; i++) {
         particles.push(new Particle(width, height))
       }

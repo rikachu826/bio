@@ -5,17 +5,15 @@ import content from '../content/site.json'
 import { appleEase, sectionTitle, defaultViewport } from '../utils/animations'
 import { sanitizeHtml } from '../utils/sanitizeHtml'
 
-// Holographic project card animation variants
+// Project card animation variants
 const introVariant = {
   hidden: {
     opacity: 0,
     y: 30,
-    filter: 'blur(10px)',
   },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: { duration: 0.7, ease: appleEase, delay: 0.1 },
   },
 }
@@ -25,14 +23,12 @@ const featuredCardVariant = (index: number) => ({
     opacity: 0,
     y: 70,
     scale: 0.9,
-    filter: 'blur(20px)',
     rotateX: 8,
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     rotateX: 0,
     transition: { duration: 0.9, ease: appleEase, delay: index * 0.12 },
   },
@@ -44,7 +40,6 @@ const gridCardVariant = (index: number) => ({
     y: 50,
     x: index % 3 === 0 ? -40 : index % 3 === 2 ? 40 : 0,
     scale: 0.88,
-    filter: 'blur(15px)',
     rotateY: index % 3 === 0 ? 8 : index % 3 === 2 ? -8 : 0,
   },
   visible: {
@@ -52,7 +47,6 @@ const gridCardVariant = (index: number) => ({
     y: 0,
     x: 0,
     scale: 1,
-    filter: 'blur(0px)',
     rotateY: 0,
     transition: { duration: 0.8, ease: appleEase, delay: (index + 2) * 0.1 },
   },
@@ -62,12 +56,10 @@ const footerVariant = {
   hidden: {
     opacity: 0,
     y: 25,
-    filter: 'blur(8px)',
   },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: { duration: 0.6, ease: appleEase, delay: 0.35 },
   },
 }

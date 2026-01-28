@@ -1,5 +1,4 @@
 import { Suspense, lazy, useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
 import Hero from './components/Hero'
 import About from './components/About'
 import CommandCenter from './components/CommandCenter'
@@ -8,31 +7,20 @@ import Projects from './components/Projects'
 import Skills from './components/Skills'
 import AIAssistant from './components/AIAssistant'
 import Contact from './components/Contact'
-import IntroOverlay from './components/IntroOverlay'
 
 // Lazy load galaxy background for better performance
 const GalaxyBackground = lazy(() => import('./components/Scene/GalaxyBackground'))
 
 function App() {
-  const [introComplete, setIntroComplete] = useState(() => {
-    if (typeof window === 'undefined') {
-      return false
-    }
-    return localStorage.getItem('introSeen') === 'true'
-  })
   const [isIdle, setIsIdle] = useState(false)
   const [isHeroVisible, setIsHeroVisible] = useState(true)
   const heroRef = useRef<HTMLElement | null>(null)
   const idleRef = useRef(false)
 
-  const galaxyOpacity = 1
-  const overlayOpacity = 0.75
   const shouldPauseGalaxy = isIdle || !isHeroVisible
 
+  // Idle detection — pause galaxy after 10 minutes of inactivity
   useEffect(() => {
-    if (!introComplete) {
-      return
-    }
     const idleTimeoutMs = 10 * 60 * 1000
     let idleTimer: number | undefined
 
@@ -62,10 +50,11 @@ function App() {
         window.clearTimeout(idleTimer)
       }
     }
-  }, [introComplete])
+  }, [])
 
+  // Pause galaxy when hero section scrolls out of view
   useEffect(() => {
-    if (!heroRef.current || !introComplete) {
+    if (!heroRef.current) {
       return
     }
     const observer = new IntersectionObserver(
@@ -76,72 +65,54 @@ function App() {
     )
     observer.observe(heroRef.current)
     return () => observer.disconnect()
-  }, [introComplete])
+  }, [])
 
   return (
     <div className="relative">
-      {!introComplete && <IntroOverlay onComplete={() => setIntroComplete(true)} />}
+      <Suspense fallback={<div className="h-screen bg-space-black" />}>
+        <div
+          className="fixed inset-0 -z-20"
+          style={{ opacity: 1 }}
+        >
+          <GalaxyBackground paused={shouldPauseGalaxy} />
+        </div>
+      </Suspense>
 
-      <motion.div
-        className="relative"
-        initial={false}
-        animate={
-          introComplete
-            ? { opacity: 1, filter: 'blur(0px)', scale: 1 }
-            : { opacity: 0.45, filter: 'blur(16px)', scale: 0.98 }
-        }
-        transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1], delay: introComplete ? 0.35 : 0 }}
-      >
-        {introComplete && (
-          <Suspense fallback={<div className="h-screen bg-space-black" />}>
-            <motion.div
-              className="fixed inset-0 -z-20"
-              style={{ opacity: galaxyOpacity }}
-            >
-              <GalaxyBackground paused={shouldPauseGalaxy} />
-            </motion.div>
-          </Suspense>
-        )}
+      <div
+        className="fixed inset-0 -z-10 bg-gradient-to-b from-white/5 via-baby-blue/10 to-sky-blue/20"
+        style={{ opacity: 0.75 }}
+      />
 
-        {introComplete && (
-          <motion.div
-            className="fixed inset-0 -z-10 bg-gradient-to-b from-white/5 via-baby-blue/10 to-sky-blue/20"
-            style={{ opacity: overlayOpacity }}
-          />
-        )}
+      {/* Hero Section with Galaxy Background */}
+      <section id="hero" className="relative" ref={heroRef}>
+        <Hero />
+      </section>
 
-        {/* Hero Section with Galaxy Background */}
-        <section id="hero" className="relative" ref={heroRef}>
-          <Hero />
-        </section>
+      {/* About Section - Dark transition */}
+      <section id="about" className="relative z-10 bg-gradient-to-b from-space-black/95 via-charcoal/90 to-charcoal/70">
+        <About />
+        <CommandCenter paused={isIdle} />
+      </section>
 
-        {/* About Section - Dark transition */}
-        <section id="about" className="relative z-10 bg-gradient-to-b from-space-black/95 via-charcoal/90 to-charcoal/70">
-          <About />
-          <CommandCenter paused={isIdle} />
-        </section>
+      {/* Experience Section - Medium transition */}
+      <section id="experience" className="relative z-10 bg-gradient-to-b from-charcoal/70 via-charcoal/55 to-charcoal/40">
+        <Experience />
+      </section>
 
-        {/* Experience Section - Medium transition */}
-        <section id="experience" className="relative z-10 bg-gradient-to-b from-charcoal/70 via-charcoal/55 to-charcoal/40">
-          <Experience />
-        </section>
+      {/* Projects Section - Light transition */}
+      <section id="projects" className="relative z-10 bg-gradient-to-b from-charcoal/40 via-white/5 to-white/10">
+        <Projects />
+      </section>
 
-        {/* Projects Section - Light transition */}
-        <section id="projects" className="relative z-10 bg-gradient-to-b from-charcoal/40 via-white/5 to-white/10">
-          <Projects />
-        </section>
+      {/* Skills Section - Transitions into ocean depths */}
+      <section id="skills" className="relative z-10 bg-gradient-to-b from-white/10 via-baby-blue/15 to-space-black/95">
+        <Skills />
+      </section>
 
-        {/* Skills Section - Transitions into ocean depths */}
-        <section id="skills" className="relative z-10 bg-gradient-to-b from-white/10 via-baby-blue/15 to-space-black/95">
-          <Skills />
-        </section>
-
-        {/* Contact Section - Immersive Ocean Zone */}
-        <section id="contact" className="relative z-10">
-          <Contact />
-        </section>
-
-      </motion.div>
+      {/* Contact Section - Immersive Ocean Zone */}
+      <section id="contact" className="relative z-10">
+        <Contact />
+      </section>
 
       <AIAssistant />
     </div>

@@ -8,19 +8,17 @@ import {
   defaultViewport,
 } from '../utils/animations'
 
-// Holographic paragraph animation with stagger
+// Paragraph animation with stagger
 const paragraphVariant = {
   hidden: {
     opacity: 0,
     y: 35,
     x: -20,
-    filter: 'blur(10px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     x: 0,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.7,
       ease: appleEase,
@@ -28,19 +26,17 @@ const paragraphVariant = {
   },
 }
 
-// Holographic pill animation
+// Pill animation
 const pillVariant = {
   hidden: {
     opacity: 0,
     scale: 0.7,
     y: 15,
-    filter: 'blur(8px)',
   },
   visible: {
     opacity: 1,
     scale: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.5,
       ease: appleEase,
@@ -48,17 +44,15 @@ const pillVariant = {
   },
 }
 
-// Holographic journey item animation
+// Journey item animation
 const journeyItemVariant = {
   hidden: {
     opacity: 0,
     x: 40,
-    filter: 'blur(6px)',
   },
   visible: {
     opacity: 1,
     x: 0,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.5,
       ease: appleEase,
@@ -66,20 +60,18 @@ const journeyItemVariant = {
   },
 }
 
-// Holographic glass card with float effect
+// Glass card with float effect
 const glassCardVariant = {
   hidden: {
     opacity: 0,
     x: 100,
     scale: 0.9,
-    filter: 'blur(20px)',
     rotateY: -10,
   },
   visible: {
     opacity: 1,
     x: 0,
     scale: 1,
-    filter: 'blur(0px)',
     rotateY: 0,
     transition: {
       duration: 1,

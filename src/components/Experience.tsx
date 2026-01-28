@@ -4,20 +4,18 @@ import content from '../content/site.json'
 import { appleEase, sectionTitle, defaultViewport } from '../utils/animations'
 import { sanitizeHtml } from '../utils/sanitizeHtml'
 
-// Holographic panel variants with blur and glow
+// Panel animation variants
 const storyPanelVariant = {
   hidden: {
     opacity: 0,
     y: 60,
     scale: 0.9,
-    filter: 'blur(20px)',
     rotateX: 10,
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     rotateX: 0,
     transition: { duration: 1, ease: appleEase },
   },
@@ -28,14 +26,12 @@ const legacyPanelVariant = {
     opacity: 0,
     x: -80,
     scale: 0.92,
-    filter: 'blur(15px)',
     rotateY: 10,
   },
   visible: {
     opacity: 1,
     x: 0,
     scale: 1,
-    filter: 'blur(0px)',
     rotateY: 0,
     transition: { duration: 0.9, ease: appleEase, delay: 0.1 },
   },
@@ -46,14 +42,12 @@ const gridCardVariant = (fromLeft: boolean, delay: number) => ({
     opacity: 0,
     x: fromLeft ? -60 : 60,
     scale: 0.9,
-    filter: 'blur(12px)',
     rotateY: fromLeft ? 8 : -8,
   },
   visible: {
     opacity: 1,
     x: 0,
     scale: 1,
-    filter: 'blur(0px)',
     rotateY: 0,
     transition: { duration: 0.8, ease: appleEase, delay },
   },
@@ -64,13 +58,11 @@ const centerPanelVariant = (delay: number) => ({
     opacity: 0,
     y: 50,
     scale: 0.92,
-    filter: 'blur(15px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: { duration: 0.85, ease: appleEase, delay },
   },
 })
@@ -79,12 +71,10 @@ const teamBadgeVariant = {
   hidden: {
     opacity: 0,
     scale: 0.8,
-    filter: 'blur(20px) brightness(1.5)',
   },
   visible: {
     opacity: 1,
     scale: 1,
-    filter: 'blur(0px) brightness(1)',
     transition: { duration: 0.7, ease: appleEase, delay: 0.45 },
   },
 }
@@ -94,13 +84,11 @@ const outcomeVariant = {
     opacity: 0,
     y: 60,
     scale: 0.9,
-    filter: 'blur(18px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: { duration: 0.9, ease: appleEase, delay: 0.5 },
   },
 }
@@ -119,13 +107,11 @@ const timelinePillVariant = {
     opacity: 0,
     x: -60,
     scale: 0.8,
-    filter: 'blur(12px)',
   },
   visible: {
     opacity: 1,
     x: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.5,
       ease: [0.34, 1.56, 0.64, 1], // Bouncy ease
@@ -156,13 +142,11 @@ const timelineItemVariant = {
     opacity: 0,
     y: 30,
     scale: 0.9,
-    filter: 'blur(10px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: { duration: 0.6, ease: appleEase },
   },
 }

@@ -20,12 +20,10 @@ const blurbVariant = {
   hidden: {
     opacity: 0,
     y: 40,
-    filter: 'blur(12px)',
   },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.8,
       ease: appleEase,
@@ -39,13 +37,11 @@ const contactCardVariant = {
     opacity: 0,
     y: 50,
     scale: 0.88,
-    filter: 'blur(18px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.9,
       ease: appleEase,
@@ -58,13 +54,11 @@ const buttonVariant = {
     opacity: 0,
     y: 40,
     scale: 0.9,
-    filter: 'blur(15px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.7,
       ease: appleEase,
@@ -77,12 +71,10 @@ const footerVariant = {
   hidden: {
     opacity: 0,
     y: 30,
-    filter: 'blur(10px)',
   },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.7,
       ease: appleEase,
@@ -93,7 +85,10 @@ const footerVariant = {
 
 export default function Contact() {
   const ref = useRef(null)
+  const oceanRef = useRef(null)
   const isInView = useInView(ref, defaultViewport)
+  // Separate observer for ocean animations — not once-only, so animations pause when scrolled away
+  const isOceanVisible = useInView(oceanRef, { amount: 0.05 })
   const [isGenerating, setIsGenerating] = useState(false)
 
   const contact = content.contact
@@ -130,7 +125,7 @@ export default function Contact() {
   }
 
   return (
-    <div id="contact" className="ocean-section" ref={ref}>
+    <div id="contact" className={`ocean-section${isOceanVisible ? '' : ' ocean-paused'}`} ref={oceanRef}>
       {/* Ocean effect layers */}
       <div className="ocean-caustics" />
       <div className="ocean-bubbles" />
@@ -147,15 +142,7 @@ export default function Contact() {
             <path d="M20,180 Q30,140 20,100 Q10,60 20,20" fill="none" stroke="rgba(22,163,74,0.55)" strokeWidth="7" strokeLinecap="round"/>
             <path d="M20,180 Q25,150 15,110 Q25,70 15,30" fill="none" stroke="rgba(74,222,128,0.45)" strokeWidth="4" strokeLinecap="round"/>
           </svg>
-          <svg className="kelp kelp--3" viewBox="0 0 40 220" preserveAspectRatio="none">
-            <path d="M20,220 Q5,170 20,130 Q35,90 20,50 Q5,20 20,0" fill="none" stroke="rgba(34,197,94,0.5)" strokeWidth="9" strokeLinecap="round"/>
-          </svg>
-          <svg className="kelp kelp--4" viewBox="0 0 40 160" preserveAspectRatio="none">
-            <path d="M20,160 Q28,120 12,80 Q28,40 20,10" fill="none" stroke="rgba(22,163,74,0.6)" strokeWidth="6" strokeLinecap="round"/>
-          </svg>
-          <svg className="kelp kelp--5" viewBox="0 0 40 190" preserveAspectRatio="none">
-            <path d="M20,190 Q10,150 25,110 Q10,70 25,30" fill="none" stroke="rgba(74,222,128,0.55)" strokeWidth="7" strokeLinecap="round"/>
-          </svg>
+
         </div>
 
         {/* Coral reef at bottom */}
@@ -170,38 +157,7 @@ export default function Contact() {
             <path d="M25,120 Q30,90 25,60 Q22,40 35,25 Q45,10 60,20 Q70,30 65,50 Q60,70 68,90 Q72,110 65,120" fill="rgba(34,211,238,0.6)"/>
             <path d="M80,120 Q78,95 85,70 Q92,50 105,40 Q112,35 110,55 Q108,75 100,95 Q95,110 90,120" fill="rgba(56,189,248,0.55)"/>
           </svg>
-          <svg className="coral coral--3" viewBox="0 0 120 150" aria-hidden="true">
-            <path d="M30,150 Q35,115 25,90 Q18,70 28,55 Q38,40 45,55 Q50,65 45,85 Q40,105 50,125 Q55,140 50,150" fill="rgba(192,132,252,0.6)"/>
-            <path d="M75,150 Q78,120 70,95 Q62,70 72,55 Q82,40 90,55 Q96,70 90,95 Q85,120 90,150" fill="rgba(216,180,254,0.55)"/>
-            <circle cx="95" cy="40" r="10" fill="rgba(244,114,182,0.6)"/>
-          </svg>
-          <svg className="coral coral--4" viewBox="0 0 120 130" aria-hidden="true">
-            <path d="M20,130 Q25,100 20,75 Q18,55 30,45 Q40,35 50,45 Q60,55 55,80 Q50,105 55,130" fill="rgba(14,165,233,0.55)"/>
-            <circle cx="80" cy="55" r="14" fill="rgba(45,212,191,0.5)"/>
-            <circle cx="95" cy="80" r="10" fill="rgba(34,197,94,0.5)"/>
-          </svg>
-          <svg className="coral coral--5" viewBox="0 0 120 110" aria-hidden="true">
-            <path d="M30,110 Q35,85 28,65 Q22,45 35,35 Q50,25 60,40 Q70,55 65,75 Q60,95 65,110" fill="rgba(248,113,113,0.65)"/>
-            <path d="M80,110 Q78,88 88,70 Q98,52 110,45 Q118,42 115,60 Q112,78 100,95 Q92,105 88,110" fill="rgba(250,204,21,0.6)"/>
-          </svg>
-          <svg className="reef-accent starfish starfish--1" viewBox="0 0 80 80" aria-hidden="true">
-            <path d="M40,6 L48,28 L72,28 L52,42 L60,66 L40,52 L20,66 L28,42 L8,28 L32,28 Z" fill="rgba(251,146,60,0.85)"/>
-            <circle cx="40" cy="40" r="6" fill="rgba(253,186,116,0.9)"/>
-          </svg>
-          <svg className="reef-accent starfish starfish--2" viewBox="0 0 80 80" aria-hidden="true">
-            <path d="M40,8 L50,30 L74,32 L54,44 L62,68 L40,54 L18,68 L26,44 L6,32 L30,30 Z" fill="rgba(248,113,113,0.8)"/>
-            <circle cx="40" cy="40" r="6" fill="rgba(252,165,165,0.9)"/>
-          </svg>
-          <svg className="reef-accent shell shell--1" viewBox="0 0 90 60" aria-hidden="true">
-            <path d="M10,50 Q45,10 80,50 Z" fill="rgba(226,232,240,0.7)"/>
-            <path d="M20,48 Q45,20 70,48" fill="none" stroke="rgba(148,163,184,0.6)" strokeWidth="3"/>
-            <path d="M30,48 Q45,26 60,48" fill="none" stroke="rgba(148,163,184,0.55)" strokeWidth="2"/>
-          </svg>
-          <svg className="reef-accent shell shell--2" viewBox="0 0 90 60" aria-hidden="true">
-            <path d="M12,48 Q45,12 78,48 Z" fill="rgba(244,244,245,0.65)"/>
-            <path d="M22,46 Q45,22 68,46" fill="none" stroke="rgba(148,163,184,0.55)" strokeWidth="3"/>
-            <path d="M34,46 Q45,28 56,46" fill="none" stroke="rgba(148,163,184,0.5)" strokeWidth="2"/>
-          </svg>
+
         </div>
 
         {/* Swimming fish */}
@@ -219,40 +175,6 @@ export default function Contact() {
           <ellipse cx="20" cy="15" rx="10" ry="5" fill="rgba(125,211,252,0.5)"/>
         </svg>
 
-        <svg className="fish fish--3" viewBox="0 0 50 30">
-          <ellipse cx="20" cy="15" rx="15" ry="10" fill="rgba(251,207,232,0.8)"/>
-          <polygon points="35,15 50,5 50,25" fill="rgba(251,207,232,0.8)"/>
-          <circle cx="12" cy="13" r="2" fill="rgba(30,30,30,0.9)"/>
-          <path d="M15,10 Q20,5 25,10" fill="none" stroke="rgba(244,114,182,0.7)" strokeWidth="1.5"/>
-        </svg>
-
-        <svg className="fish fish--4" viewBox="0 0 50 30">
-          <ellipse cx="20" cy="15" rx="15" ry="10" fill="rgba(134,239,172,0.75)"/>
-          <polygon points="35,15 50,5 50,25" fill="rgba(134,239,172,0.75)"/>
-          <circle cx="12" cy="13" r="2" fill="rgba(30,30,30,0.9)"/>
-        </svg>
-
-        {/* Sea turtle */}
-        <svg className="turtle" viewBox="0 0 80 50">
-          <ellipse cx="40" cy="28" rx="25" ry="18" fill="rgba(34,197,94,0.7)"/>
-          <ellipse cx="40" cy="28" rx="20" ry="14" fill="rgba(74,222,128,0.5)"/>
-          <path d="M35,28 L30,28 L28,32 L32,30 Z" fill="rgba(34,197,94,0.6)"/>
-          <circle cx="65" cy="25" r="8" fill="rgba(34,197,94,0.7)"/>
-          <circle cx="68" cy="23" r="2" fill="rgba(30,30,30,0.8)"/>
-          <ellipse cx="18" cy="20" rx="8" ry="5" fill="rgba(34,197,94,0.6)" transform="rotate(-30 18 20)"/>
-          <ellipse cx="18" cy="36" rx="8" ry="5" fill="rgba(34,197,94,0.6)" transform="rotate(30 18 36)"/>
-          <ellipse cx="58" cy="18" rx="6" ry="4" fill="rgba(34,197,94,0.6)" transform="rotate(-20 58 18)"/>
-          <ellipse cx="58" cy="38" rx="6" ry="4" fill="rgba(34,197,94,0.6)" transform="rotate(20 58 38)"/>
-        </svg>
-
-        {/* Stingray */}
-        <svg className="ray" viewBox="0 0 120 70" aria-hidden="true">
-          <path d="M10,35 Q35,10 60,25 Q85,10 110,35 Q85,55 60,45 Q35,55 10,35 Z" fill="rgba(125,211,252,0.55)"/>
-          <circle cx="50" cy="32" r="2.5" fill="rgba(30,30,30,0.8)"/>
-          <circle cx="70" cy="32" r="2.5" fill="rgba(30,30,30,0.8)"/>
-          <path d="M60,45 Q62,55 70,65" fill="none" stroke="rgba(125,211,252,0.55)" strokeWidth="3" strokeLinecap="round"/>
-        </svg>
-
         {/* Jellyfish */}
         <svg className="jellyfish" viewBox="0 0 60 80">
           <ellipse cx="30" cy="20" rx="25" ry="18" fill="rgba(192,132,252,0.5)"/>
@@ -267,13 +189,12 @@ export default function Contact() {
 
       {/* Waves at bottom */}
       <div className="ocean-waves">
-        <div className="ocean-wave ocean-wave--back" />
         <div className="ocean-wave ocean-wave--mid" />
         <div className="ocean-wave ocean-wave--front" />
       </div>
 
       {/* Content wrapper - above all effects */}
-      <div className="ocean-content section-container py-20">
+      <div className="ocean-content section-container py-20" ref={ref}>
         <div className="content-wrapper max-w-4xl">
         <motion.div
           variants={containerVariant}

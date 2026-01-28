@@ -103,7 +103,7 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
         const fileName = path.split('/').pop() || ''
         const lower = fileName.toLowerCase()
         const inCommandFolder = path.toLowerCase().includes('/command-center/')
-        const isRank = lower === 'rank1.jpg'
+        const isRank = lower === 'rank1.webp'
         const isCommand = inCommandFolder || commandKeywords.some((keyword) => lower.includes(keyword))
         if (!isRank && !isCommand) {
           return null
@@ -176,8 +176,8 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
       .filter((entry): entry is Slide & { videoKey: string } => Boolean(entry))
 
     return normalizedEntries.sort((a, b) => {
-      if (a.key === 'rank1.jpg') return 1
-      if (b.key === 'rank1.jpg') return -1
+      if (a.key === 'rank1.webp') return 1
+      if (b.key === 'rank1.webp') return -1
       return a.key.localeCompare(b.key)
     })
   }, [])
@@ -294,9 +294,9 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
                   controls
                   preload="metadata"
                   onError={handleSlideError}
-                  initial={{ opacity: 0, scale: 0.96, filter: 'blur(4px)' }}
-                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, scale: 0.96, filter: 'blur(4px)' }}
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
                   transition={{ duration: 0.5, ease: appleEase }}
                 >
                   {(activeSlide.sources && activeSlide.sources.length > 0
@@ -315,9 +315,9 @@ export default function CommandCenter({ paused = false }: CommandCenterProps) {
                   loading="eager"
                   decoding="async"
                   onError={handleSlideError}
-                  initial={{ opacity: 0, scale: 0.96, filter: 'blur(4px)' }}
-                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, scale: 0.96, filter: 'blur(4px)' }}
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
                   transition={{ duration: 0.5, ease: appleEase }}
                 />
               )}

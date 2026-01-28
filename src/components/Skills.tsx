@@ -23,14 +23,13 @@ const categoryContainer = {
   },
 }
 
-// Holographic category card - alternating directions with blur
+// Category card - alternating directions
 const getCategoryVariant = (index: number) => ({
   hidden: {
     opacity: 0,
     x: index % 3 === 0 ? -60 : index % 3 === 1 ? 0 : 60,
     y: index % 3 === 1 ? 60 : 30,
     scale: 0.88,
-    filter: 'blur(15px)',
     rotateY: index % 3 === 0 ? 10 : index % 3 === 2 ? -10 : 0,
   },
   visible: {
@@ -38,7 +37,6 @@ const getCategoryVariant = (index: number) => ({
     x: 0,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     rotateY: 0,
     transition: {
       duration: 0.9,
@@ -47,19 +45,17 @@ const getCategoryVariant = (index: number) => ({
   },
 })
 
-// Holographic skill badge animation
+// Skill badge animation
 const skillBadge = {
   hidden: {
     opacity: 0,
     scale: 0.7,
     y: 15,
-    filter: 'blur(8px)',
   },
   visible: {
     opacity: 1,
     scale: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: {
       duration: 0.4,
       ease: appleEase,

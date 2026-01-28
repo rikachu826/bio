@@ -10,13 +10,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          three: ['three', '@react-three/fiber', '@react-three/drei'],
           animation: ['framer-motion']
         }
       }
     }
   },
   optimizeDeps: {
-    include: ['three', '@react-three/fiber', '@react-three/drei', 'framer-motion']
+    include: ['framer-motion']
   }
 })
